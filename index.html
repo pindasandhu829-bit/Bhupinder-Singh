@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -277,7 +277,7 @@ tr:last-child td{border-bottom:none;}
           <div class="aval">0xab594d87682eeE1ECD7B72414177915153885f7c</div>
           <button class="cpyadd" onclick="cpyA('0xab594d87682eeE1ECD7B72414177915153885f7c')">📋 Copy Address</button>
         </div>
-        <div class="depinfo">⚠️ <strong>Only send USDT (ERC-20)</strong> to this address<br>🌐 Network: <strong>Ethereum Mainnet</strong><br>✅ Min Deposit: <strong>$5 USDT</strong><br>⏱️ Confirmation: <strong>~3 minutes</strong><br>💱 1 USDT ≈ ₹83</div>
+        <div class="depinfo">⚠️ <strong>Only send USDT (ERC-20)</strong> to this address<br>🌐 Network: <strong>Ethereum Mainnet</strong><br>✅ Min Deposit: <strong>$5 USDT</strong><br>⏱️ Confirmation: <strong>~3 minutes</strong><br>💱 1 USDT ≈ ₹96</div>
       </div>
       <div id="D-bep" style="display:none;">
         <div class="abox">
@@ -286,7 +286,7 @@ tr:last-child td{border-bottom:none;}
           <div class="aval">0xab594d87682eeE1ECD7B72414177915153885f7c</div>
           <button class="cpyadd" onclick="cpyA('0xab594d87682eeE1ECD7B72414177915153885f7c')">📋 Copy Address</button>
         </div>
-        <div class="depinfo">⚠️ <strong>Only send USDT (BEP-20)</strong> to this address<br>🌐 Network: <strong>BNB Smart Chain</strong><br>✅ Min Deposit: <strong>$2 USDT</strong><br>⏱️ Confirmation: <strong>~1 minute</strong><br>💱 1 USDT ≈ ₹83</div>
+        <div class="depinfo">⚠️ <strong>Only send USDT (BEP-20)</strong> to this address<br>🌐 Network: <strong>BNB Smart Chain</strong><br>✅ Min Deposit: <strong>$2 USDT</strong><br>⏱️ Confirmation: <strong>~1 minute</strong><br>💱 1 USDT ≈ ₹96</div>
       </div>
       <div id="D-trc" style="display:none;">
         <div class="abox">
@@ -295,7 +295,7 @@ tr:last-child td{border-bottom:none;}
           <div class="aval">TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc</div>
           <button class="cpyadd" onclick="cpyA('TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc')">📋 Copy Address</button>
         </div>
-        <div class="depinfo">⚠️ <strong>Only send USDT (TRC-20)</strong> to this address<br>🌐 Network: <strong>TRON Network</strong><br>✅ Min Deposit: <strong>$1 USDT</strong><br>⏱️ Confirmation: <strong>~1 minute</strong><br>💱 1 USDT ≈ ₹83</div>
+        <div class="depinfo">⚠️ <strong>Only send USDT (TRC-20)</strong> to this address<br>🌐 Network: <strong>TRON Network</strong><br>✅ Min Deposit: <strong>$1 USDT</strong><br>⏱️ Confirmation: <strong>~1 minute</strong><br>💱 1 USDT ≈ ₹96</div>
       </div>
 
 
@@ -304,13 +304,13 @@ tr:last-child td{border-bottom:none;}
         <div class="abox" style="border-color:var(--gold);">
           <div class="albl" style="color:var(--gold);">INR Deposit — UPI / Bank Transfer</div>
           <div class="qrph" style="font-size:2rem;">🇮🇳</div>
-          <div style="font-size:.8rem;color:var(--gold);font-weight:700;margin-bottom:8px;">UPI ID: chromabet@upi</div>
+          <div style="font-size:.8rem;color:var(--gold);font-weight:700;margin-bottom:8px;">UPI ID: pindasandhu829@pingpay</div>
           <div style="font-size:.7rem;color:var(--muted);margin-bottom:12px;">Ya Bank Transfer karo</div>
-          <button class="cpyadd" onclick="cpyA('chromabet@upi')" style="background:var(--gold);color:#000;">📋 Copy UPI ID</button>
+          <button class="cpyadd" onclick="cpyA('pindasandhu829@pingpay')" style="background:var(--gold);color:#000;">📋 Copy UPI ID</button>
         </div>
         <div class="depinfo" style="background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.2);">
           ⚠️ <strong>UPI / Bank Transfer se INR bhejo</strong><br>
-          💱 Auto convert: <strong>₹83 = 1 USDT</strong><br>
+          💱 Auto convert: <strong>₹96 = 1 USDT</strong><br>
           ✅ Min Deposit: <strong>₹100</strong><br>
           ⏱️ Approval: <strong>30 min se 2 hours</strong><br>
           📝 Screenshot zaroor bhejo proof mein
@@ -526,15 +526,15 @@ function selN(n){
 }
 function cpyA(a){navigator.clipboard.writeText(a).then(()=>sn('✅ Address Copied!','Send only USDT to this address',''));}
 document.addEventListener('input',function(e){
-  if(e.target.id==='DUA'){const v=+e.target.value||0;document.getElementById('DINR').textContent='₹'+Math.floor(v*83);}
+  if(e.target.id==='DUA'){const v=+e.target.value||0;document.getElementById('DINR').textContent='₹'+Math.floor(v*96);}
   if(e.target.id==='WDR'){updWD();}
 });
 function updDep(){
   const v=+document.getElementById('DUA').value||0;
   if(curNet==='inr'){document.getElementById('DINR').textContent='₹'+v+' INR';}
-  else{document.getElementById('DINR').textContent='₹'+Math.floor(v*83);}
+  else{document.getElementById('DINR').textContent='₹'+Math.floor(v*96);}
 }
-function updWD(){const v=+document.getElementById('WDR').value||0;document.getElementById('WDU').textContent=(v/83).toFixed(2)+' USDT';}
+function updWD(){const v=+document.getElementById('WDR').value||0;document.getElementById('WDU').textContent=(v/96).toFixed(2)+' USDT';}
 function subDep(){
   const th=document.getElementById('DTH').value.trim(),ua=parseFloat(document.getElementById('DUA').value)||0;
   if(curNet==='inr'){
@@ -543,14 +543,14 @@ function subDep(){
     if(ua<100)return sn('❌ Min deposit ₹100','','lose');
     const netlbl={erc:'ERC-20',bep:'BEP-20',trc:'TRC-20',inr:'INR-UPI'};
     const d=gD();if(!d.deposits)d.deposits=[];
-    d.deposits.unshift({id:'DEP'+Date.now(),user:CU,txHash:th,usdtAmt:(ua/83).toFixed(2),inrAmt:ua,network:'INR-UPI',status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});
+    d.deposits.unshift({id:'DEP'+Date.now(),user:CU,txHash:th,usdtAmt:(ua/96).toFixed(2),inrAmt:ua,network:'INR-UPI',status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});
     if(!d.users[CU].transactions)d.users[CU].transactions=[];
     d.users[CU].transactions.unshift({type:'Deposit',amount:'₹'+ua+' (INR-UPI)',network:'INR-UPI',status:'Pending',date:new Date().toLocaleDateString()});
     sD(d);document.getElementById('DTH').value='';document.getElementById('DUA').value='';
     sn('✅ INR Deposit Submitted!','Admin verify karega soon','');loadTX();return;
   }
   if(!th)return sn('❌ Enter TX Hash!','','lose');if(ua<1)return sn('❌ Enter valid amount','','lose');
-  const inr=Math.floor(ua*83);
+  const inr=Math.floor(ua*96);
   const netlbl={erc:'ERC-20',bep:'BEP-20',trc:'TRC-20'};
   const d=gD();if(!d.deposits)d.deposits=[];
   d.deposits.unshift({id:'DEP'+Date.now(),user:CU,txHash:th,usdtAmt:ua,inrAmt:inr,network:netlbl[curNet],status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});
@@ -565,7 +565,7 @@ function subWD(){
   if(amt<415)return sn('❌ Min withdrawal ₹415 (~$5)','','lose');
   if(amt>bal)return sn('❌ Insufficient balance!','','lose');
   bal-=amt;updBal();saveUD();
-  const ua=(amt/83).toFixed(2);
+  const ua=(amt/96).toFixed(2);
   const d=gD();if(!d.withdrawals)d.withdrawals=[];
   d.withdrawals.unshift({id:'WD'+Date.now(),user:CU,addr,amt,usdtAmt:ua,network:net,status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});
   if(!d.users[CU].transactions)d.users[CU].transactions=[];
