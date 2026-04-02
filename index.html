@@ -301,7 +301,7 @@ tr:last-child td{border-bottom:none;}
           <div class="aval">0xab594d87682eeE1ECD7B72414177915153885f7c</div>
           <button class="cpyadd" onclick="cpyA('0xab594d87682eeE1ECD7B72414177915153885f7c')">📋 Copy Address</button>
         </div>
-        <div class="depinfo">⚠️ <strong>Only send USDT (ERC-20)</strong> to this address<br>🌐 Network: <strong>Ethereum Mainnet</strong><br>✅ Min Deposit: <strong>$5 USDT</strong><br>⏱️ Confirmation: <strong>~3 minutes</strong><br>💱 1 USDT ≈ ₹96</div>
+        <div class="depinfo">⚠️ <strong>Only send USDT (ERC-20)</strong> to this address<br>🌐 Network: <strong>Ethereum Mainnet</strong><br>✅ Min Deposit: <strong>$1 USDT</strong><br>⏱️ Confirmation: <strong>~3 minutes</strong><br>💱 1 USDT ≈ ₹96</div>
       </div>
       <div id="D-bep" style="display:none;">
         <div class="abox">
@@ -335,7 +335,7 @@ tr:last-child td{border-bottom:none;}
         <div class="depinfo" style="background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.2);">
           ⚠️ <strong>UPI / Bank Transfer se INR bhejo</strong><br>
           💱 Auto convert: <strong>₹96 = 1 USDT</strong><br>
-          ✅ Min Deposit: <strong>₹100</strong><br>
+          ✅ Min Deposit: <strong>₹10</strong><br>
           ⏱️ Approval: <strong>30 min se 2 hours</strong><br>
           📝 Screenshot zaroor bhejo proof mein
         </div>
@@ -352,18 +352,44 @@ tr:last-child td{border-bottom:none;}
     <!-- WITHDRAW -->
     <div class="gc">
       <div class="sl">💸 Withdraw</div>
-      <div class="depinfo">⚡ Processed in <strong>1–24 hours</strong> by admin<br>💰 Min withdrawal: <strong>$5 USDT (≈₹415)</strong><br>📤 Only crypto withdrawals accepted</div>
-      <div class="fl" style="margin-top:12px;">Network</div>
-      <select class="wdsel" id="WDN">
-        <option value="ERC-20">USDT — ERC-20 (Ethereum)</option>
-        <option value="BEP-20">USDT — BEP-20 (BSC)</option>
-        <option value="TRC-20">USDT — TRC-20 (TRON)</option>
-      </select>
-      <div class="fl">Your Wallet Address</div>
-      <input class="pinp" id="WDA" placeholder="Enter your wallet address"/>
-      <div class="fl">Amount (₹)</div>
-      <input class="pinp" type="number" id="WDR" placeholder="Enter ₹ amount" oninput="updWD()"/>
-      <div style="font-size:.67rem;color:var(--muted);margin-bottom:12px;">Equivalent: <span id="WDU" style="color:var(--gold)">0 USDT</span></div>
+      <div class="depinfo">⚡ Processed in <strong>1–24 hours</strong> by admin<br>💰 Min withdrawal: <strong>₹100</strong><br>📤 Crypto ya UPI dono accepted</div>
+
+      <!-- Withdraw Type Toggle -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <button id="wtCrypto" onclick="setWT('crypto')" style="flex:1;padding:10px;border-radius:10px;border:2px solid var(--blue);background:rgba(61,90,254,.15);color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;">💎 Crypto</button>
+        <button id="wtInr" onclick="setWT('inr')" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;">🇮🇳 INR (UPI)</button>
+      </div>
+
+      <!-- CRYPTO WITHDRAW -->
+      <div id="WD-crypto">
+        <div class="fl">Network</div>
+        <select class="wdsel" id="WDN">
+          <option value="ERC-20">USDT — ERC-20 (Ethereum)</option>
+          <option value="BEP-20">USDT — BEP-20 (BSC)</option>
+          <option value="TRC-20">USDT — TRC-20 (TRON)</option>
+        </select>
+        <div class="fl">Your Wallet Address</div>
+        <input class="pinp" id="WDA" placeholder="Enter your wallet address"/>
+        <div class="fl">Amount (₹)</div>
+        <input class="pinp" type="number" id="WDR" placeholder="Enter ₹ amount" oninput="updWD()"/>
+        <div style="font-size:.67rem;color:var(--muted);margin-bottom:12px;">Equivalent: <span id="WDU" style="color:var(--gold)">0 USDT</span></div>
+      </div>
+
+      <!-- INR WITHDRAW -->
+      <div id="WD-inr" style="display:none;">
+        <div class="depinfo" style="background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.2);margin-bottom:14px;">
+          💳 Paisa seedha tumhare UPI pe aayega<br>
+          ⏱️ Processing: <strong>1-24 hours</strong><br>
+          💰 Min: <strong>₹100</strong>
+        </div>
+        <div class="fl">Your UPI ID</div>
+        <input class="pinp" id="WDUPI" placeholder="yourname@upi / yourname@paytm"/>
+        <div class="fl">Your Full Name</div>
+        <input class="pinp" id="WDNAME" placeholder="Account holder name"/>
+        <div class="fl">Amount (₹)</div>
+        <input class="pinp" type="number" id="WDINR" placeholder="Enter ₹ amount"/>
+      </div>
+
       <button class="wdbtn" onclick="subWD()">📤 Request Withdrawal</button>
     </div>
 
@@ -606,7 +632,7 @@ function subDep(){
   if(curNet==='inr'){
     // INR deposit
     if(!th)return sn('❌ Enter UTR/Reference No!','','lose');
-    if(ua<100)return sn('❌ Min deposit ₹100','','lose');
+    if(ua<10)return sn('❌ Min deposit ₹10','','lose');
     const netlbl={erc:'ERC-20',bep:'BEP-20',trc:'TRC-20',inr:'INR-UPI'};
     const d=gD();if(!d.deposits)d.deposits=[];
     d.deposits.unshift({id:'DEP'+Date.now(),user:CU,txHash:th,usdtAmt:(ua/96).toFixed(2),inrAmt:ua,network:'INR-UPI',status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});
@@ -628,7 +654,7 @@ function subDep(){
 function subWD(){
   const addr=document.getElementById('WDA').value.trim(),amt=parseInt(document.getElementById('WDR').value)||0,net=document.getElementById('WDN').value;
   if(!addr)return sn('❌ Enter wallet address!','','lose');
-  if(amt<415)return sn('❌ Min withdrawal ₹415 (~$5)','','lose');
+  if(amt<192)return sn('❌ Min withdrawal ₹415 (~$5)','','lose');
   if(amt>bal)return sn('❌ Insufficient balance!','','lose');
   bal-=amt;updBal();saveUD();
   const ua=(amt/96).toFixed(2);
