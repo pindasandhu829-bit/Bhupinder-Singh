@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -157,14 +157,38 @@ tr:last-child td{border-bottom:none;}
   <div class="llogo"><span>Chroma</span>Bet</div>
   <div class="lsub">Color Prediction Platform</div>
   <div id="LF">
-    <div class="fl">Username</div><input class="fi" id="lU" placeholder="Enter username"/>
+    <div class="fl">Phone / Email / Username</div><input class="fi" id="lU" placeholder="Phone, Email ya Username"/>
     <div class="fl">Password</div><input class="fi" type="password" id="lP" placeholder="Enter password"/>
     <button class="lbtn" onclick="doLogin()">Login →</button>
     <div class="ltog">No account? <a onclick="togF(1)">Register</a></div>
   </div>
   <div id="RF" style="display:none;">
-    <div class="fl">Username</div><input class="fi" id="rU" placeholder="Choose username"/>
-    <div class="fl">Password</div><input class="fi" type="password" id="rP" placeholder="Choose password"/>
+    <div class="fl">Full Name</div><input class="fi" id="rName" placeholder="Apna naam likho"/>
+    <!-- Register Type Toggle -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button id="rtPhone" onclick="setRT('phone')" style="flex:1;padding:9px;border-radius:9px;border:2px solid var(--blue);background:rgba(61,90,254,.15);color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;">📱 Phone</button>
+      <button id="rtEmail" onclick="setRT('email')" style="flex:1;padding:9px;border-radius:9px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;">📧 Email</button>
+    </div>
+    <div id="phoneField">
+      <div class="fl">Phone Number</div>
+      <div style="display:flex;gap:6px;">
+        <select class="fi" id="rCC" style="width:90px;flex-shrink:0;margin-bottom:12px;">
+          <option value="+91">🇮🇳 +91</option>
+          <option value="+1">🇺🇸 +1</option>
+          <option value="+44">🇬🇧 +44</option>
+          <option value="+971">🇦🇪 +971</option>
+          <option value="+92">🇵🇰 +92</option>
+          <option value="+880">🇧🇩 +880</option>
+        </select>
+        <input class="fi" id="rPhone" type="tel" placeholder="10-digit number" maxlength="10"/>
+      </div>
+    </div>
+    <div id="emailField" style="display:none;">
+      <div class="fl">Email Address</div>
+      <input class="fi" id="rEmail" type="email" placeholder="example@gmail.com"/>
+    </div>
+    <div class="fl">Password</div><input class="fi" type="password" id="rP" placeholder="Min 6 characters"/>
+    <div class="fl">Confirm Password</div><input class="fi" type="password" id="rP2" placeholder="Password dobara likho"/>
     <div class="fl">Referral Code (Optional)</div>
     <div class="rhint">🎁 Get ₹50 bonus with a referral code!</div>
     <input class="fi" id="rRef" placeholder="e.g. ABC123" style="text-transform:uppercase;"/>
@@ -401,28 +425,70 @@ function gc(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({leng
 
 let CU=null,bal=0,rnd=1,tmr=30,tI=null,sC=null,bO=true,pB=null,hist=[],W=0,L=0,P=0,curNet='erc';
 
-function togF(r){document.getElementById('LF').style.display=r?'none':'block';document.getElementById('RF').style.display=r?'block':'none';}
-function doLogin(){
-  const u=document.getElementById('lU').value.trim().toLowerCase(),p=document.getElementById('lP').value;
-  const d=gD();if(!d.users[u]||d.users[u].password!==p)return sn('❌ Wrong credentials!','','lose');
-  CU=u;startApp();
+let regType='phone';
+function setRT(t){
+  regType=t;
+  document.getElementById('rtPhone').style.cssText='flex:1;padding:9px;border-radius:9px;border:'+(t==='phone'?'2px solid var(--blue);background:rgba(61,90,254,.15);color:#fff':'1px solid var(--border);background:none;color:var(--muted)')+';font-family:Syne,sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;';
+  document.getElementById('rtEmail').style.cssText='flex:1;padding:9px;border-radius:9px;border:'+(t==='email'?'2px solid var(--blue);background:rgba(61,90,254,.15);color:#fff':'1px solid var(--border);background:none;color:var(--muted)')+';font-family:Syne,sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;';
+  document.getElementById('phoneField').style.display=t==='phone'?'block':'none';
+  document.getElementById('emailField').style.display=t==='email'?'block':'none';
 }
+function togF(r){document.getElementById('LF').style.display=r?'none':'block';document.getElementById('RF').style.display=r?'block':'none';}
+
+function doLogin(){
+  const raw=document.getElementById('lU').value.trim(),p=document.getElementById('lP').value;
+  const d=gD();
+  // Try match by username, phone, or email
+  let found=null;
+  const users=Object.keys(d.users);
+  for(let u of users){
+    const ud=d.users[u];
+    if(u===raw.toLowerCase()||ud.phone===raw||ud.email===raw.toLowerCase()){found=u;break;}
+  }
+  if(!found||d.users[found].password!==p)return sn('❌ Wrong credentials!','','lose');
+  CU=found;startApp();
+}
+
 function doReg(){
-  const u=document.getElementById('rU').value.trim().toLowerCase(),p=document.getElementById('rP').value,ref=document.getElementById('rRef').value.trim().toUpperCase();
-  if(!u||!p)return sn('❌ Fill all fields!','','lose');
-  if(u.length<3)return sn('❌ Username min 3 chars','','lose');
-  const d=gD();if(d.users[u])return sn('❌ Username taken!','','lose');
+  const name=document.getElementById('rName').value.trim();
+  const p=document.getElementById('rP').value,p2=document.getElementById('rP2').value;
+  const ref=document.getElementById('rRef').value.trim().toUpperCase();
+  if(!name)return sn('❌ Naam likho!','','lose');
+  if(p.length<6)return sn('❌ Password min 6 chars!','','lose');
+  if(p!==p2)return sn('❌ Password match nahi!','','lose');
+
+  let uid='',phone='',email='';
+  if(regType==='phone'){
+    const cc=document.getElementById('rCC').value;
+    phone=document.getElementById('rPhone').value.trim();
+    if(!phone||phone.length<10)return sn('❌ Valid phone number dalo!','','lose');
+    uid=phone;phone=cc+phone;
+  } else {
+    email=document.getElementById('rEmail').value.trim().toLowerCase();
+    if(!email||!email.includes('@'))return sn('❌ Valid email dalo!','','lose');
+    uid=email.split('@')[0]+Math.floor(Math.random()*999);
+    email=email;
+  }
+
+  const d=gD();
+  // Check duplicate phone/email
+  const exists=Object.values(d.users).find(u=>u.phone===phone||u.email===email);
+  if(exists)return sn('❌ Phone/Email already registered!','','lose');
+  if(d.users[uid])uid=uid+Math.floor(Math.random()*99);
+
   let bonus=100,ru=null;
   if(ref){ru=Object.keys(d.users).find(k=>d.users[k].referralCode===ref);if(!ru)return sn('❌ Invalid referral code!','','lose');bonus+=50;}
-  d.users[u]={password:p,balance:bonus,referralCode:gc(),referredBy:ru||null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[]};
-  if(ru){d.users[ru].balance+=100;d.users[ru].referrals.push({username:u,joined:new Date().toLocaleDateString(),bets:0,earned:100});}
-  sD(d);CU=u;startApp();if(bonus>100)sn('🎁 Referral Bonus!','+₹'+bonus+' credited!','');
+
+  d.users[uid]={password:p,name,phone,email,balance:bonus,referralCode:gc(),referredBy:ru||null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[]};
+  if(ru){d.users[ru].balance+=100;d.users[ru].referrals.push({username:uid,joined:new Date().toLocaleDateString(),bets:0,earned:100});}
+  sD(d);CU=uid;startApp();
+  sn('🎉 Welcome '+name+'!',bonus>100?'+₹'+bonus+' bonus credited!':'+₹100 signup bonus!','');
 }
 function doOut(){CU=null;clearInterval(tI);document.getElementById('APP').style.display='none';document.getElementById('LS').style.display='flex';}
 
 function startApp(){
   document.getElementById('LS').style.display='none';document.getElementById('APP').style.display='block';
-  document.getElementById('hUN').textContent=CU;loadUD();setupRef();startRound();
+  const dbu=gD();document.getElementById('hUN').textContent=dbu.users[CU].name||CU;loadUD();setupRef();startRound();
 }
 function loadUD(){
   const d=gD(),u=d.users[CU];
