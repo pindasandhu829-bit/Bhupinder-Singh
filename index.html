@@ -8,13 +8,13 @@
 <style>
 :root{--bg:#0a0a0f;--surface:#12121a;--card:#1a1a26;--border:#2a2a3a;--text:#f0f0ff;--muted:#7070a0;--red:#ff3b5c;--green:#00e676;--blue:#3d5afe;--gold:#ffd700;--violet:#9c27b0;--orange:#ff9800;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
+body{background:#0a0a0f;color:#f0f0ff;font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(61,90,254,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(61,90,254,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;width:600px;height:600px;background:radial-gradient(circle,rgba(61,90,254,.12) 0%,transparent 70%);top:-200px;right:-200px;border-radius:50%;pointer-events:none;z-index:0;animation:orb 8s ease-in-out infinite alternate;}
 @keyframes orb{from{transform:translate(0,0)}to{transform:translate(-100px,100px)}}
 .wrap{max-width:960px;margin:0 auto;padding:20px;position:relative;z-index:1;}
 /* LOGIN */
-#LS{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:20px;}
+#LS{position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0f;z-index:500;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:20px;}
 .lbox{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:36px;width:100%;max-width:420px;}
 .llogo{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;text-align:center;margin-bottom:6px;}
 .llogo span{background:linear-gradient(135deg,#3d5afe,#ff3b5c,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -47,4 +47,570 @@ header{display:flex;align-items:center;justify-content:space-between;padding:18p
 .gc{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:20px;}
 .sl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;}
 /* GAME */
-.trow{display:flex;align-items:center;justify-
+.trow{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.rnum{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;}
+.tdisp{font-family:'Syne',sans-serif;font-weight:800;font-size:2.5rem;line-height:1;letter-spacing:-2px;}
+.tdisp.urg{color:var(--red);animation:pulse .5s ease infinite alternate;}
+@keyframes pulse{from{opacity:1}to{opacity:.5}}
+.ptrack{width:100%;height:4px;background:var(--border);border-radius:2px;margin-bottom:26px;overflow:hidden;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--blue),var(--red));border-radius:2px;transition:width 1s linear;}
+.rdisp{display:flex;align-items:center;justify-content:center;gap:16px;padding:26px;border-radius:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:20px;min-height:120px;}
+.rcirc{width:76px;height:76px;border-radius:50%;border:3px solid rgba(255,255,255,.15);flex-shrink:0;transition:all .5s;}
+.rcirc.spin{animation:sp .3s linear infinite;}
+.rcirc.rev{animation:rv .6s cubic-bezier(.34,1.56,.64,1) forwards;}
+@keyframes sp{from{transform:rotate(0deg) scale(1)}to{transform:rotate(360deg) scale(1.05)}}
+@keyframes rv{0%{transform:scale(.2) rotate(-180deg);opacity:0}100%{transform:scale(1) rotate(0deg);opacity:1}}
+.rtxt{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;letter-spacing:-1px;}
+.rsub{font-size:.7rem;color:var(--muted);margin-top:4px;}
+.wtxt{font-family:'Syne',sans-serif;font-size:1rem;color:var(--muted);animation:blink 1.2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.bcs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.cb{padding:16px 8px;border-radius:13px;border:2px solid transparent;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;text-transform:uppercase;letter-spacing:1px;transition:all .2s;position:relative;overflow:hidden;outline:none;}
+.cb::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s;background:rgba(255,255,255,.08);}
+.cb:hover::before{opacity:1}.cb:hover{transform:translateY(-3px);}
+.cb.sel{border-color:#fff;transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.cb.dis{opacity:.4;cursor:not-allowed;transform:none!important;}
+.cbr{background:linear-gradient(135deg,#c62828,#ff3b5c);color:#fff;}
+.cbg{background:linear-gradient(135deg,#1b5e20,#00e676);color:#001a06;}
+.cbv{background:linear-gradient(135deg,#4a148c,#9c27b0);color:#fff;}
+.odds{display:block;font-size:.6rem;font-weight:400;color:rgba(255,255,255,.7);margin-top:3px;font-family:'Space Mono',monospace;}
+.ainp{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 16px;color:var(--text);font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;outline:none;transition:border-color .2s;}
+.ainp:focus{border-color:var(--blue);}
+.qbs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}
+.qb{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 13px;color:var(--muted);font-family:'Space Mono',monospace;font-size:.72rem;cursor:pointer;transition:all .2s;}
+.qb:hover{border-color:var(--blue);color:var(--text);}
+.betbtn{width:100%;padding:17px;border-radius:13px;border:none;background:linear-gradient(135deg,var(--blue),#7b1fa2);color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.betbtn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(61,90,254,.4);}
+.betbtn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.hrow{display:flex;gap:7px;flex-wrap:wrap;}
+.hd{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:700;text-transform:uppercase;animation:di .3s ease;}
+@keyframes di{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.hd-r{background:#c62828;color:#fff;}.hd-g{background:#1b5e20;color:#00e676;}.hd-v{background:#4a148c;color:#ce93d8;}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.sbox{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px;text-align:center;}
+.sval{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:2px;}
+.slbl{font-size:.57rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:.57rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);}
+td{padding:10px 10px;font-size:.76rem;border-bottom:1px solid rgba(255,255,255,.03);}
+tr:last-child td{border-bottom:none;}
+.tag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+.tred{background:rgba(255,59,92,.15);color:var(--red);}
+.tgreen{background:rgba(0,230,118,.15);color:var(--green);}
+.tviolet{background:rgba(156,39,176,.2);color:#ce93d8;}
+.nb{color:var(--muted);font-size:.76rem;text-align:center;padding:18px;}
+/* WALLET */
+.netrow{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.nbtn{padding:9px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Syne',sans-serif;font-weight:700;font-size:.74rem;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:1px;}
+.nbtn.on{border-color:var(--blue);color:var(--text);background:rgba(61,90,254,.12);}
+.abox{background:var(--surface);border:2px dashed var(--border);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;}
+.albl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;}
+.aval{font-family:'Space Mono',monospace;font-size:.74rem;color:var(--gold);word-break:break-all;line-height:1.8;margin-bottom:12px;}
+.cpyadd{background:var(--blue);border:none;border-radius:9px;padding:9px 20px;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;transition:all .2s;}
+.cpyadd:hover{background:#5c6bc0;transform:translateY(-1px);}
+.qrph{width:110px;height:110px;margin:0 auto 12px;background:var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;}
+.depinfo{background:rgba(61,90,254,.08);border:1px solid rgba(61,90,254,.2);border-radius:10px;padding:13px 16px;font-size:.73rem;color:#9ab;line-height:1.8;margin-bottom:14px;}
+.depinfo strong{color:var(--text);}
+.pinp{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Space Mono',monospace;font-size:.8rem;outline:none;margin-bottom:10px;transition:border-color .2s;}
+.pinp:focus{border-color:var(--blue);}
+.subbtn{width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#00897b,#00e676);color:#001a06;font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .2s;}
+.subbtn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,230,118,.3);}
+.wdbtn{width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#c62828,#ff3b5c);color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .2s;}
+.wdbtn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,59,92,.3);}
+.wdsel{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Space Mono',monospace;font-size:.8rem;outline:none;margin-bottom:12px;}
+.sbadge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+.sp{background:rgba(255,152,0,.15);color:var(--orange);}
+.sa{background:rgba(0,230,118,.15);color:var(--green);}
+.sr{background:rgba(255,59,92,.15);color:var(--red);}
+/* REFERRAL */
+.rcbox{background:var(--surface);border:2px dashed var(--blue);border-radius:14px;padding:22px;text-align:center;margin-bottom:16px;}
+.rcode{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--gold);letter-spacing:4px;margin:8px 0;}
+.rlinrow{display:flex;gap:8px;margin-bottom:14px;}
+.rlinp{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:var(--muted);font-family:'Space Mono',monospace;font-size:.7rem;outline:none;}
+.cpbtn{background:var(--blue);border:none;border-radius:9px;padding:11px 18px;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.74rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.cpbtn:hover{background:#5c6bc0;}
+.shgrd{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px;}
+.shbtn{padding:11px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'Syne',sans-serif;font-weight:700;font-size:.74rem;cursor:pointer;transition:all .2s;text-align:center;}
+.shbtn:hover{border-color:var(--blue);transform:translateY(-2px);}
+.refstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.rsbox{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px;text-align:center;}
+.rsv{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:var(--green);margin-bottom:3px;}
+.rslbl{font-size:.57rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;}
+.ibox{background:rgba(61,90,254,.08);border:1px solid rgba(61,90,254,.22);border-radius:11px;padding:13px 16px;font-size:.74rem;color:#9ab;line-height:1.8;}
+.ibox strong{color:var(--text);}
+/* NOTIF */
+.notif{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-120px);background:var(--card);border:1px solid var(--green);border-radius:13px;padding:14px 28px;font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;z-index:9999;transition:transform .4s cubic-bezier(.34,1.56,.64,1);text-align:center;min-width:250px;}
+.notif.show{transform:translateX(-50%) translateY(0);}
+.notif.lose{border-color:var(--red);}
+.na{font-size:1.3rem;}.naw{color:var(--green);}.nal{color:var(--red);}
+.cfp{position:fixed;width:10px;height:10px;top:-20px;animation:cff linear forwards;border-radius:2px;z-index:200;pointer-events:none;}
+@keyframes cff{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+#GV,#WV,#RV{display:none;}
+#GV.on,#WV.on,#RV.on{display:block;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="LS">
+<div class="lbox">
+  <div class="llogo"><span>Chroma</span>Bet</div>
+  <div class="lsub">Color Prediction Platform</div>
+  <div id="LF">
+    <div class="fl">Username</div><input class="fi" id="lU" placeholder="Enter username"/>
+    <div class="fl">Password</div><input class="fi" type="password" id="lP" placeholder="Enter password"/>
+    <button class="lbtn" onclick="doLogin()">Login →</button>
+    <div class="ltog">No account? <a onclick="togF(1)">Register</a></div>
+  </div>
+  <div id="RF" style="display:none;">
+    <div class="fl">Username</div><input class="fi" id="rU" placeholder="Choose username"/>
+    <div class="fl">Password</div><input class="fi" type="password" id="rP" placeholder="Choose password"/>
+    <div class="fl">Referral Code (Optional)</div>
+    <div class="rhint">🎁 Get ₹50 bonus with a referral code!</div>
+    <input class="fi" id="rRef" placeholder="e.g. ABC123" style="text-transform:uppercase;"/>
+    <button class="lbtn" onclick="doReg()">Create Account →</button>
+    <div class="ltog">Have account? <a onclick="togF(0)">Login</a></div>
+  </div>
+</div>
+</div>
+
+<!-- APP -->
+<div class="wrap" id="APP" style="display:none;">
+  <header>
+    <div class="logo"><span>Chroma</span>Bet</div>
+    <div class="hrt">
+      <div class="uchip">👤 <strong id="hUN">—</strong></div>
+      <div class="bxb"><div class="bxl">Balance</div><div class="bxv" id="bDisp">₹0</div></div>
+      <button class="outbtn" onclick="doOut()">Logout</button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" id="tG" onclick="sw('G')">🎮 Game</button>
+    <button class="tab" id="tW" onclick="sw('W')">💳 Wallet</button>
+    <button class="tab" id="tR" onclick="sw('R')">🔗 Referral</button>
+  </div>
+
+  <!-- GAME -->
+  <div id="GV" class="on">
+    <div class="gc">
+      <div class="trow">
+        <div><div class="sl">Current Round</div><div class="rnum" id="RN">#0001</div></div>
+        <div style="text-align:right;"><div class="sl">Time Left</div><div class="tdisp" id="TD">30</div></div>
+      </div>
+      <div class="ptrack"><div class="pfill" id="PF" style="width:100%"></div></div>
+      <div class="rdisp">
+        <div class="wtxt" id="WT">Waiting for result...</div>
+        <div id="RC" style="display:none;align-items:center;gap:16px;flex-direction:column;">
+          <div class="rcirc" id="RCI"></div>
+          <div style="text-align:center;"><div class="rtxt" id="RT">—</div><div class="rsub" id="RS">Round Result</div></div>
+        </div>
+      </div>
+      <div class="sl">Last 20 Results</div>
+      <div class="hrow" id="HR"><div style="color:var(--muted);font-size:.74rem;">No results yet</div></div>
+    </div>
+
+    <div class="sgrid">
+      <div class="sbox"><div class="sval" id="SW" style="color:var(--green)">0</div><div class="slbl">Wins</div></div>
+      <div class="sbox"><div class="sval" id="SL" style="color:var(--red)">0</div><div class="slbl">Losses</div></div>
+      <div class="sbox"><div class="sval" id="SP" style="color:var(--gold)">₹0</div><div class="slbl">Net P&L</div></div>
+    </div>
+
+    <div class="gc">
+      <div class="sl">Place Your Bet</div>
+      <div class="bcs">
+        <button class="cb cbr" onclick="selC('red')" id="B-red">🔴 Red<span class="odds">2x Payout</span></button>
+        <button class="cb cbg" onclick="selC('green')" id="B-green">🟢 Green<span class="odds">2x Payout</span></button>
+        <button class="cb cbv" onclick="selC('violet')" id="B-violet">🟣 Violet<span class="odds">4.5x</span></button>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:14px;">
+        <input class="ainp" type="number" id="BA" placeholder="Enter amount" value="50" min="10"/>
+      </div>
+      <div class="qbs">
+        <button class="qb" onclick="sa(10)">₹10</button>
+        <button class="qb" onclick="sa(50)">₹50</button>
+        <button class="qb" onclick="sa(100)">₹100</button>
+        <button class="qb" onclick="sa(500)">₹500</button>
+        <button class="qb" onclick="da()">2×</button>
+        <button class="qb" onclick="ha()">½</button>
+      </div>
+      <button class="betbtn" id="BB" onclick="placeBet()">Place Bet</button>
+    </div>
+
+    <div class="gc">
+      <div class="sl">My Recent Bets</div>
+      <table>
+        <thead><tr><th>Round</th><th>Bet</th><th>Amount</th><th>Result</th><th>P&L</th></tr></thead>
+        <tbody id="BTB"><tr><td colspan="5" class="nb">No bets yet!</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- WALLET -->
+  <div id="WV">
+    <div class="sgrid" style="grid-template-columns:1fr;">
+      <div class="sbox">
+        <div class="sval" style="color:var(--gold);font-size:2rem;" id="WBL">₹0</div>
+        <div class="slbl">Available Balance</div>
+      </div>
+    </div>
+    <div class="sgrid">
+      <div class="sbox"><div class="sval" style="color:var(--green)" id="WTD">₹0</div><div class="slbl">Total Deposited</div></div>
+      <div class="sbox"><div class="sval" style="color:var(--red)" id="WTW">₹0</div><div class="slbl">Total Withdrawn</div></div>
+      <div class="sbox"><div class="sval" style="color:var(--blue)" id="WBT">0</div><div class="slbl">Total Bets</div></div>
+    </div>
+
+    <!-- DEPOSIT -->
+    <div class="gc">
+      <div class="sl">💰 Deposit — Crypto Only</div>
+      <div class="netrow">
+        <button class="nbtn on" id="N-erc" onclick="selN('erc')">USDT ERC-20</button>
+        <button class="nbtn" id="N-bep" onclick="selN('bep')">USDT BEP-20</button>
+        <button class="nbtn" id="N-trc" onclick="selN('trc')">USDT TRC-20</button>
+        <button class="nbtn" id="N-inr" onclick="selN('inr')" style="border-color:var(--gold);color:var(--gold);">🇮🇳 INR (UPI)</button>
+      </div>
+
+      <div id="D-erc">
+        <div class="abox">
+          <div class="albl">ERC-20 (Ethereum) Deposit Address</div>
+          <div class="qrph">🔷</div>
+          <div class="aval">0xab594d87682eeE1ECD7B72414177915153885f7c</div>
+          <button class="cpyadd" onclick="cpyA('0xab594d87682eeE1ECD7B72414177915153885f7c')">📋 Copy Address</button>
+        </div>
+        <div class="depinfo">⚠️ <strong>Only send USDT (ERC-20)</strong> to this address<br>🌐 Network: <strong>Ethereum Mainnet</strong><br>✅ Min Deposit: <strong>$5 USDT</strong><br>⏱️ Confirmation: <strong>~3 minutes</strong><br>💱 1 USDT ≈ ₹83</div>
+      </div>
+      <div id="D-bep" style="display:none;">
+        <div class="abox">
+          <div class="albl">BEP-20 (BSC) Deposit Address</div>
+          <div class="qrph">🟡</div>
+          <div class="aval">0xab594d87682eeE1ECD7B72414177915153885f7c</div>
+          <button class="cpyadd" onclick="cpyA('0xab594d87682eeE1ECD7B72414177915153885f7c')">📋 Copy Address</button>
+        </div>
+        <div class="depinfo">⚠️ <strong>Only send USDT (BEP-20)</strong> to this address<br>🌐 Network: <strong>BNB Smart Chain</strong><br>✅ Min Deposit: <strong>$2 USDT</strong><br>⏱️ Confirmation: <strong>~1 minute</strong><br>💱 1 USDT ≈ ₹83</div>
+      </div>
+      <div id="D-trc" style="display:none;">
+        <div class="abox">
+          <div class="albl">TRC-20 (TRON) Deposit Address</div>
+          <div class="qrph">🔴</div>
+          <div class="aval">TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc</div>
+          <button class="cpyadd" onclick="cpyA('TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc')">📋 Copy Address</button>
+        </div>
+        <div class="depinfo">⚠️ <strong>Only send USDT (TRC-20)</strong> to this address<br>🌐 Network: <strong>TRON Network</strong><br>✅ Min Deposit: <strong>$1 USDT</strong><br>⏱️ Confirmation: <strong>~1 minute</strong><br>💱 1 USDT ≈ ₹83</div>
+      </div>
+
+
+      <!-- INR DEPOSIT -->
+      <div id="D-inr" style="display:none;">
+        <div class="abox" style="border-color:var(--gold);">
+          <div class="albl" style="color:var(--gold);">INR Deposit — UPI / Bank Transfer</div>
+          <div class="qrph" style="font-size:2rem;">🇮🇳</div>
+          <div style="font-size:.8rem;color:var(--gold);font-weight:700;margin-bottom:8px;">UPI ID: chromabet@upi</div>
+          <div style="font-size:.7rem;color:var(--muted);margin-bottom:12px;">Ya Bank Transfer karo</div>
+          <button class="cpyadd" onclick="cpyA('chromabet@upi')" style="background:var(--gold);color:#000;">📋 Copy UPI ID</button>
+        </div>
+        <div class="depinfo" style="background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.2);">
+          ⚠️ <strong>UPI / Bank Transfer se INR bhejo</strong><br>
+          💱 Auto convert: <strong>₹83 = 1 USDT</strong><br>
+          ✅ Min Deposit: <strong>₹100</strong><br>
+          ⏱️ Approval: <strong>30 min se 2 hours</strong><br>
+          📝 Screenshot zaroor bhejo proof mein
+        </div>
+      </div>
+      <div style="margin-top:6px;">
+        <div class="sl">Submit Deposit Proof</div>
+        <input class="pinp" id="DTH" placeholder="TX Hash / UTR No. / Reference No."/>
+        <input class="pinp" type="number" id="DUA" placeholder="Amount (USDT ya ₹ INR)" oninput="updDep()"/>
+        <div style="font-size:.67rem;color:var(--muted);margin-bottom:10px;">Network: <span id="DNL" style="color:var(--gold)">ERC-20</span> &nbsp;|&nbsp; You'll receive: <span id="DINR" style="color:var(--green)">₹0</span></div>
+        <button class="subbtn" onclick="subDep()">✅ Submit Deposit Request</button>
+      </div>
+    </div>
+
+    <!-- WITHDRAW -->
+    <div class="gc">
+      <div class="sl">💸 Withdraw</div>
+      <div class="depinfo">⚡ Processed in <strong>1–24 hours</strong> by admin<br>💰 Min withdrawal: <strong>$5 USDT (≈₹415)</strong><br>📤 Only crypto withdrawals accepted</div>
+      <div class="fl" style="margin-top:12px;">Network</div>
+      <select class="wdsel" id="WDN">
+        <option value="ERC-20">USDT — ERC-20 (Ethereum)</option>
+        <option value="BEP-20">USDT — BEP-20 (BSC)</option>
+        <option value="TRC-20">USDT — TRC-20 (TRON)</option>
+      </select>
+      <div class="fl">Your Wallet Address</div>
+      <input class="pinp" id="WDA" placeholder="Enter your wallet address"/>
+      <div class="fl">Amount (₹)</div>
+      <input class="pinp" type="number" id="WDR" placeholder="Enter ₹ amount" oninput="updWD()"/>
+      <div style="font-size:.67rem;color:var(--muted);margin-bottom:12px;">Equivalent: <span id="WDU" style="color:var(--gold)">0 USDT</span></div>
+      <button class="wdbtn" onclick="subWD()">📤 Request Withdrawal</button>
+    </div>
+
+    <!-- TX HISTORY -->
+    <div class="gc">
+      <div class="sl">Transaction History</div>
+      <table>
+        <thead><tr><th>Type</th><th>Amount</th><th>Network</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody id="TXB"><tr><td colspan="5" class="nb">No transactions yet</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- REFERRAL -->
+  <div id="RV">
+    <div class="gc">
+      <div class="sl">Your Referral Code</div>
+      <div class="rcbox">
+        <div style="color:var(--muted);font-size:.7rem;">Share & earn on every friend who joins</div>
+        <div class="rcode" id="MRC">------</div>
+        <div style="color:var(--muted);font-size:.67rem;">You earn ₹100 per referral!</div>
+      </div>
+      <div class="sl">Referral Link</div>
+      <div class="rlinrow">
+        <input class="rlinp" id="RLI" readonly/>
+        <button class="cpbtn" onclick="cpyLink()">📋 Copy</button>
+      </div>
+      <div class="shgrd">
+        <button class="shbtn" onclick="shrWA()">💬 WhatsApp</button>
+        <button class="shbtn" onclick="shrTG()">✈️ Telegram</button>
+      </div>
+    </div>
+    <div class="refstats">
+      <div class="rsbox"><div class="rsv" id="RTOT">0</div><div class="rslbl">Referrals</div></div>
+      <div class="rsbox"><div class="rsv" style="color:var(--gold)" id="RERN">₹0</div><div class="rslbl">Earned</div></div>
+      <div class="rsbox"><div class="rsv" style="color:var(--violet)" id="RCOM">₹0</div><div class="rslbl">Commission</div></div>
+    </div>
+    <div class="gc">
+      <div class="sl">Program Rules</div>
+      <div class="ibox">🎁 <strong>Friend gets:</strong> ₹50 on signup<br>💰 <strong>You get:</strong> ₹100 per friend<br>🏆 <strong>5+ referrals:</strong> ₹200 milestone bonus<br>⚡ <strong>Commission:</strong> 5% of friend's every bet<br>📅 Credited within 24 hours</div>
+    </div>
+    <div class="gc">
+      <div class="sl">Referred Users</div>
+      <table>
+        <thead><tr><th>User</th><th>Joined</th><th>Bets</th><th>Earned</th></tr></thead>
+        <tbody id="RFB"><tr><td colspan="4" class="nb">No referrals yet!</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="notif" id="NE"><div id="NM">—</div><div class="na" id="NAM">—</div></div>
+
+<script>
+const DK='chromabet_db';
+function gD(){return JSON.parse(localStorage.getItem(DK)||JSON.stringify({users:{admin:{password:'admin123',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[]}},gameHistory:[],currentRound:1,deposits:[],withdrawals:[]}));}
+function sD(d){localStorage.setItem(DK,JSON.stringify(d));}
+function gc(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');}
+
+let CU=null,bal=0,rnd=1,tmr=30,tI=null,sC=null,bO=true,pB=null,hist=[],W=0,L=0,P=0,curNet='erc';
+
+function togF(r){document.getElementById('LF').style.display=r?'none':'block';document.getElementById('RF').style.display=r?'block':'none';}
+function doLogin(){
+  const u=document.getElementById('lU').value.trim().toLowerCase(),p=document.getElementById('lP').value;
+  const d=gD();if(!d.users[u]||d.users[u].password!==p)return sn('❌ Wrong credentials!','','lose');
+  CU=u;startApp();
+}
+function doReg(){
+  const u=document.getElementById('rU').value.trim().toLowerCase(),p=document.getElementById('rP').value,ref=document.getElementById('rRef').value.trim().toUpperCase();
+  if(!u||!p)return sn('❌ Fill all fields!','','lose');
+  if(u.length<3)return sn('❌ Username min 3 chars','','lose');
+  const d=gD();if(d.users[u])return sn('❌ Username taken!','','lose');
+  let bonus=100,ru=null;
+  if(ref){ru=Object.keys(d.users).find(k=>d.users[k].referralCode===ref);if(!ru)return sn('❌ Invalid referral code!','','lose');bonus+=50;}
+  d.users[u]={password:p,balance:bonus,referralCode:gc(),referredBy:ru||null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[]};
+  if(ru){d.users[ru].balance+=100;d.users[ru].referrals.push({username:u,joined:new Date().toLocaleDateString(),bets:0,earned:100});}
+  sD(d);CU=u;startApp();if(bonus>100)sn('🎁 Referral Bonus!','+₹'+bonus+' credited!','');
+}
+function doOut(){CU=null;clearInterval(tI);document.getElementById('APP').style.display='none';document.getElementById('LS').style.display='flex';}
+
+function startApp(){
+  document.getElementById('LS').style.display='none';document.getElementById('APP').style.display='block';
+  document.getElementById('hUN').textContent=CU;loadUD();setupRef();startRound();
+}
+function loadUD(){
+  const d=gD(),u=d.users[CU];
+  bal=u.balance;W=u.wins||0;L=u.losses||0;P=u.netPnl||0;
+  updBal();updStats();updWalSt();
+}
+function saveUD(){const d=gD();Object.assign(d.users[CU],{balance:bal,wins:W,losses:L,netPnl:P});sD(d);}
+
+function sw(t){
+  ['G','W','R'].forEach(x=>{document.getElementById(x+'V').classList.toggle('on',x===t);document.getElementById('t'+x).classList.toggle('active',x===t);});
+  if(t==='R')setupRef();if(t==='W')updWalSt();
+}
+
+// GAME
+const COLS=['red','green','violet'],ODDS={red:2,green:2,violet:4.5},CL={red:'Red',green:'Green',violet:'Violet'};
+function selC(c){if(!bO)return;sC=c;COLS.forEach(x=>document.getElementById('B-'+x).classList.toggle('sel',x===c));}
+function sa(v){document.getElementById('BA').value=v;}
+function da(){document.getElementById('BA').value=Math.min(+document.getElementById('BA').value*2,bal);}
+function ha(){document.getElementById('BA').value=Math.max(Math.floor(+document.getElementById('BA').value/2),10);}
+function placeBet(){
+  if(!bO)return;if(!sC)return sn('❗ Select a color!','','lose');
+  const a=parseInt(document.getElementById('BA').value);
+  if(!a||a<10)return sn('❗ Min bet ₹10','','lose');
+  if(a>bal)return sn('❗ Insufficient balance!','','lose');
+  if(pB)return sn('⚠️ Already placed!','','');
+  bal-=a;updBal();pB={color:sC,amount:a,round:rnd};
+  const b=document.getElementById('BB');b.disabled=true;b.textContent='✅ ₹'+a+' on '+CL[sC];
+}
+function startRound(){
+  const d=gD();rnd=d.currentRound||1;tmr=30;bO=true;pB=null;
+  const b=document.getElementById('BB');b.disabled=false;b.textContent='Place Bet';
+  sC=null;COLS.forEach(c=>document.getElementById('B-'+c).classList.remove('sel','dis'));
+  document.getElementById('RN').textContent='#'+String(rnd).padStart(4,'0');
+  document.getElementById('WT').style.display='';document.getElementById('RC').style.display='none';
+  document.getElementById('RCI').classList.remove('spin','rev');
+  clearInterval(tI);tI=setInterval(tick,1000);updT();
+}
+function tick(){
+  tmr--;updT();
+  if(tmr===5){bO=false;const b=document.getElementById('BB');b.disabled=true;if(!pB)b.textContent='🔒 Betting Closed';COLS.forEach(c=>document.getElementById('B-'+c).classList.add('dis'));}
+  if(tmr<=0){clearInterval(tI);showRes();}
+}
+function updT(){const e=document.getElementById('TD');e.textContent=tmr;e.className='tdisp'+(tmr<=5?' urg':'');document.getElementById('PF').style.width=(tmr/30*100)+'%';}
+function showRes(){
+  const d=gD();const fr=d.forcedResult;let res;
+  if(fr){res=fr;d.forcedResult=null;sD(d);}else{const r=Math.random();res=r<.4?'red':r<.8?'green':'violet';}
+  const cols={red:'#ff3b5c',green:'#00e676',violet:'#9c27b0'};
+  document.getElementById('WT').style.display='none';document.getElementById('RC').style.display='flex';
+  const ci=document.getElementById('RCI');ci.style.background='var(--border)';ci.classList.add('spin');
+  setTimeout(()=>{
+    ci.classList.remove('spin');ci.style.background=cols[res];ci.classList.add('rev');
+    document.getElementById('RT').textContent=CL[res];document.getElementById('RT').style.color=cols[res];
+    document.getElementById('RS').textContent='Round #'+String(rnd).padStart(4,'0')+' Result';
+    addH(res);if(pB)resolveB(res);
+    const d2=gD();d2.gameHistory.unshift({round:rnd,result:res,timestamp:new Date().toLocaleTimeString()});
+    if(d2.gameHistory.length>100)d2.gameHistory.pop();d2.currentRound=rnd+1;sD(d2);
+    setTimeout(()=>{rnd++;startRound();},3000);
+  },1200);
+}
+function resolveB(res){
+  const{color,amount}=pB,won=color===res;let p2;
+  if(won){const pay=Math.floor(amount*ODDS[color]);p2=pay-amount;bal+=pay;W++;P+=p2;sn('🎉 YOU WON!','+₹'+p2,'');confetti();}
+  else{p2=-amount;P+=p2;L++;sn('😞 Better luck!','-₹'+amount,'lose');}
+  const d=gD();d.users[CU].totalBets++;d.users[CU].totalWagered+=amount;
+  if(d.users[CU].referredBy){const rf=d.users[CU].referredBy;const cm=Math.floor(amount*.05);if(d.users[rf]){d.users[rf].balance+=cm;const re=d.users[rf].referrals.find(r=>r.username===CU);if(re){re.bets++;re.earned=(re.earned||100)+cm;}}}
+  sD(d);updBal();updStats();saveUD();addBR(pB.round,color,amount,res,p2,won);pB=null;
+}
+function addH(c){
+  hist.unshift(c);if(hist.length>20)hist.pop();
+  const hr=document.getElementById('HR');hr.innerHTML='';
+  hist.forEach(col=>{const d=document.createElement('div');d.className='hd hd-'+col[0];d.textContent=col[0].toUpperCase();hr.appendChild(d);});
+}
+function addBR(r,bc,a,res,p2,won){
+  const tb=document.getElementById('BTB');const nr=tb.querySelector('.nb');if(nr)nr.parentElement.remove();
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td>#'+String(r).padStart(4,'0')+'</td><td><span class="tag t'+bc+'">'+CL[bc]+'</span></td><td>₹'+a+'</td><td><span class="tag t'+res+'">'+CL[res]+'</span></td><td style="color:'+(won?'var(--green)':'var(--red)')+';font-weight:700;">'+(won?'+':'')+'₹'+Math.abs(p2)+'</td>';
+  tb.insertBefore(tr,tb.firstChild);if(tb.rows.length>10)tb.deleteRow(tb.rows.length-1);
+}
+function updBal(){document.getElementById('bDisp').textContent='₹'+bal.toLocaleString();document.getElementById('WBL').textContent='₹'+bal.toLocaleString();}
+function updStats(){
+  document.getElementById('SW').textContent=W;document.getElementById('SL').textContent=L;
+  document.getElementById('SP').textContent=(P>=0?'+':'')+'₹'+P;
+  document.getElementById('SP').style.color=P>=0?'var(--green)':'var(--red)';
+}
+
+// WALLET
+function updWalSt(){
+  const d=gD(),u=d.users[CU]||{};
+  document.getElementById('WTD').textContent='₹'+(u.totalDeposited||0).toLocaleString();
+  document.getElementById('WTW').textContent='₹'+(u.totalWithdrawn||0).toLocaleString();
+  document.getElementById('WBT').textContent=(u.totalBets||0);
+  loadTX();
+}
+function selN(n){
+  curNet=n;
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('N-'+n).classList.add('on');
+  ['erc','bep','trc','inr'].forEach(x=>{const el=document.getElementById('D-'+x);if(el)el.style.display=x===n?'block':'none';});
+  const lbl={erc:'ERC-20 (Ethereum)',bep:'BEP-20 (BSC)',trc:'TRC-20 (TRON)',inr:'INR (UPI)'};
+  document.getElementById('DNL').textContent=lbl[n]||n;
+}
+function cpyA(a){navigator.clipboard.writeText(a).then(()=>sn('✅ Address Copied!','Send only USDT to this address',''));}
+document.addEventListener('input',function(e){
+  if(e.target.id==='DUA'){const v=+e.target.value||0;document.getElementById('DINR').textContent='₹'+Math.floor(v*83);}
+  if(e.target.id==='WDR'){updWD();}
+});
+function updDep(){
+  const v=+document.getElementById('DUA').value||0;
+  if(curNet==='inr'){document.getElementById('DINR').textContent='₹'+v+' INR';}
+  else{document.getElementById('DINR').textContent='₹'+Math.floor(v*83);}
+}
+function updWD(){const v=+document.getElementById('WDR').value||0;document.getElementById('WDU').textContent=(v/83).toFixed(2)+' USDT';}
+function subDep(){
+  const th=document.getElementById('DTH').value.trim(),ua=parseFloat(document.getElementById('DUA').value)||0;
+  if(curNet==='inr'){
+    // INR deposit
+    if(!th)return sn('❌ Enter UTR/Reference No!','','lose');
+    if(ua<100)return sn('❌ Min deposit ₹100','','lose');
+    const netlbl={erc:'ERC-20',bep:'BEP-20',trc:'TRC-20',inr:'INR-UPI'};
+    const d=gD();if(!d.deposits)d.deposits=[];
+    d.deposits.unshift({id:'DEP'+Date.now(),user:CU,txHash:th,usdtAmt:(ua/83).toFixed(2),inrAmt:ua,network:'INR-UPI',status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});
+    if(!d.users[CU].transactions)d.users[CU].transactions=[];
+    d.users[CU].transactions.unshift({type:'Deposit',amount:'₹'+ua+' (INR-UPI)',network:'INR-UPI',status:'Pending',date:new Date().toLocaleDateString()});
+    sD(d);document.getElementById('DTH').value='';document.getElementById('DUA').value='';
+    sn('✅ INR Deposit Submitted!','Admin verify karega soon','');loadTX();return;
+  }
+  if(!th)return sn('❌ Enter TX Hash!','','lose');if(ua<1)return sn('❌ Enter valid amount','','lose');
+  const inr=Math.floor(ua*83);
+  const netlbl={erc:'ERC-20',bep:'BEP-20',trc:'TRC-20'};
+  const d=gD();if(!d.deposits)d.deposits=[];
+  d.deposits.unshift({id:'DEP'+Date.now(),user:CU,txHash:th,usdtAmt:ua,inrAmt:inr,network:netlbl[curNet],status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});
+  if(!d.users[CU].transactions)d.users[CU].transactions=[];
+  d.users[CU].transactions.unshift({type:'Deposit',amount:'₹'+inr+' ('+ua+' USDT)',network:netlbl[curNet],status:'Pending',date:new Date().toLocaleDateString()});
+  sD(d);document.getElementById('DTH').value='';document.getElementById('DUA').value='';document.getElementById('DINR').textContent='₹0';
+  sn('✅ Deposit Submitted!','Admin will verify & credit soon','');loadTX();
+}
+function subWD(){
+  const addr=document.getElementById('WDA').value.trim(),amt=parseInt(document.getElementById('WDR').value)||0,net=document.getElementById('WDN').value;
+  if(!addr)return sn('❌ Enter wallet address!','','lose');
+  if(amt<415)return sn('❌ Min withdrawal ₹415 (~$5)','','lose');
+  if(amt>bal)return sn('❌ Insufficient balance!','','lose');
+  bal-=amt;updBal();saveUD();
+  const ua=(amt/83).toFixed(2);
+  const d=gD();if(!d.withdrawals)d.withdrawals=[];
+  d.withdrawals.unshift({id:'WD'+Date.now(),user:CU,addr,amt,usdtAmt:ua,network:net,status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});
+  if(!d.users[CU].transactions)d.users[CU].transactions=[];
+  d.users[CU].transactions.unshift({type:'Withdrawal',amount:'₹'+amt+' ('+ua+' USDT)',network:net,status:'Pending',date:new Date().toLocaleDateString()});
+  d.users[CU].totalWithdrawn=(d.users[CU].totalWithdrawn||0)+amt;
+  sD(d);document.getElementById('WDA').value='';document.getElementById('WDR').value='';document.getElementById('WDU').textContent='0 USDT';
+  sn('📤 Withdrawal Requested!','Processing within 24 hours','');loadTX();updWalSt();
+}
+function loadTX(){
+  const d=gD(),txs=d.users[CU]?.transactions||[];
+  const tb=document.getElementById('TXB');
+  if(!txs.length){tb.innerHTML='<tr><td colspan="5" class="nb">No transactions yet</td></tr>';return;}
+  tb.innerHTML=txs.slice(0,15).map(t=>'<tr><td><span class="tag '+(t.type==='Deposit'?'tgreen':'tred')+'">'+t.type+'</span></td><td style="color:'+(t.type==='Deposit'?'var(--green)':'var(--red)')+'">'+t.amount+'</td><td>'+t.network+'</td><td><span class="sbadge '+(t.status==='Approved'?'sa':t.status==='Rejected'?'sr':'sp')+'">'+t.status+'</span></td><td>'+t.date+'</td></tr>').join('');
+}
+
+// REFERRAL
+function setupRef(){
+  const d=gD(),u=d.users[CU];
+  document.getElementById('MRC').textContent=u.referralCode;
+  const lnk=location.origin+location.pathname+'?ref='+u.referralCode;
+  document.getElementById('RLI').value=lnk;
+  const refs=u.referrals||[];
+  document.getElementById('RTOT').textContent=refs.length;
+  const ern=refs.reduce((s,r)=>s+(r.earned||0),0);
+  document.getElementById('RERN').textContent='₹'+ern;
+  const com=refs.reduce((s,r)=>s+Math.max(0,(r.earned||0)-100),0);
+  document.getElementById('RCOM').textContent='₹'+com;
+  document.getElementById('RFB').innerHTML=refs.length?refs.map(r=>'<tr><td>👤 '+r.username+'</td><td>'+r.joined+'</td><td>'+(r.bets||0)+'</td><td style="color:var(--green)">+₹'+(r.earned||0)+'</td></tr>').join(''):'<tr><td colspan="4" class="nb">No referrals yet!</td></tr>';
+}
+function cpyLink(){navigator.clipboard.writeText(document.getElementById('RLI').value).then(()=>sn('✅ Link Copied!','Share with friends',''));}
+function shrWA(){const l=document.getElementById('RLI').value,c=document.getElementById('MRC').textContent;window.open('https://wa.me/?text='+encodeURIComponent('🎨 Join ChromaBet!\nUse code *'+c+'* & get ₹50 bonus!\n'+l));}
+function shrTG(){window.open('https://t.me/share/url?url='+encodeURIComponent(document.getElementById('RLI').value)+'&text='+encodeURIComponent('Join ChromaBet & get ₹50 bonus!'));}
+
+// NOTIF
+let NT;
+function sn(m,a,t){
+  const e=document.getElementById('NE');e.className='notif'+(t==='lose'?' lose':'')+' show';
+  document.getElementById('NM').textContent=m;
+  const ae=document.getElementById('NAM');ae.textContent=a;
+  ae.className='na'+(a.startsWith&&a.startsWith('+')?'naw':a.startsWith&&a.startsWith('-')?' nal':'');
+  clearTimeout(NT);NT=setTimeout(()=>e.classList.remove('show'),3000);
+}
+function confetti(){const cs=['#ff3b5c','#00e676','#ffd700','#3d5afe','#ce93d8','#fff'];for(let i=0;i<60;i++){const c=document.createElement('div');c.className='cfp';c.style.cssText='left:'+Math.random()*100+'vw;background:'+cs[Math.floor(Math.random()*cs.length)]+';width:'+(6+Math.random()*10)+'px;height:'+(6+Math.random()*10)+'px;animation-duration:'+(1.5+Math.random()*2)+'s;animation-delay:'+Math.random()*.5+'s;border-radius:'+(Math.random()>.5?'50%':'2px')+';';document.body.appendChild(c);setTimeout(()=>c.remove(),4000);}}
+
+window.onload=()=>{const p=new URLSearchParams(window.location.search);if(p.get('ref')){togF(1);document.getElementById('rRef').value=p.get('ref').toUpperCase();}};
+</script>
+</body>
+</html>
