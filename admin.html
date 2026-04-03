@@ -204,7 +204,7 @@ tr:hover td{background:rgba(255,255,255,.015);}
       </div>
       <div class="card">
         <table>
-          <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Balance</th><th>Deposited</th><th>Bets</th><th>W/L</th><th>Joined</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Username</th><th>Balance</th><th>Deposited</th><th>Withdrawn</th><th>Bets</th><th>W/L</th><th>Ref By</th><th>Joined</th><th>Actions</th></tr></thead>
           <tbody id="uTbl"></tbody>
         </table>
       </div>
@@ -299,9 +299,7 @@ tr:hover td{background:rgba(255,255,255,.015);}
 <div class="mo" id="moAddU">
   <div class="mbox">
     <div class="mtit">➕ Add New User</div>
-    <div class="fl">Full Name</div><input class="fi" id="nName" placeholder="Full name" style="margin-bottom:10px;"/>
-    <div class="fl">Phone Number</div><input class="fi" id="nPhone" placeholder="+91XXXXXXXXXX" style="margin-bottom:10px;"/>
-    <div class="fl">Email (Optional)</div><input class="fi" id="nEmail" placeholder="email@example.com" style="margin-bottom:10px;"/>
+    <div class="fl">Username</div><input class="fi" id="nUN" placeholder="username" style="margin-bottom:10px;"/>
     <div class="fl">Password</div><input class="fi" id="nUP" type="password" placeholder="password" style="margin-bottom:10px;"/>
     <div class="fl">Starting Balance (₹)</div><input class="fi" id="nUB" type="number" value="1000" style="margin-bottom:10px;"/>
     <div class="mbtns"><button class="btn bp" onclick="addU()">Create</button><button class="btn bd" onclick="cloMo()">Cancel</button></div>
@@ -374,7 +372,7 @@ function loadDash(){
   const tot=hist.length||1;
   ['red','green','violet'].forEach(c=>{const pct=Math.round(cnt[c]/tot*100);document.getElementById('p'+c[0].toUpperCase()).textContent=pct+'%';document.getElementById('b'+c[0].toUpperCase()).style.width=pct+'%';});
   const sorted=us.sort((a,b)=>(d.users[b].totalWagered||0)-(d.users[a].totalWagered||0)).slice(0,5);
-  document.getElementById('tpU').innerHTML=sorted.map(u=>'<tr><td>👤 '+(d.users[u].name||u)+'<div style="font-size:.6rem;color:var(--mu)">'+( d.users[u].phone||'')+'</div></td><td>₹'+(d.users[u].totalWagered||0).toLocaleString()+'</td><td><span style="color:var(--gr)">'+(d.users[u].wins||0)+'W</span>/<span style="color:var(--red)">'+(d.users[u].losses||0)+'L</span></td></tr>').join('')||'<tr><td colspan="3" style="color:var(--mu);text-align:center;padding:14px;">No users yet</td></tr>';
+  document.getElementById('tpU').innerHTML=sorted.map(u=>'<tr><td>👤 '+u+'</td><td>₹'+(d.users[u].totalWagered||0).toLocaleString()+'</td><td><span style="color:var(--gr)">'+(d.users[u].wins||0)+'W</span>/<span style="color:var(--red)">'+(d.users[u].losses||0)+'L</span></td></tr>').join('')||'<tr><td colspan="3" style="color:var(--mu);text-align:center;padding:14px;">No users yet</td></tr>';
   const pa=document.getElementById('pendActs');
   let html='';
   if(pDeps>0)html+='<div style="background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.25);border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem;color:var(--or)">'+pDeps+'</div><div style="font-size:.65rem;color:var(--mu)">PENDING DEPOSITS</div></div><button class="btn" style="background:var(--or);color:#000;font-family:Syne,sans-serif;" onclick="nav(\'deposits\')">Review →</button></div>';
@@ -450,18 +448,12 @@ function loadUsers(){
 function opAddU(){document.getElementById('moAddU').classList.add('op');}
 function cloMo(){document.querySelectorAll('.mo').forEach(m=>m.classList.remove('op'));}
 function addU(){
-  const name=document.getElementById('nName').value.trim();
-  const phone=document.getElementById('nPhone').value.trim();
-  const email=document.getElementById('nEmail').value.trim().toLowerCase();
-  const p=document.getElementById('nUP').value,b=parseInt(document.getElementById('nUB').value)||1000;
-  if(!name||!phone||!p)return nt('❌ Name, Phone & Password required','err');
-  const d=gD();
-  const exists=Object.values(d.users).find(u=>u.phone===phone);
-  if(exists)return nt('❌ Phone already registered','err');
+  const n=document.getElementById('nUN').value.trim().toLowerCase(),p=document.getElementById('nUP').value,b=parseInt(document.getElementById('nUB').value)||1000;
+  if(!n||!p)return nt('❌ Fill all fields','err');
+  const d=gD();if(d.users[n])return nt('❌ Username taken','err');
   const gc=()=>{const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');};
-  const uid=phone.replace('+','').slice(-10)+Math.floor(Math.random()*99);
-  d.users[uid]={password:p,name,phone,email,balance:b,referralCode:gc(),referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[]};
-  sD(d);cloMo();loadUsers();nt('✅ User '+name+' created!');
+  d.users[n]={password:p,balance:b,referralCode:gc(),referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[]};
+  sD(d);cloMo();loadUsers();nt('✅ User created!');
 }
 function opEB(u){const d=gD();document.getElementById('eUN').textContent=u;document.getElementById('eBV').value=d.users[u].balance;document.getElementById('moEB').dataset.u=u;document.getElementById('moEB').classList.add('op');}
 function svEB(){
