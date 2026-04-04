@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ChromaBet Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
 :root{--bg:#080810;--sf:#0f0f1a;--card:#151520;--br:#252535;--tx:#f0f0ff;--mu:#6060a0;--red:#ff3b5c;--gr:#00e676;--bl:#3d5afe;--gd:#ffd700;--vi:#9c27b0;--or:#ff9800;}
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -290,26 +292,47 @@ tr:hover td{background:rgba(255,255,255,.015);}
 <div class="notif" id="AN">—</div>
 
 <script>
-const DK = 'chromabet_v2';
+// ══ FIREBASE ═══════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyAbWxd0BmH1Km1BYMV3hDeojCRRlZkr3oo",
+  authDomain: "chromabet-34c53.firebaseapp.com",
+  databaseURL: "https://chromabet-34c53-default-rtdb.firebaseio.com",
+  projectId: "chromabet-34c53",
+  storageBucket: "chromabet-34c53.firebasestorage.app",
+  messagingSenderId: "205630233421",
+  appId: "1:205630233421:web:0bd80b39e900af7b543504"
+};
+firebase.initializeApp(firebaseConfig);
+const DB = firebase.database();
 
-function gD(){
-  try{
-    const r=localStorage.getItem(DK);
-    if(r){
-      const d=JSON.parse(r);
-      if(!d.users)d.users={};
-      if(!d.users.admin){d.users.admin={password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:'',isAdmin:true};localStorage.setItem(DK,JSON.stringify(d));}
-      if(!d.deposits)d.deposits=[];
-      if(!d.withdrawals)d.withdrawals=[];
-      if(!d.gameHistory)d.gameHistory=[];
-      return d;
-    }
-  }catch(e){}
-  const fresh={users:{admin:{password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:'',isAdmin:true}},gameHistory:[],currentRound:1,deposits:[],withdrawals:[]};
-  localStorage.setItem(DK,JSON.stringify(fresh));
-  return fresh;
+let _db = {users:{admin:{password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:'',isAdmin:true}},gameHistory:[],currentRound:1,deposits:[],withdrawals:[]};
+
+// Live sync
+DB.ref('chromabet').on('value', snap => {
+  const val = snap.val();
+  if(val) {
+    _db = val;
+    if(!_db.users) _db.users = {};
+    if(!_db.users.admin) _db.users.admin = {password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:'',isAdmin:true};
+    if(!_db.deposits) _db.deposits = [];
+    if(!_db.withdrawals) _db.withdrawals = [];
+    if(!_db.gameHistory) _db.gameHistory = [];
+  }
+  // Auto refresh if admin is logged in
+  if(document.getElementById('APP').style.display !== 'none') {
+    const pt = document.getElementById('PT').textContent;
+    if(pt.includes('Dashboard')) loadDash();
+    else if(pt.includes('Deposit')) loadDeps('all');
+    else if(pt.includes('Withdrawal')) loadWds('all');
+    else if(pt.includes('Users')) loadUsers();
+  }
+});
+
+function gD(){ return _db; }
+function sD(d){
+  _db = d;
+  DB.ref('chromabet').set(d);
 }
-function sD(d){localStorage.setItem(DK,JSON.stringify(d));}
 
 const PAGES=['dash','deps','wds','users','game','refs','hist','set'];
 const PTIT={dash:'📊 Dashboard',deps:'💰 Deposits',wds:'💸 Withdrawals',users:'👥 Users',game:'🎮 Game Control',refs:'🔗 Referrals',hist:'📋 History',set:'⚙️ Settings'};
