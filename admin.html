@@ -9,25 +9,20 @@
 :root{--bg:#080810;--sf:#0f0f1a;--card:#151520;--br:#252535;--tx:#f0f0ff;--mu:#6060a0;--red:#ff3b5c;--gr:#00e676;--bl:#3d5afe;--gd:#ffd700;--vi:#9c27b0;--or:#ff9800;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--tx);font-family:'Space Mono',monospace;min-height:100vh;}
-
-/* LOGIN */
-#AL{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;}
-.albox{background:var(--card);border:1px solid var(--br);border-radius:20px;padding:34px;width:100%;max-width:370px;margin:20px;}
+#AL{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;}
+.albox{background:var(--card);border:1px solid var(--br);border-radius:20px;padding:34px;width:100%;max-width:370px;}
 .alt{font-family:'Syne',sans-serif;font-weight:800;font-size:1.75rem;text-align:center;margin-bottom:4px;}
 .als{text-align:center;color:var(--mu);font-size:.7rem;margin-bottom:26px;}
 .fl{font-size:.56rem;color:var(--mu);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}
 .fi{width:100%;background:var(--sf);border:1px solid var(--br);border-radius:8px;padding:10px 13px;color:var(--tx);font-family:'Space Mono',monospace;font-size:.8rem;outline:none;margin-bottom:12px;transition:border-color .2s;}
 .fi:focus{border-color:var(--bl);}
+.fsel{width:100%;background:var(--sf);border:1px solid var(--br);border-radius:8px;padding:10px 13px;color:var(--tx);font-family:'Space Mono',monospace;font-size:.78rem;outline:none;margin-bottom:12px;}
 .lbtn{width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--bl),#7b1fa2);color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;cursor:pointer;transition:all .2s;}
 .lbtn:hover{transform:translateY(-2px);}
 .def{text-align:center;margin-top:12px;font-size:.66rem;color:var(--mu);}
-
-/* LAYOUT */
 #APP{display:none;}
 .layout{display:flex;min-height:100vh;}
-
-/* SIDEBAR */
-.sb{width:200px;background:var(--sf);border-right:1px solid var(--br);display:flex;flex-direction:column;padding:20px 0;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;}
+.sb{width:200px;background:var(--sf);border-right:1px solid var(--br);display:flex;flex-direction:column;padding:20px 0;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;}
 .sblogo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;padding:0 16px 20px;border-bottom:1px solid var(--br);margin-bottom:12px;}
 .sblogo span{background:linear-gradient(135deg,#3d5afe,#ff3b5c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .badge{display:inline-block;background:rgba(255,152,0,.15);color:var(--or);font-size:.5rem;padding:2px 7px;border-radius:20px;letter-spacing:2px;margin-top:3px;}
@@ -37,38 +32,26 @@ body{background:var(--bg);color:var(--tx);font-family:'Space Mono',monospace;min
 .sbft{margin-top:auto;padding:14px 16px;border-top:1px solid var(--br);}
 .outbtn{width:100%;padding:8px;border-radius:8px;border:1px solid var(--br);background:none;color:var(--mu);font-family:'Space Mono',monospace;font-size:.7rem;cursor:pointer;transition:all .2s;}
 .outbtn:hover{border-color:var(--red);color:var(--red);}
-
-/* MAIN */
 .main{flex:1;margin-left:200px;overflow-y:auto;}
 .topbar{padding:16px 24px;border-bottom:1px solid var(--br);display:flex;align-items:center;justify-content:space-between;background:var(--sf);position:sticky;top:0;z-index:10;}
 .ptit{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;}
 .trt{font-size:.7rem;color:var(--mu);}
 .content{padding:20px 24px;}
-
-/* PAGES */
 .pg{display:none;}.pg.on{display:block;}
-
-/* KPI */
 .kg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
 @media(min-width:700px){.kg{grid-template-columns:repeat(4,1fr);}}
 .kpi{background:var(--card);border:1px solid var(--br);border-radius:14px;padding:16px;}
 .ki{font-size:1.3rem;margin-bottom:6px;}
 .kv{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:2px;}
 .kl{font-size:.56rem;color:var(--mu);text-transform:uppercase;letter-spacing:2px;}
-
-/* CARDS */
 .card{background:var(--card);border:1px solid var(--br);border-radius:14px;padding:18px;margin-bottom:16px;}
 .ctit{font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;margin-bottom:12px;}
-
-/* TABLE */
 .tbl-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;min-width:600px;}
+table{width:100%;border-collapse:collapse;min-width:500px;}
 th{font-size:.54rem;color:var(--mu);text-transform:uppercase;letter-spacing:2px;padding:7px 10px;text-align:left;border-bottom:1px solid var(--br);}
 td{padding:10px 10px;font-size:.74rem;border-bottom:1px solid rgba(255,255,255,.03);}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:rgba(255,255,255,.015);}
-
-/* TAGS & BADGES */
 .tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.58rem;font-weight:700;text-transform:uppercase;}
 .tpend{background:rgba(255,152,0,.15);color:var(--or);}
 .tappr{background:rgba(0,230,118,.15);color:var(--gr);}
@@ -76,19 +59,13 @@ tr:hover td{background:rgba(255,255,255,.015);}
 .tinr{background:rgba(255,215,0,.15);color:var(--gd);}
 .tcryp{background:rgba(61,90,254,.15);color:#9ab;}
 .tadm{background:rgba(255,152,0,.15);color:var(--or);}
-
-/* BUTTONS */
 .btn{padding:7px 13px;border-radius:8px;border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;cursor:pointer;transition:all .2s;}
 .bp{background:var(--bl);color:#fff;}.bp:hover{background:#5c6bc0;}
 .bd{background:rgba(255,59,92,.12);color:var(--red);border:1px solid rgba(255,59,92,.3);}.bd:hover{background:rgba(255,59,92,.25);}
 .bg2{background:rgba(0,230,118,.12);color:var(--gr);border:1px solid rgba(0,230,118,.3);}.bg2:hover{background:rgba(0,230,118,.25);}
 .bgo{background:rgba(255,215,0,.12);color:var(--gd);border:1px solid rgba(255,215,0,.3);}.bgo:hover{background:rgba(255,215,0,.25);}
 .bsm{padding:5px 10px;font-size:.65rem;}
-
-/* FILTER BTNS */
 .fbrow{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
-
-/* RESULT BTNS */
 .rbg{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
 .rbtn{padding:14px;border-radius:11px;border:2px solid transparent;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;transition:all .2s;}
 .rbtn:hover{transform:translateY(-2px);}
@@ -97,29 +74,23 @@ tr:hover td{background:rgba(255,255,255,.015);}
 .rv{background:linear-gradient(135deg,#4a148c,#9c27b0);color:#fff;}
 .rbtn.fon{box-shadow:0 0 0 3px #fff;}
 .finf{background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.2);border-radius:10px;padding:12px;font-size:.73rem;color:#bba060;margin-top:10px;line-height:1.8;}
-
-/* BARS */
 .bw{margin-bottom:9px;}
 .blbl{display:flex;justify-content:space-between;font-size:.7rem;margin-bottom:3px;}
 .btr{background:var(--br);border-radius:4px;height:5px;overflow:hidden;}
 .bfl{height:100%;border-radius:4px;transition:width .5s;}
-
-/* MODAL */
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:800;display:none;align-items:center;justify-content:center;padding:20px;}
 .mo.op{display:flex;}
-.mbox{background:var(--card);border:1px solid var(--br);border-radius:18px;padding:24px;width:100%;max-width:400px;}
+.mbox{background:var(--card);border:1px solid var(--br);border-radius:18px;padding:24px;width:100%;max-width:420px;}
 .mtit{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:16px;}
 .mbtns{display:flex;gap:8px;margin-top:16px;}
-
-/* NOTIF */
-.notif{position:fixed;top:16px;right:16px;background:var(--card);border:1px solid var(--gr);border-radius:11px;padding:12px 20px;font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;z-index:9999;transform:translateX(200%);transition:transform .3s ease;}
+.notif{position:fixed;top:16px;right:16px;background:var(--card);border:1px solid var(--gr);border-radius:11px;padding:12px 20px;font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;z-index:9999;transform:translateX(300%);transition:transform .3s ease;max-width:300px;}
 .notif.show{transform:translateX(0);}
 .notif.err{border-color:var(--red);}
-
-.tx-hash{font-size:.63rem;color:var(--mu);word-break:break-all;max-width:160px;}
+.tx-hash{font-size:.63rem;color:var(--mu);word-break:break-all;max-width:150px;}
 .upi-info{font-size:.72rem;color:var(--gd);font-weight:700;}
-
-@media(max-width:600px){.sb{width:56px;}.sblogo span,.ni span,.badge{display:none;}.main{margin-left:56px;}.content{padding:14px;}}
+.info-box{background:rgba(61,90,254,.08);border:1px solid rgba(61,90,254,.2);border-radius:10px;padding:13px;font-size:.74rem;color:#9ab;line-height:1.8;margin-bottom:14px;}
+.info-box strong{color:var(--tx);}
+@media(max-width:600px){.sb{width:50px;}.sblogo,.ni span,.badge{display:none;}.main{margin-left:50px;}.content{padding:12px;}}
 </style>
 </head>
 <body>
@@ -130,9 +101,9 @@ tr:hover td{background:rgba(255,255,255,.015);}
     <div class="alt"><span style="background:linear-gradient(135deg,#3d5afe,#ff9800);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Admin</span> Panel</div>
     <div class="als">ChromaBet Control Center</div>
     <div class="fl">Username</div>
-    <input class="fi" id="AU" placeholder="admin"/>
+    <input class="fi" id="AU" placeholder="admin" value="admin"/>
     <div class="fl">Password</div>
-    <input class="fi" type="password" id="AP" placeholder="••••••••"/>
+    <input class="fi" type="password" id="AP" placeholder="admin123"/>
     <button class="lbtn" onclick="aLogin()">Login →</button>
     <div class="def">Default: admin / admin123</div>
   </div>
@@ -141,7 +112,6 @@ tr:hover td{background:rgba(255,255,255,.015);}
 <!-- APP -->
 <div id="APP">
 <div class="layout">
-  <!-- SIDEBAR -->
   <div class="sb">
     <div class="sblogo"><span>Chroma</span>Bet<br><div class="badge">ADMIN</div></div>
     <div class="ni on" onclick="nav('dash')"><span>📊</span><span>Dashboard</span></div>
@@ -155,7 +125,6 @@ tr:hover td{background:rgba(255,255,255,.015);}
     <div class="sbft"><button class="outbtn" onclick="aOut()">🚪 Logout</button></div>
   </div>
 
-  <!-- MAIN -->
   <div class="main">
     <div class="topbar">
       <div class="ptit" id="PT">Dashboard</div>
@@ -167,29 +136,25 @@ tr:hover td{background:rgba(255,255,255,.015);}
       <div class="pg on" id="pg-dash">
         <div class="kg">
           <div class="kpi"><div class="ki">👥</div><div class="kv" id="kU">0</div><div class="kl">Total Users</div></div>
-          <div class="kpi"><div class="ki">💰</div><div class="kv" id="kD" style="color:var(--gr)">₹0</div><div class="kl">Total Deposited</div></div>
-          <div class="kpi"><div class="ki">💸</div><div class="kv" id="kW" style="color:var(--red)">₹0</div><div class="kl">Total Withdrawn</div></div>
+          <div class="kpi"><div class="ki">💰</div><div class="kv" id="kD" style="color:var(--gr)">₹0</div><div class="kl">Deposited</div></div>
+          <div class="kpi"><div class="ki">💸</div><div class="kv" id="kW" style="color:var(--red)">₹0</div><div class="kl">Withdrawn</div></div>
           <div class="kpi"><div class="ki">⏳</div><div class="kv" id="kP" style="color:var(--or)">0</div><div class="kl">Pending</div></div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
           <div class="card">
-            <div class="ctit">📈 Color Distribution</div>
+            <div class="ctit">📈 Color Stats</div>
             <div class="bw"><div class="blbl"><span>🔴 Red</span><span id="pR">0%</span></div><div class="btr"><div class="bfl" id="bR" style="background:var(--red);width:0%"></div></div></div>
             <div class="bw"><div class="blbl"><span>🟢 Green</span><span id="pG">0%</span></div><div class="btr"><div class="bfl" id="bG" style="background:var(--gr);width:0%"></div></div></div>
             <div class="bw"><div class="blbl"><span>🟣 Violet</span><span id="pV">0%</span></div><div class="btr"><div class="bfl" id="bV" style="background:var(--vi);width:0%"></div></div></div>
           </div>
           <div class="card">
-            <div class="ctit">⏳ Pending Actions</div>
-            <div id="pendActs"><div style="color:var(--mu);font-size:.75rem;">✅ No pending</div></div>
+            <div class="ctit">⏳ Pending</div>
+            <div id="pendActs"><div style="color:var(--mu);font-size:.74rem;">✅ No pending</div></div>
           </div>
         </div>
         <div class="card">
           <div class="ctit">🏆 Top Players</div>
-          <div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Wagered</th><th>W/L</th></tr></thead><tbody id="tpU"></tbody></table></div>
-        </div>
-        <div class="card">
-          <div class="ctit">🕐 Recent Rounds</div>
-          <div class="tbl-wrap"><table><thead><tr><th>Round</th><th>Result</th><th>Time</th></tr></thead><tbody id="recR"></tbody></table></div>
+          <div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Balance</th><th>W/L</th></tr></thead><tbody id="tpU"></tbody></table></div>
         </div>
       </div>
 
@@ -203,8 +168,8 @@ tr:hover td{background:rgba(255,255,255,.015);}
         </div>
         <div class="card">
           <div class="tbl-wrap"><table>
-            <thead><tr><th>ID</th><th>User</th><th>Network</th><th>Amount</th><th>INR</th><th>TX / UTR</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody id="depTbl"></tbody>
+            <thead><tr><th>User</th><th>Network</th><th>Amount</th><th>TX/UTR</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="depTbl"><tr><td colspan="7" style="color:var(--mu);text-align:center;padding:16px;">No deposits yet</td></tr></tbody>
           </table></div>
         </div>
       </div>
@@ -219,8 +184,8 @@ tr:hover td{background:rgba(255,255,255,.015);}
         </div>
         <div class="card">
           <div class="tbl-wrap"><table>
-            <thead><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>To (UPI/Wallet)</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody id="wdTbl"></tbody>
+            <thead><tr><th>User</th><th>Type</th><th>Amount</th><th>UPI / Wallet</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="wdTbl"><tr><td colspan="7" style="color:var(--mu);text-align:center;padding:16px;">No withdrawals yet</td></tr></tbody>
           </table></div>
         </div>
       </div>
@@ -233,7 +198,7 @@ tr:hover td{background:rgba(255,255,255,.015);}
         </div>
         <div class="card">
           <div class="tbl-wrap"><table>
-            <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Balance</th><th>Deposited</th><th>Bets</th><th>W/L</th><th>Joined</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Balance</th><th>Deposited</th><th>Bets</th><th>Joined</th><th>Actions</th></tr></thead>
             <tbody id="uTbl"></tbody>
           </table></div>
         </div>
@@ -243,44 +208,31 @@ tr:hover td{background:rgba(255,255,255,.015);}
       <div class="pg" id="pg-game">
         <div class="card">
           <div class="ctit">🎯 Force Next Result</div>
-          <p style="font-size:.75rem;color:var(--mu);margin-bottom:14px;">Next round ka result force karo. Ek baar use hone ke baad auto reset.</p>
           <div class="rbg">
             <button class="rbtn rr" onclick="forceR('red')" id="fr-red">🔴 Red</button>
             <button class="rbtn rg" onclick="forceR('green')" id="fr-green">🟢 Green</button>
             <button class="rbtn rv" onclick="forceR('violet')" id="fr-violet">🟣 Violet</button>
           </div>
-          <div class="finf">⚠️ Status: <span id="FS" style="color:var(--mu)">Random (default)</span></div>
-          <button class="btn bd" style="margin-top:11px;" onclick="clearF()">✕ Clear Force</button>
-        </div>
-        <div class="card">
-          <div class="ctit">⚙️ Game Settings</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-            <div><div class="fl">Round Time (sec)</div><input class="fi" type="number" id="gRT" value="30" style="margin-bottom:0;"/></div>
-            <div><div class="fl">Min Bet (₹)</div><input class="fi" type="number" id="gMB" value="10" style="margin-bottom:0;"/></div>
-            <div><div class="fl">Red/Green Payout</div><input class="fi" type="number" id="gO2" value="2" step="0.1" style="margin-bottom:0;"/></div>
-            <div><div class="fl">Violet Payout</div><input class="fi" type="number" id="gO4" value="4.5" step="0.1" style="margin-bottom:0;"/></div>
-          </div>
-          <button class="btn bp" onclick="nt('✅ Settings saved!')">Save Settings</button>
+          <div class="finf">Status: <span id="FS" style="color:var(--mu)">Random</span></div>
+          <button class="btn bd" style="margin-top:10px;" onclick="clearF()">✕ Clear</button>
         </div>
       </div>
 
       <!-- REFERRALS -->
       <div class="pg" id="pg-refs">
         <div class="kg" style="grid-template-columns:repeat(3,1fr);">
-          <div class="kpi"><div class="ki">🔗</div><div class="kv" id="rKT" style="color:var(--vi)">0</div><div class="kl">Total Referrals</div></div>
+          <div class="kpi"><div class="ki">🔗</div><div class="kv" id="rKT" style="color:var(--vi)">0</div><div class="kl">Referrals</div></div>
           <div class="kpi"><div class="ki">💸</div><div class="kv" id="rKP" style="color:var(--gd)">₹0</div><div class="kl">Bonus Paid</div></div>
-          <div class="kpi"><div class="ki">👑</div><div class="kv" id="rKL" style="font-size:1rem;">—</div><div class="kl">Top Referrer</div></div>
+          <div class="kpi"><div class="ki">👑</div><div class="kv" id="rKL" style="font-size:.9rem;">—</div><div class="kl">Top Referrer</div></div>
         </div>
         <div class="card">
-          <div class="ctit">🏆 Referral Leaderboard</div>
-          <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Name</th><th>Code</th><th>Referrals</th><th>Earned</th></tr></thead><tbody id="rTbl"></tbody></table></div>
+          <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Name</th><th>Code</th><th>Refs</th><th>Earned</th></tr></thead><tbody id="rTbl"></tbody></table></div>
         </div>
       </div>
 
       <!-- HISTORY -->
       <div class="pg" id="pg-hist">
         <div class="card">
-          <div class="ctit">📋 Round History</div>
           <div class="tbl-wrap"><table><thead><tr><th>Round</th><th>Result</th><th>Time</th></tr></thead><tbody id="hTbl"></tbody></table></div>
         </div>
       </div>
@@ -288,39 +240,15 @@ tr:hover td{background:rgba(255,255,255,.015);}
       <!-- SETTINGS -->
       <div class="pg" id="pg-set">
         <div class="card">
-          <div class="ctit">🏦 Crypto Addresses</div>
-          <div class="fl">ERC-20 & BEP-20 Address</div>
-          <input class="fi" id="sERC" value="0xab594d87682eeE1ECD7B72414177915153885f7c"/>
-          <div class="fl">TRC-20 Address</div>
-          <input class="fi" id="sTRC" value="TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc"/>
-          <div class="fl">UPI ID (INR)</div>
-          <input class="fi" id="sUPI" value="pindasandhu829@pingpay"/>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-            <div><div class="fl">USDT → INR Rate</div><input class="fi" id="sRATE" value="96" style="margin-bottom:0;"/></div>
-            <div><div class="fl">Min Deposit (₹)</div><input class="fi" id="sMD" value="10" style="margin-bottom:0;"/></div>
-          </div>
-          <button class="btn bp" onclick="nt('✅ Wallet settings saved!')">💾 Save</button>
-        </div>
-        <div class="card">
           <div class="ctit">🔑 Change Admin Password</div>
           <div class="fl">New Password</div>
           <input class="fi" type="password" id="sNP" placeholder="New password"/>
-          <button class="btn bp" onclick="chgPw()">Update Password</button>
-        </div>
-        <div class="card">
-          <div class="ctit">🎁 Referral Bonuses</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-            <div><div class="fl">New User Bonus (₹)</div><input class="fi" id="sNB" value="100" style="margin-bottom:0;"/></div>
-            <div><div class="fl">Referrer Bonus (₹)</div><input class="fi" id="sRB" value="100" style="margin-bottom:0;"/></div>
-            <div><div class="fl">Commission %</div><input class="fi" id="sCP" value="5" style="margin-bottom:0;"/></div>
-            <div><div class="fl">5-Ref Milestone (₹)</div><input class="fi" id="sMIL" value="200" style="margin-bottom:0;"/></div>
-          </div>
-          <button class="btn bp" onclick="nt('✅ Bonus settings saved!')">💾 Save</button>
+          <button class="btn bp" onclick="chgPw()">Update</button>
         </div>
         <div class="card">
           <div class="ctit">🗑️ Danger Zone</div>
           <button class="btn bd" style="margin-right:8px;" onclick="clrHist()">Clear History</button>
-          <button class="btn bd" onclick="rstRnd()">Reset Round Counter</button>
+          <button class="btn bd" onclick="rstRnd()">Reset Rounds</button>
         </div>
       </div>
 
@@ -334,10 +262,10 @@ tr:hover td{background:rgba(255,255,255,.015);}
   <div class="mbox">
     <div class="mtit">➕ Add New User</div>
     <div class="fl">Full Name</div><input class="fi" id="nName" placeholder="Full name"/>
-    <div class="fl">Phone Number</div><input class="fi" id="nPhone" placeholder="+91XXXXXXXXXX"/>
+    <div class="fl">Phone</div><input class="fi" id="nPhone" placeholder="+91XXXXXXXXXX"/>
     <div class="fl">Email (Optional)</div><input class="fi" id="nEmail" placeholder="email@example.com"/>
     <div class="fl">Password</div><input class="fi" id="nUP" type="password" placeholder="password"/>
-    <div class="fl">Starting Balance (₹)</div><input class="fi" id="nUB" type="number" value="1000"/>
+    <div class="fl">Balance (₹)</div><input class="fi" id="nUB" type="number" value="1000"/>
     <div class="mbtns">
       <button class="btn bp" onclick="addU()">Create</button>
       <button class="btn bd" onclick="cloMo()">Cancel</button>
@@ -358,300 +286,333 @@ tr:hover td{background:rgba(255,255,255,.015);}
 <div class="notif" id="AN">—</div>
 
 <script>
-const DK='chromabet_db';
-function gD(){
-  try{
-    const raw=localStorage.getItem(DK);
-    if(raw)return JSON.parse(raw);
-  }catch(e){}
-  const def={users:{admin:{password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[]}},gameHistory:[],currentRound:1,deposits:[],withdrawals:[]};
-  localStorage.setItem(DK,JSON.stringify(def));
-  return def;
-}
-function sD(d){localStorage.setItem(DK,JSON.stringify(d));}
+// ── DB ──────────────────────────────────────────────
+const DK = 'chromabet_db';
 
-const PAGES=['dash','deps','wds','users','game','refs','hist','set'];
-const PTIT={dash:'📊 Dashboard',deps:'💰 Deposits',wds:'💸 Withdrawals',users:'👥 Users',game:'🎮 Game Control',refs:'🔗 Referrals',hist:'📋 History',set:'⚙️ Settings'};
-
-function aLogin(){
-  const u=document.getElementById('AU').value.trim().toLowerCase();
-  const p=document.getElementById('AP').value;
-  if(!u||!p)return alert('❌ Fill all fields!');
-  const d=gD();
-  if(!d.users[u])return alert('❌ User not found!');
-  if(d.users[u].password!==p)return alert('❌ Wrong password!');
-  if(u!=='admin'&&!d.users[u].isAdmin)return alert('❌ Not an admin account!');
-  document.getElementById('AL').style.display='none';
-  document.getElementById('APP').style.display='block';
-  loadDash();
-  setInterval(()=>{document.getElementById('TT').textContent='🟢 Live • '+new Date().toLocaleTimeString();},1000);
-}
-function aOut(){
-  document.getElementById('APP').style.display='none';
-  document.getElementById('AL').style.display='flex';
-  document.getElementById('AU').value='';
-  document.getElementById('AP').value='';
-}
-
-function nav(p){
-  PAGES.forEach((x,i)=>{
-    document.getElementById('pg-'+x).classList.toggle('on',x===p);
-    document.querySelectorAll('.ni')[i].classList.toggle('on',x===p);
-  });
-  document.getElementById('PT').textContent=PTIT[p];
-  if(p==='dash')loadDash();
-  else if(p==='deps')loadDeps('all');
-  else if(p==='wds')loadWds('all');
-  else if(p==='users')loadUsers();
-  else if(p==='game')loadGame();
-  else if(p==='refs')loadRefs();
-  else if(p==='hist')loadHist();
-}
-
-// DASHBOARD
-function loadDash(){
-  const d=gD();
-  const us=Object.keys(d.users).filter(u=>u!=='admin');
-  document.getElementById('kU').textContent=us.length;
-  const tdep=us.reduce((s,u)=>s+(d.users[u].totalDeposited||0),0);
-  const twd=us.reduce((s,u)=>s+(d.users[u].totalWithdrawn||0),0);
-  document.getElementById('kD').textContent='₹'+tdep.toLocaleString();
-  document.getElementById('kW').textContent='₹'+twd.toLocaleString();
-  const pD=(d.deposits||[]).filter(x=>x.status==='pending').length;
-  const pW=(d.withdrawals||[]).filter(x=>x.status==='pending').length;
-  document.getElementById('kP').textContent=pD+pW;
-  // Color stats
-  const hist=d.gameHistory||[];
-  const cnt={red:0,green:0,violet:0};
-  hist.forEach(h=>cnt[h.result]=(cnt[h.result]||0)+1);
-  const tot=hist.length||1;
-  ['red','green','violet'].forEach(c=>{
-    const pct=Math.round(cnt[c]/tot*100);
-    document.getElementById('p'+c[0].toUpperCase()).textContent=pct+'%';
-    document.getElementById('b'+c[0].toUpperCase()).style.width=pct+'%';
-  });
-  // Pending actions
-  let pa='';
-  if(pD>0)pa+='<div style="background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.2);border-radius:9px;padding:12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><div><div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem;color:var(--or)">'+pD+'</div><div style="font-size:.62rem;color:var(--mu)">PENDING DEPOSITS</div></div><button class="btn" style="background:var(--or);color:#000;font-family:Syne,sans-serif;font-size:.7rem;font-weight:700;" onclick="nav(\'deps\')">Review →</button></div>';
-  if(pW>0)pa+='<div style="background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:9px;padding:12px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem;color:var(--red)">'+pW+'</div><div style="font-size:.62rem;color:var(--mu)">PENDING WITHDRAWALS</div></div><button class="btn bd" onclick="nav(\'wds\')">Review →</button></div>';
-  document.getElementById('pendActs').innerHTML=pa||'<div style="color:var(--mu);font-size:.74rem;">✅ No pending requests</div>';
-  // Top users
-  const sorted=[...us].sort((a,b)=>(d.users[b].totalWagered||0)-(d.users[a].totalWagered||0)).slice(0,5);
-  document.getElementById('tpU').innerHTML=sorted.length?sorted.map(u=>'<tr><td><strong>'+(d.users[u].name||u)+'</strong></td><td style="color:var(--mu)">'+(d.users[u].phone||'—')+'</td><td>₹'+(d.users[u].totalWagered||0).toLocaleString()+'</td><td><span style="color:var(--gr)">'+(d.users[u].wins||0)+'W</span>/<span style="color:var(--red)">'+(d.users[u].losses||0)+'L</span></td></tr>').join(''):'<tr><td colspan="4" style="color:var(--mu);text-align:center;padding:14px;">No users yet</td></tr>';
-  // Recent rounds
-  document.getElementById('recR').innerHTML=(d.gameHistory||[]).slice(0,8).map(h=>'<tr><td>#'+String(h.round).padStart(4,'0')+'</td><td><span class="tag '+(h.result==='red'?'trej':h.result==='green'?'tappr':'')+'">'+h.result+'</span></td><td style="color:var(--mu)">'+(h.timestamp||'—')+'</td></tr>').join('')||'<tr><td colspan="3" style="color:var(--mu);text-align:center;padding:14px;">No rounds yet</td></tr>';
-}
-
-// DEPOSITS
-function loadDeps(filter){
-  const d=gD();
-  let deps=d.deposits||[];
-  if(filter!=='all')deps=deps.filter(x=>x.status===filter);
-  const tb=document.getElementById('depTbl');
-  if(!deps.length){tb.innerHTML='<tr><td colspan="9" style="color:var(--mu);text-align:center;padding:16px;">No deposits</td></tr>';return;}
-  tb.innerHTML=deps.map(dep=>{
-    const sc=dep.status==='approved'?'tappr':dep.status==='rejected'?'trej':'tpend';
-    const isInr=dep.network==='INR-UPI';
-    return '<tr>'
-      +'<td style="font-size:.62rem;color:var(--mu)">'+dep.id.slice(-6)+'</td>'
-      +'<td><strong>'+(dep.userName||dep.user)+'</strong><div style="font-size:.62rem;color:var(--mu)">'+dep.user+'</div></td>'
-      +'<td><span class="tag '+(isInr?'tinr':'tcryp')+'">'+dep.network+'</span></td>'
-      +'<td style="color:var(--gr)">'+(isInr?'₹'+dep.inrAmt:dep.usdtAmt+' USDT')+'</td>'
-      +'<td style="color:var(--gd)">₹'+dep.inrAmt+'</td>'
-      +'<td><div class="tx-hash">'+dep.txHash+'</div></td>'
-      +'<td style="color:var(--mu);font-size:.68rem">'+dep.date+'</td>'
-      +'<td><span class="tag '+sc+'">'+dep.status+'</span></td>'
-      +'<td>'+(dep.status==='pending'
-        ?'<button class="btn bg2 bsm" onclick="actDep(\''+dep.id+'\',\'approve\')" style="margin-right:4px;margin-bottom:4px;">✅ Approve</button><button class="btn bd bsm" onclick="actDep(\''+dep.id+'\',\'reject\')">❌ Reject</button>'
-        :'<span style="color:var(--mu);font-size:.65rem">Done</span>')
-      +'</td></tr>';
-  }).join('');
-}
-function actDep(id,action){
-  const d=gD();
-  const dep=(d.deposits||[]).find(x=>x.id===id);
-  if(!dep)return;
-  dep.status=action==='approve'?'approved':'rejected';
-  if(action==='approve'){
-    if(d.users[dep.user]){
-      d.users[dep.user].balance=(d.users[dep.user].balance||0)+dep.inrAmt;
-      d.users[dep.user].totalDeposited=(d.users[dep.user].totalDeposited||0)+dep.inrAmt;
+function gD() {
+  try {
+    const raw = localStorage.getItem(DK);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Ensure admin exists
+      if (!parsed.users) parsed.users = {};
+      if (!parsed.users.admin) {
+        parsed.users.admin = defAdmin();
+        localStorage.setItem(DK, JSON.stringify(parsed));
+      }
+      if (!parsed.deposits) parsed.deposits = [];
+      if (!parsed.withdrawals) parsed.withdrawals = [];
+      if (!parsed.gameHistory) parsed.gameHistory = [];
+      return parsed;
     }
-    const tx=(d.users[dep.user]?.transactions||[]).find(t=>t.status==='Pending'&&t.type==='Deposit');
-    if(tx)tx.status='Approved';
-  } else {
-    const tx=(d.users[dep.user]?.transactions||[]).find(t=>t.status==='Pending'&&t.type==='Deposit');
-    if(tx)tx.status='Rejected';
-  }
-  sD(d);
-  nt(action==='approve'?'✅ ₹'+dep.inrAmt+' credited to '+dep.user:'❌ Deposit rejected');
-  loadDeps('all');loadDash();
+  } catch(e) { console.log('DB error:', e); }
+  const fresh = {
+    users: { admin: defAdmin() },
+    gameHistory: [], currentRound: 1,
+    deposits: [], withdrawals: []
+  };
+  localStorage.setItem(DK, JSON.stringify(fresh));
+  return fresh;
 }
 
-// WITHDRAWALS
-function loadWds(filter){
-  const d=gD();
-  let wds=d.withdrawals||[];
-  if(filter!=='all')wds=wds.filter(x=>x.status===filter);
-  const tb=document.getElementById('wdTbl');
-  if(!wds.length){tb.innerHTML='<tr><td colspan="8" style="color:var(--mu);text-align:center;padding:16px;">No withdrawals</td></tr>';return;}
-  tb.innerHTML=wds.map(wd=>{
-    const sc=wd.status==='approved'?'tappr':wd.status==='rejected'?'trej':'tpend';
-    const isInr=wd.network==='INR-UPI';
-    const toInfo=isInr
-      ?'<div class="upi-info">UPI: '+wd.addr+'</div><div style="font-size:.62rem;color:var(--mu)">'+( wd.holderName||'')+'</div>'
-      :'<div class="tx-hash">'+wd.addr+'</div>';
-    return '<tr>'
-      +'<td style="font-size:.62rem;color:var(--mu)">'+wd.id.slice(-6)+'</td>'
-      +'<td><strong>'+wd.user+'</strong></td>'
-      +'<td><span class="tag '+(isInr?'tinr':'tcryp')+'">'+wd.network+'</span></td>'
-      +'<td style="color:var(--red)">₹'+wd.amt+'</td>'
-      +'<td>'+toInfo+'</td>'
-      +'<td style="color:var(--mu);font-size:.68rem">'+wd.date+'</td>'
-      +'<td><span class="tag '+sc+'">'+wd.status+'</span></td>'
-      +'<td>'+(wd.status==='pending'
-        ?'<button class="btn bg2 bsm" onclick="actWd(\''+wd.id+'\',\'approve\')" style="margin-right:4px;margin-bottom:4px;">'+(isInr?'✅ Paid':'✅ Sent')+'</button><button class="btn bd bsm" onclick="actWd(\''+wd.id+'\',\'reject\')">❌ Reject</button>'
-        :'<span style="color:var(--mu);font-size:.65rem">Done</span>')
-      +'</td></tr>';
-  }).join('');
-}
-function actWd(id,action){
-  const d=gD();
-  const wd=(d.withdrawals||[]).find(x=>x.id===id);
-  if(!wd)return;
-  wd.status=action==='approve'?'approved':'rejected';
-  if(action==='rejected'&&d.users[wd.user]){
-    d.users[wd.user].balance=(d.users[wd.user].balance||0)+wd.amt;
-    d.users[wd.user].totalWithdrawn=Math.max(0,(d.users[wd.user].totalWithdrawn||0)-wd.amt);
-  }
-  const tx=(d.users[wd.user]?.transactions||[]).find(t=>t.type==='Withdrawal'&&t.status==='Pending');
-  if(tx)tx.status=action==='approve'?'Approved':'Rejected';
-  sD(d);
-  nt(action==='approve'?'✅ Withdrawal approved — ₹'+wd.amt:'❌ Rejected — ₹'+wd.amt+' refunded');
-  loadWds('all');loadDash();
+function defAdmin() {
+  return { password:'admin123', name:'Admin', phone:'', email:'', balance:5000,
+    referralCode:'ADMIN0', referredBy:null, referrals:[], totalBets:0,
+    totalWagered:0, totalDeposited:0, totalWithdrawn:0, wins:0, losses:0,
+    netPnl:0, joined:new Date().toLocaleDateString(), transactions:[], isAdmin:true };
 }
 
-// USERS
-function loadUsers(){
-  const d=gD();const us=Object.keys(d.users);
-  document.getElementById('uCnt').textContent=us.length+' total users';
-  document.getElementById('uTbl').innerHTML=us.map(u=>{
-    const ud=d.users[u];
+function sD(d) { localStorage.setItem(DK, JSON.stringify(d)); }
+
+// ── AUTH ─────────────────────────────────────────────
+function aLogin() {
+  const u = document.getElementById('AU').value.trim().toLowerCase();
+  const p = document.getElementById('AP').value.trim();
+  if (!u || !p) { alert('Username aur password dalo!'); return; }
+  const d = gD();
+  if (!d.users[u]) { alert('❌ User "' + u + '" nahi mila!'); return; }
+  if (d.users[u].password !== p) { alert('❌ Password galat hai!'); return; }
+  document.getElementById('AL').style.display = 'none';
+  document.getElementById('APP').style.display = 'block';
+  loadDash();
+  setInterval(() => { document.getElementById('TT').textContent = '🟢 Live • ' + new Date().toLocaleTimeString(); }, 1000);
+}
+
+function aOut() {
+  document.getElementById('APP').style.display = 'none';
+  document.getElementById('AL').style.display = 'flex';
+}
+
+// ── NAV ──────────────────────────────────────────────
+const PAGES = ['dash','deps','wds','users','game','refs','hist','set'];
+const PTIT = { dash:'📊 Dashboard', deps:'💰 Deposits', wds:'💸 Withdrawals',
+  users:'👥 Users', game:'🎮 Game Control', refs:'🔗 Referrals',
+  hist:'📋 History', set:'⚙️ Settings' };
+
+function nav(p) {
+  PAGES.forEach((x, i) => {
+    document.getElementById('pg-' + x).classList.toggle('on', x === p);
+    document.querySelectorAll('.ni')[i].classList.toggle('on', x === p);
+  });
+  document.getElementById('PT').textContent = PTIT[p];
+  if (p==='dash') loadDash();
+  else if (p==='deps') loadDeps('all');
+  else if (p==='wds') loadWds('all');
+  else if (p==='users') loadUsers();
+  else if (p==='game') loadGame();
+  else if (p==='refs') loadRefs();
+  else if (p==='hist') loadHist();
+}
+
+// ── DASHBOARD ────────────────────────────────────────
+function loadDash() {
+  const d = gD();
+  const us = Object.keys(d.users).filter(u => u !== 'admin');
+  document.getElementById('kU').textContent = us.length;
+  const tdep = us.reduce((s, u) => s + (d.users[u].totalDeposited || 0), 0);
+  const twd = us.reduce((s, u) => s + (d.users[u].totalWithdrawn || 0), 0);
+  document.getElementById('kD').textContent = '₹' + tdep.toLocaleString();
+  document.getElementById('kW').textContent = '₹' + twd.toLocaleString();
+  const pD = (d.deposits || []).filter(x => x.status === 'pending').length;
+  const pW = (d.withdrawals || []).filter(x => x.status === 'pending').length;
+  document.getElementById('kP').textContent = pD + pW;
+  const hist = d.gameHistory || [];
+  const cnt = { red:0, green:0, violet:0 };
+  hist.forEach(h => cnt[h.result] = (cnt[h.result] || 0) + 1);
+  const tot = hist.length || 1;
+  ['red','green','violet'].forEach(c => {
+    const pct = Math.round(cnt[c] / tot * 100);
+    document.getElementById('p' + c[0].toUpperCase()).textContent = pct + '%';
+    document.getElementById('b' + c[0].toUpperCase()).style.width = pct + '%';
+  });
+  let pa = '';
+  if (pD > 0) pa += '<div style="background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.2);border-radius:9px;padding:11px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><div><div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem;color:var(--or)">' + pD + '</div><div style="font-size:.6rem;color:var(--mu)">PENDING DEPOSITS</div></div><button class="btn" style="background:var(--or);color:#000;font-family:Syne,sans-serif;font-weight:700;font-size:.7rem;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;" onclick="nav(\'deps\')">Review →</button></div>';
+  if (pW > 0) pa += '<div style="background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);border-radius:9px;padding:11px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem;color:var(--red)">' + pW + '</div><div style="font-size:.6rem;color:var(--mu)">PENDING WITHDRAWALS</div></div><button class="btn bd" onclick="nav(\'wds\')" style="padding:6px 12px;">Review →</button></div>';
+  document.getElementById('pendActs').innerHTML = pa || '<div style="color:var(--mu);font-size:.74rem;">✅ No pending requests</div>';
+  const sorted = [...us].sort((a, b) => (d.users[b].totalWagered || 0) - (d.users[a].totalWagered || 0)).slice(0, 5);
+  document.getElementById('tpU').innerHTML = sorted.length
+    ? sorted.map(u => '<tr><td><strong>' + (d.users[u].name || u) + '</strong></td><td style="color:var(--mu)">' + (d.users[u].phone || '—') + '</td><td style="color:var(--gd)">₹' + (d.users[u].balance || 0).toLocaleString() + '</td><td><span style="color:var(--gr)">' + (d.users[u].wins || 0) + 'W</span>/<span style="color:var(--red)">' + (d.users[u].losses || 0) + 'L</span></td></tr>').join('')
+    : '<tr><td colspan="4" style="color:var(--mu);text-align:center;padding:14px;">No users yet</td></tr>';
+}
+
+// ── DEPOSITS ─────────────────────────────────────────
+function loadDeps(filter) {
+  const d = gD();
+  let deps = d.deposits || [];
+  if (filter !== 'all') deps = deps.filter(x => x.status === filter);
+  const tb = document.getElementById('depTbl');
+  if (!deps.length) { tb.innerHTML = '<tr><td colspan="7" style="color:var(--mu);text-align:center;padding:16px;">No deposits found</td></tr>'; return; }
+  tb.innerHTML = deps.map(dep => {
+    const sc = dep.status === 'approved' ? 'tappr' : dep.status === 'rejected' ? 'trej' : 'tpend';
+    const isInr = dep.network === 'INR-UPI';
     return '<tr>'
-      +'<td><strong>'+(ud.name||u)+'</strong>'+(u==='admin'?' <span class="tag tadm">ADMIN</span>':'')+'<div style="font-size:.6rem;color:var(--mu)">@'+u+'</div></td>'
-      +'<td style="color:var(--mu)">'+(ud.phone||'—')+'</td>'
-      +'<td style="font-size:.66rem;color:var(--mu)">'+(ud.email||'—')+'</td>'
-      +'<td style="color:var(--gd)">₹'+ud.balance.toLocaleString()+'</td>'
-      +'<td style="color:var(--gr)">₹'+(ud.totalDeposited||0)+'</td>'
-      +'<td>'+(ud.totalBets||0)+'</td>'
-      +'<td><span style="color:var(--gr)">'+(ud.wins||0)+'W</span>/<span style="color:var(--red)">'+(ud.losses||0)+'L</span></td>'
-      +'<td style="color:var(--mu);font-size:.68rem">'+(ud.joined||'—')+'</td>'
-      +'<td style="display:flex;gap:5px;flex-wrap:wrap;">'
-        +'<button class="btn bgo bsm" onclick="opEB(\''+u+'\')">💰 Bal</button>'
-        +(u!=='admin'?'<button class="btn bd bsm" onclick="delU(\''+u+'\')">🗑️</button>':'')
-      +'</td></tr>';
+      + '<td><strong>' + (dep.userName || dep.user) + '</strong><div style="font-size:.6rem;color:var(--mu)">' + dep.user + '</div></td>'
+      + '<td><span class="tag ' + (isInr ? 'tinr' : 'tcryp') + '">' + dep.network + '</span></td>'
+      + '<td style="color:var(--gd)">₹' + dep.inrAmt + (isInr ? '' : ' (' + dep.usdtAmt + ' USDT)') + '</td>'
+      + '<td><div class="tx-hash">' + dep.txHash + '</div></td>'
+      + '<td style="color:var(--mu);font-size:.68rem">' + dep.date + '</td>'
+      + '<td><span class="tag ' + sc + '">' + dep.status + '</span></td>'
+      + '<td>' + (dep.status === 'pending'
+        ? '<button class="btn bg2 bsm" onclick="actDep(\'' + dep.id + '\',\'approve\')" style="margin-right:4px;margin-bottom:3px;">✅ Approve</button><button class="btn bd bsm" onclick="actDep(\'' + dep.id + '\',\'reject\')">❌ Reject</button>'
+        : '<span style="color:var(--mu);font-size:.65rem">Done</span>')
+      + '</td></tr>';
   }).join('');
 }
-function opAddU(){document.getElementById('moAddU').classList.add('op');}
-function cloMo(){document.querySelectorAll('.mo').forEach(m=>m.classList.remove('op'));}
-function addU(){
-  const name=document.getElementById('nName').value.trim();
-  const phone=document.getElementById('nPhone').value.trim();
-  const email=document.getElementById('nEmail').value.trim().toLowerCase();
-  const p=document.getElementById('nUP').value;
-  const b=parseInt(document.getElementById('nUB').value)||1000;
-  if(!name||!phone||!p)return nt('❌ Name, Phone & Password required','err');
-  const d=gD();
-  const gc=()=>{const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');};
-  const uid='u'+Date.now();
-  d.users[uid]={password:p,name,phone,email,balance:b,referralCode:gc(),referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[]};
-  sD(d);cloMo();loadUsers();nt('✅ User '+name+' created!');
+
+function actDep(id, action) {
+  const d = gD();
+  const dep = (d.deposits || []).find(x => x.id === id);
+  if (!dep) return;
+  dep.status = action === 'approve' ? 'approved' : 'rejected';
+  if (action === 'approve' && d.users[dep.user]) {
+    d.users[dep.user].balance = (d.users[dep.user].balance || 0) + dep.inrAmt;
+    d.users[dep.user].totalDeposited = (d.users[dep.user].totalDeposited || 0) + dep.inrAmt;
+    const tx = (d.users[dep.user].transactions || []).find(t => t.status === 'Pending' && t.type === 'Deposit');
+    if (tx) tx.status = 'Approved';
+  } else if (action === 'reject' && d.users[dep.user]) {
+    const tx = (d.users[dep.user].transactions || []).find(t => t.status === 'Pending' && t.type === 'Deposit');
+    if (tx) tx.status = 'Rejected';
+  }
+  sD(d);
+  nt(action === 'approve' ? '✅ ₹' + dep.inrAmt + ' credited to ' + (dep.userName || dep.user) : '❌ Deposit rejected');
+  loadDeps('all'); loadDash();
 }
-function opEB(u){
-  const d=gD();
-  document.getElementById('eUN').textContent=(d.users[u].name||u);
-  document.getElementById('eBV').value=d.users[u].balance;
-  document.getElementById('moEB').dataset.u=u;
+
+// ── WITHDRAWALS ──────────────────────────────────────
+function loadWds(filter) {
+  const d = gD();
+  let wds = d.withdrawals || [];
+  if (filter !== 'all') wds = wds.filter(x => x.status === filter);
+  const tb = document.getElementById('wdTbl');
+  if (!wds.length) { tb.innerHTML = '<tr><td colspan="7" style="color:var(--mu);text-align:center;padding:16px;">No withdrawals found</td></tr>'; return; }
+  tb.innerHTML = wds.map(wd => {
+    const sc = wd.status === 'approved' ? 'tappr' : wd.status === 'rejected' ? 'trej' : 'tpend';
+    const isInr = wd.network === 'INR-UPI';
+    const toInfo = isInr
+      ? '<div class="upi-info">📱 ' + wd.addr + '</div><div style="font-size:.6rem;color:var(--mu)">' + (wd.holderName || '') + '</div>'
+      : '<div class="tx-hash">' + wd.addr + '</div>';
+    return '<tr>'
+      + '<td><strong>' + wd.user + '</strong></td>'
+      + '<td><span class="tag ' + (isInr ? 'tinr' : 'tcryp') + '">' + wd.network + '</span></td>'
+      + '<td style="color:var(--red)">₹' + wd.amt + '</td>'
+      + '<td>' + toInfo + '</td>'
+      + '<td style="color:var(--mu);font-size:.68rem">' + wd.date + '</td>'
+      + '<td><span class="tag ' + sc + '">' + wd.status + '</span></td>'
+      + '<td>' + (wd.status === 'pending'
+        ? '<button class="btn bg2 bsm" onclick="actWd(\'' + wd.id + '\',\'approve\')" style="margin-right:4px;margin-bottom:3px;">' + (isInr ? '✅ Paid' : '✅ Sent') + '</button><button class="btn bd bsm" onclick="actWd(\'' + wd.id + '\',\'reject\')">❌ Reject</button>'
+        : '<span style="color:var(--mu);font-size:.65rem">Done</span>')
+      + '</td></tr>';
+  }).join('');
+}
+
+function actWd(id, action) {
+  const d = gD();
+  const wd = (d.withdrawals || []).find(x => x.id === id);
+  if (!wd) return;
+  wd.status = action === 'approve' ? 'approved' : 'rejected';
+  if (action === 'rejected' && d.users[wd.user]) {
+    d.users[wd.user].balance = (d.users[wd.user].balance || 0) + wd.amt;
+    d.users[wd.user].totalWithdrawn = Math.max(0, (d.users[wd.user].totalWithdrawn || 0) - wd.amt);
+  }
+  const tx = (d.users[wd.user]?.transactions || []).find(t => t.type === 'Withdrawal' && t.status === 'Pending');
+  if (tx) tx.status = action === 'approve' ? 'Approved' : 'Rejected';
+  sD(d);
+  nt(action === 'approve' ? '✅ Withdrawal approved — ₹' + wd.amt : '❌ Rejected — ₹' + wd.amt + ' refunded');
+  loadWds('all'); loadDash();
+}
+
+// ── USERS ─────────────────────────────────────────────
+function loadUsers() {
+  const d = gD(); const us = Object.keys(d.users);
+  document.getElementById('uCnt').textContent = us.length + ' total users';
+  document.getElementById('uTbl').innerHTML = us.map(u => {
+    const ud = d.users[u];
+    return '<tr>'
+      + '<td><strong>' + (ud.name || u) + '</strong>' + (u === 'admin' ? ' <span class="tag tadm">ADMIN</span>' : '') + '<div style="font-size:.6rem;color:var(--mu)">@' + u + '</div></td>'
+      + '<td style="color:var(--mu)">' + (ud.phone || '—') + '</td>'
+      + '<td style="font-size:.66rem;color:var(--mu)">' + (ud.email || '—') + '</td>'
+      + '<td style="color:var(--gd)">₹' + (ud.balance || 0).toLocaleString() + '</td>'
+      + '<td style="color:var(--gr)">₹' + (ud.totalDeposited || 0) + '</td>'
+      + '<td>' + (ud.totalBets || 0) + '</td>'
+      + '<td style="color:var(--mu);font-size:.68rem">' + (ud.joined || '—') + '</td>'
+      + '<td style="display:flex;gap:5px;flex-wrap:wrap;">'
+        + '<button class="btn bgo bsm" onclick="opEB(\'' + u + '\')">💰 Bal</button>'
+        + (u !== 'admin' ? '<button class="btn bd bsm" onclick="delU(\'' + u + '\')">🗑️</button>' : '')
+      + '</td></tr>';
+  }).join('');
+}
+
+function opAddU() { document.getElementById('moAddU').classList.add('op'); }
+function cloMo() { document.querySelectorAll('.mo').forEach(m => m.classList.remove('op')); }
+
+function addU() {
+  const name = document.getElementById('nName').value.trim();
+  const phone = document.getElementById('nPhone').value.trim();
+  const email = document.getElementById('nEmail').value.trim().toLowerCase();
+  const p = document.getElementById('nUP').value;
+  const b = parseInt(document.getElementById('nUB').value) || 1000;
+  if (!name || !phone || !p) return nt('❌ Name, Phone & Password required', 'err');
+  const d = gD();
+  const gc = () => { const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from({length:6}, () => c[Math.floor(Math.random() * c.length)]).join(''); };
+  const uid = 'u' + Date.now();
+  d.users[uid] = { password:p, name, phone, email, balance:b, referralCode:gc(),
+    referredBy:null, referrals:[], totalBets:0, totalWagered:0, totalDeposited:0,
+    totalWithdrawn:0, wins:0, losses:0, netPnl:0, joined:new Date().toLocaleDateString(), transactions:[] };
+  sD(d); cloMo(); loadUsers(); nt('✅ User ' + name + ' created!');
+}
+
+function opEB(u) {
+  const d = gD();
+  document.getElementById('eUN').textContent = d.users[u].name || u;
+  document.getElementById('eBV').value = d.users[u].balance;
+  document.getElementById('moEB').dataset.u = u;
   document.getElementById('moEB').classList.add('op');
 }
-function svEB(){
-  const u=document.getElementById('moEB').dataset.u;
-  const v=parseInt(document.getElementById('eBV').value);
-  if(isNaN(v)||v<0)return nt('❌ Invalid amount','err');
-  const d=gD();d.users[u].balance=v;sD(d);cloMo();loadUsers();loadDash();nt('✅ Balance updated');
+function svEB() {
+  const u = document.getElementById('moEB').dataset.u;
+  const v = parseInt(document.getElementById('eBV').value);
+  if (isNaN(v) || v < 0) return nt('❌ Invalid amount', 'err');
+  const d = gD(); d.users[u].balance = v; sD(d); cloMo(); loadUsers(); loadDash(); nt('✅ Balance updated');
 }
-function delU(u){
-  if(!confirm('Delete "'+u+'"?'))return;
-  const d=gD();delete d.users[u];sD(d);loadUsers();nt('🗑️ User deleted');
-}
-
-// GAME
-function loadGame(){
-  const d=gD();
-  const fr=d.forcedResult;
-  document.getElementById('FS').textContent=fr?'🎯 '+fr.toUpperCase()+' forced':'Random (default)';
-  document.getElementById('FS').style.color=fr?'var(--gd)':'var(--mu)';
-  ['red','green','violet'].forEach(c=>document.getElementById('fr-'+c).classList.toggle('fon',c===fr));
-}
-function forceR(c){
-  const d=gD();d.forcedResult=c;sD(d);
-  ['red','green','violet'].forEach(x=>document.getElementById('fr-'+x).classList.toggle('fon',x===c));
-  document.getElementById('FS').textContent='🎯 '+c.toUpperCase()+' forced';
-  document.getElementById('FS').style.color='var(--gd)';
-  nt('✅ Force set: '+c.toUpperCase());
-}
-function clearF(){
-  const d=gD();d.forcedResult=null;sD(d);
-  ['red','green','violet'].forEach(c=>document.getElementById('fr-'+c).classList.remove('fon'));
-  document.getElementById('FS').textContent='Random (default)';
-  document.getElementById('FS').style.color='var(--mu)';
-  nt('✅ Force cleared');
+function delU(u) {
+  if (!confirm('Delete "' + u + '"?')) return;
+  const d = gD(); delete d.users[u]; sD(d); loadUsers(); nt('🗑️ Deleted');
 }
 
-// REFERRALS
-function loadRefs(){
-  const d=gD();const us=Object.keys(d.users);
-  let tr=0,tp=0,top='—',topC=0;
-  const rows=us.map(u=>{
-    const ud=d.users[u];
-    const refs=ud.referrals?.length||0;
-    const ern=ud.referrals?.reduce((s,r)=>s+(r.earned||0),0)||0;
-    if(refs>topC){topC=refs;top=ud.name||u;}
-    tr+=refs;tp+=ern;
-    return{u,name:ud.name||u,refs,ern,code:ud.referralCode};
-  }).sort((a,b)=>b.refs-a.refs);
-  document.getElementById('rKT').textContent=tr;
-  document.getElementById('rKP').textContent='₹'+tp.toLocaleString();
-  document.getElementById('rKL').textContent=top;
-  document.getElementById('rTbl').innerHTML=rows.map((r,i)=>'<tr><td>'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1)+'</td><td><strong>'+r.name+'</strong></td><td style="color:var(--gd);font-family:Syne,sans-serif;font-weight:700;letter-spacing:2px;">'+r.code+'</td><td>'+r.refs+'</td><td style="color:var(--gr)">₹'+r.ern+'</td></tr>').join('');
+// ── GAME ─────────────────────────────────────────────
+function loadGame() {
+  const d = gD(); const fr = d.forcedResult;
+  document.getElementById('FS').textContent = fr ? '🎯 ' + fr.toUpperCase() + ' forced' : 'Random';
+  document.getElementById('FS').style.color = fr ? 'var(--gd)' : 'var(--mu)';
+  ['red','green','violet'].forEach(c => document.getElementById('fr-' + c).classList.toggle('fon', c === fr));
+}
+function forceR(c) {
+  const d = gD(); d.forcedResult = c; sD(d);
+  ['red','green','violet'].forEach(x => document.getElementById('fr-' + x).classList.toggle('fon', x === c));
+  document.getElementById('FS').textContent = '🎯 ' + c.toUpperCase();
+  document.getElementById('FS').style.color = 'var(--gd)';
+  nt('✅ Force: ' + c);
+}
+function clearF() {
+  const d = gD(); d.forcedResult = null; sD(d);
+  ['red','green','violet'].forEach(c => document.getElementById('fr-' + c).classList.remove('fon'));
+  document.getElementById('FS').textContent = 'Random';
+  document.getElementById('FS').style.color = 'var(--mu)';
+  nt('✅ Cleared');
 }
 
-// HISTORY
-function loadHist(){
-  const d=gD();const hist=d.gameHistory||[];
-  const tb=document.getElementById('hTbl');
-  if(!hist.length){tb.innerHTML='<tr><td colspan="3" style="color:var(--mu);text-align:center;padding:16px;">No rounds yet</td></tr>';return;}
-  tb.innerHTML=hist.map(h=>'<tr><td>#'+String(h.round).padStart(4,'0')+'</td><td><span class="tag '+(h.result==='red'?'trej':h.result==='green'?'tappr':'')+'">'+h.result+'</span></td><td style="color:var(--mu)">'+( h.timestamp||'—')+'</td></tr>').join('');
+// ── REFERRALS ────────────────────────────────────────
+function loadRefs() {
+  const d = gD(); const us = Object.keys(d.users);
+  let tr = 0, tp = 0, top = '—', topC = 0;
+  const rows = us.map(u => {
+    const ud = d.users[u];
+    const refs = ud.referrals?.length || 0;
+    const ern = ud.referrals?.reduce((s, r) => s + (r.earned || 0), 0) || 0;
+    if (refs > topC) { topC = refs; top = ud.name || u; }
+    tr += refs; tp += ern;
+    return { u, name: ud.name || u, refs, ern, code: ud.referralCode };
+  }).sort((a, b) => b.refs - a.refs);
+  document.getElementById('rKT').textContent = tr;
+  document.getElementById('rKP').textContent = '₹' + tp.toLocaleString();
+  document.getElementById('rKL').textContent = top;
+  document.getElementById('rTbl').innerHTML = rows.map((r, i) =>
+    '<tr><td>' + (i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1) + '</td><td><strong>' + r.name + '</strong></td>'
+    + '<td style="color:var(--gd);font-family:Syne,sans-serif;font-weight:700;letter-spacing:2px;">' + (r.code||'—') + '</td>'
+    + '<td>' + r.refs + '</td><td style="color:var(--gr)">₹' + r.ern + '</td></tr>'
+  ).join('');
 }
 
-// SETTINGS
-function chgPw(){
-  const p=document.getElementById('sNP').value;
-  if(!p||p.length<4)return nt('❌ Min 4 chars','err');
-  const d=gD();d.users.admin.password=p;sD(d);
-  document.getElementById('sNP').value='';
+// ── HISTORY ──────────────────────────────────────────
+function loadHist() {
+  const d = gD(); const hist = d.gameHistory || [];
+  const tb = document.getElementById('hTbl');
+  if (!hist.length) { tb.innerHTML = '<tr><td colspan="3" style="color:var(--mu);text-align:center;padding:16px;">No rounds</td></tr>'; return; }
+  tb.innerHTML = hist.map(h =>
+    '<tr><td>#' + String(h.round).padStart(4,'0') + '</td>'
+    + '<td><span class="tag ' + (h.result==='red'?'trej':h.result==='green'?'tappr':'') + '">' + h.result + '</span></td>'
+    + '<td style="color:var(--mu)">' + (h.timestamp||'—') + '</td></tr>'
+  ).join('');
+}
+
+// ── SETTINGS ─────────────────────────────────────────
+function chgPw() {
+  const p = document.getElementById('sNP').value;
+  if (!p || p.length < 4) return nt('❌ Min 4 chars', 'err');
+  const d = gD(); d.users.admin.password = p; sD(d);
+  document.getElementById('sNP').value = '';
   nt('✅ Password updated!');
 }
-function clrHist(){if(!confirm('Clear all history?'))return;const d=gD();d.gameHistory=[];sD(d);nt('🗑️ History cleared');}
-function rstRnd(){if(!confirm('Reset round to 1?'))return;const d=gD();d.currentRound=1;sD(d);nt('✅ Round reset');}
+function clrHist() { if (!confirm('Clear all?')) return; const d = gD(); d.gameHistory = []; sD(d); nt('🗑️ Cleared'); }
+function rstRnd() { if (!confirm('Reset?')) return; const d = gD(); d.currentRound = 1; sD(d); nt('✅ Reset'); }
 
-// NOTIF
+// ── NOTIF ────────────────────────────────────────────
 let NT;
-function nt(msg,t){
-  const e=document.getElementById('AN');
-  e.textContent=msg;
-  e.className='notif'+(t?' '+t:'')+' show';
-  clearTimeout(NT);NT=setTimeout(()=>e.classList.remove('show'),3000);
+function nt(msg, t) {
+  const e = document.getElementById('AN');
+  e.textContent = msg;
+  e.className = 'notif' + (t ? ' ' + t : '') + ' show';
+  clearTimeout(NT); NT = setTimeout(() => e.classList.remove('show'), 3000);
 }
 </script>
 </body>
