@@ -335,7 +335,7 @@ tr:last-child td{border-bottom:none;}
         <div class="depinfo" style="background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.2);">
           ⚠️ <strong>UPI / Bank Transfer se INR bhejo</strong><br>
           💱 Auto convert: <strong>₹96 = 1 USDT</strong><br>
-          ✅ Min Deposit: <strong>₹10</strong><br>
+          ✅ Min Deposit: <strong>₹100</strong><br>
           ⏱️ Approval: <strong>30 min se 2 hours</strong><br>
           📝 Screenshot zaroor bhejo proof mein
         </div>
@@ -632,7 +632,7 @@ function subDep(){
   if(curNet==='inr'){
     // INR deposit
     if(!th)return sn('❌ Enter UTR/Reference No!','','lose');
-    if(ua<10)return sn('❌ Min deposit ₹10','','lose');
+    if(ua<100)return sn('❌ Min deposit ₹100','','lose');
     const netlbl={erc:'ERC-20',bep:'BEP-20',trc:'TRC-20',inr:'INR-UPI'};
     const d=gD();if(!d.deposits)d.deposits=[];
     d.deposits.unshift({id:'DEP'+Date.now(),user:CU,txHash:th,usdtAmt:(ua/96).toFixed(2),inrAmt:ua,network:'INR-UPI',status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});
@@ -702,7 +702,7 @@ function sn(m,a,t){
 }
 function confetti(){const cs=['#ff3b5c','#00e676','#ffd700','#3d5afe','#ce93d8','#fff'];for(let i=0;i<60;i++){const c=document.createElement('div');c.className='cfp';c.style.cssText='left:'+Math.random()*100+'vw;background:'+cs[Math.floor(Math.random()*cs.length)]+';width:'+(6+Math.random()*10)+'px;height:'+(6+Math.random()*10)+'px;animation-duration:'+(1.5+Math.random()*2)+'s;animation-delay:'+Math.random()*.5+'s;border-radius:'+(Math.random()>.5?'50%':'2px')+';';document.body.appendChild(c);setTimeout(()=>c.remove(),4000);}}
 
-window.onload=()=>{const p=new URLSearchParams(window.location.search);if(p.get('ref')){togF(1);document.getElementById('rRef').value=p.get('ref').toUpperCase();}};
+window.onload=()=>{const p=new URLSearchParams(window.location.search);if(p.get('ref')){togF(1);document.getElementById('rRef').value=p.get('ref').toUpperCase();}if(p.get('register')==='true')togF(1);};
 </script>
 </body>
 </html>
