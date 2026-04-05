@@ -566,24 +566,29 @@ setTimeout(()=>{
 }, 5000);
 
 function showLogin(){
-  document.getElementById('loadingScreen').style.display='none';
-  document.getElementById('LS').classList.add('show');
   try {
+    document.getElementById('loadingScreen').style.display='none';
+    document.getElementById('APP').style.display='none';
+    document.getElementById('LS').classList.add('show');
     const p = new URLSearchParams(window.location.search);
     if(p.get('ref')){togF(1);document.getElementById('rRef').value=p.get('ref').toUpperCase();}
     if(p.get('register')==='true') togF(1);
-  } catch(e){}
+  } catch(e){ console.log('showLogin error:',e); }
 }
 
 function showApp(){
-  document.getElementById('loadingScreen').style.display='none';
-  document.getElementById('LS').classList.remove('show');
-  document.getElementById('APP').style.display='block';
   try {
+    document.getElementById('loadingScreen').style.display='none';
+    document.getElementById('LS').classList.remove('show');
+    document.getElementById('APP').style.display='block';
     const d=gD();
-    document.getElementById('hUN').textContent=d.users[CU]?.name||CU;
+    if(!d.users[CU]){ showLogin(); return; }
+    document.getElementById('hUN').textContent=d.users[CU].name||'User';
     loadUD(); setupRef(); loadProfile(); startRound();
-  } catch(e){ console.log('showApp error:',e); }
+  } catch(e){ 
+    console.log('showApp error:',e);
+    showLogin();
+  }
 }
 
 // ══ AUTH ═════════════════════════════════════════════
@@ -705,13 +710,7 @@ function doOut(){
 }
 
 function startApp(){
-  localStorage.setItem('cb_user', CU);
-  document.getElementById('loadingScreen').style.display='none';
-  document.getElementById('LS').classList.remove('show');
-  document.getElementById('APP').style.display='block';
-  const d=gD();
-  document.getElementById('hUN').textContent=d.users[CU].name||CU;
-  loadUD();setupRef();loadProfile();startRound();
+  showApp();
 }
 
 function loadUD(){
