@@ -490,49 +490,108 @@ firebase.initializeApp(firebaseConfig);
 const DB = firebase.database();
 
 // ══ FIREBASE DB ══════════════════════════════════════
-let _db = {users:{admin:{password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:''}},gameHistory:[],currentRound:1,deposits:[],withdrawals:[]};
+let _db = null;
 let _dbLoaded = false;
+let CU = null, bal=0, rnd=1, tmr=30, tI=null, sC=null, bO=true, pB=null, hist=[], W=0, L=0, P=0, curNet='erc', wdType='crypto', regType='phone';
 
-// Load from Firebase on start
+function defDB(){
+  return {users:{admin:{password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:''}},gameHistory:[],currentRound:1,deposits:[],withdrawals:[]};
+}
+
+function gD(){ return _db || defDB(); }
+
+function sD(d){
+  _db = d;
+  DB.ref('chromabet').set(d).catch(e=>console.log('DB write error:',e));
+}
+
+function gc(){
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');
+}
+
+// Firebase listener
 DB.ref('chromabet').on('value', snap => {
-  const val = snap.val();
-  if(val) {
-    _db = val;
-    if(!_db.users) _db.users = {};
-    if(!_db.users.admin) _db.users.admin = {password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:''};
-    if(!_db.deposits) _db.deposits = [];
-    if(!_db.withdrawals) _db.withdrawals = [];
-    if(!_db.gameHistory) _db.gameHistory = [];
-  }
-  if(!_dbLoaded) {
+  try {
+    const val = snap.val();
+    if(val){
+      _db = val;
+      if(!_db.users) _db.users = {};
+      if(!_db.users.admin) { _db.users.admin = defDB().users.admin; }
+      if(!_db.deposits) _db.deposits = [];
+      if(!_db.withdrawals) _db.withdrawals = [];
+      if(!_db.gameHistory) _db.gameHistory = [];
+    } else {
+      _db = defDB();
+      DB.ref('chromabet').set(_db);
+    }
+  } catch(e){ _db = defDB(); }
+
+  if(!_dbLoaded){
     _dbLoaded = true;
-    document.getElementById('loadingScreen').style.display = 'none';
-    document.getElementById('LS').classList.add('show');
-    const p = new URLSearchParams(window.location.search);
-    if(p.get('ref')){togF(1);document.getElementById('rRef').value=p.get('ref').toUpperCase();}
-    if(p.get('register')==='true') togF(1);
+    // Try restore session
+    try {
+      const saved = localStorage.getItem('cb_user');
+      if(saved && _db.users && _db.users[saved]){
+        CU = saved;
+        showApp();
+        return;
+      }
+    } catch(e){}
+    // Show login
+    showLogin();
+  } else {
+    // Live update — only refresh balance if logged in
+    if(CU && _db.users && _db.users[CU]){
+      const newBal = _db.users[CU].balance || 0;
+      if(newBal !== bal){ bal = newBal; updBal(); }
+    }
   }
-  // Refresh UI if logged in
-  if(CU && _db.users[CU]) {
-    bal = _db.users[CU].balance || 0;
-    updBal();updStats();
+}, err => {
+  console.log('Firebase error:', err);
+  if(!_dbLoaded){
+    _dbLoaded = true;
+    _db = defDB();
+    showLogin();
   }
 });
 
-function gD(){ return _db; }
-function sD(d){
-  _db = d;
-  DB.ref('chromabet').set(d);
+// Timeout fallback - if Firebase takes too long
+setTimeout(()=>{
+  if(!_dbLoaded){
+    _dbLoaded = true;
+    _db = defDB();
+    showLogin();
+  }
+}, 5000);
+
+function showLogin(){
+  document.getElementById('loadingScreen').style.display='none';
+  document.getElementById('LS').classList.add('show');
+  try {
+    const p = new URLSearchParams(window.location.search);
+    if(p.get('ref')){togF(1);document.getElementById('rRef').value=p.get('ref').toUpperCase();}
+    if(p.get('register')==='true') togF(1);
+  } catch(e){}
 }
-function gc(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');}
 
-let CU=null,bal=0,rnd=1,tmr=30,tI=null,sC=null,bO=true,pB=null,hist=[],W=0,L=0,P=0,curNet='erc',wdType='crypto',regType='phone';
-
-// ══ INIT ═════════════════════════════════════════════
-// onload handled by Firebase
+function showApp(){
+  document.getElementById('loadingScreen').style.display='none';
+  document.getElementById('LS').classList.remove('show');
+  document.getElementById('APP').style.display='block';
+  try {
+    const d=gD();
+    document.getElementById('hUN').textContent=d.users[CU]?.name||CU;
+    loadUD(); setupRef(); loadProfile(); startRound();
+  } catch(e){ console.log('showApp error:',e); }
+}
 
 // ══ AUTH ═════════════════════════════════════════════
-function togF(r){document.getElementById('LF').style.display=r?'none':'block';document.getElementById('RF').style.display=r?'block':'none';}
+function togF(r){
+  document.getElementById('LF').style.display=r?'none':'block';
+  document.getElementById('RF').style.display=r?'block':'none';
+}
+
 function setRT(t){
   regType=t;
   document.getElementById('rtP').className='rt-btn'+(t==='phone'?'':' off');
@@ -542,50 +601,112 @@ function setRT(t){
 }
 
 function doLogin(){
-  const raw=document.getElementById('lU').value.trim(),p=document.getElementById('lP').value;
-  if(!raw||!p)return sn('❌ Fill all fields!','','lose');
-  const d=gD();
+  const raw=document.getElementById('lU').value.trim();
+  const p=document.getElementById('lP').value.trim();
+  if(!raw||!p){ sn('❌ Phone/Email aur Password dalo!','','lose'); return; }
+  if(!_db||!_db.users){ sn('❌ Loading... thoda wait karo!','','lose'); return; }
+  
   let found=null;
-  for(let u of Object.keys(d.users)){
-    const ud=d.users[u];
-    if(u===raw||ud.phone===raw||ud.phone==='+91'+raw||ud.email===raw.toLowerCase()){found=u;break;}
+  for(let u of Object.keys(_db.users)){
+    const ud=_db.users[u];
+    if(!ud) continue;
+    const rawL = raw.toLowerCase();
+    if(u===rawL || u===raw ||
+       (ud.phone && (ud.phone===raw || ud.phone==='+91'+raw || ud.phone===raw.replace('+91',''))) ||
+       (ud.email && ud.email===rawL)){
+      found=u; break;
+    }
   }
-  if(!found||d.users[found].password!==p)return sn('❌ Wrong credentials!','','lose');
-  CU=found;startApp();
+  
+  if(!found){ sn('❌ Account nahi mila!','Phone ya Email check karo','lose'); return; }
+  if(_db.users[found].password !== p){ sn('❌ Password galat hai!','','lose'); return; }
+  
+  CU=found;
+  localStorage.setItem('cb_user', CU);
+  showApp();
 }
 
 function doReg(){
   const name=document.getElementById('rName').value.trim();
-  const p=document.getElementById('rP').value,p2=document.getElementById('rP2').value;
+  const p=document.getElementById('rP').value;
+  const p2=document.getElementById('rP2').value;
   const ref=document.getElementById('rRef').value.trim().toUpperCase();
-  if(!name)return sn('❌ Naam likho!','','lose');
-  if(p.length<6)return sn('❌ Password min 6!','','lose');
-  if(p!==p2)return sn('❌ Password match nahi!','','lose');
-  let phone='',email='';
+  
+  if(!name){ sn('❌ Apna naam likho!','','lose'); return; }
+  if(p.length<6){ sn('❌ Password min 6 characters!','','lose'); return; }
+  if(p!==p2){ sn('❌ Password match nahi kar raha!','','lose'); return; }
+  if(!_db){ sn('❌ Loading... thoda wait karo!','','lose'); return; }
+  
+  let phone='', email='';
+  
   if(regType==='phone'){
     const cc=document.getElementById('rCC').value;
-    const ph=document.getElementById('rPhone').value.trim();
-    if(!ph||ph.length<10)return sn('❌ Valid phone dalo!','','lose');
+    const ph=document.getElementById('rPhone').value.trim().replace(/\D/g,'');
+    if(!ph||ph.length<10){ sn('❌ 10 digit phone number dalo!','','lose'); return; }
     phone=cc+ph;
   } else {
     email=document.getElementById('rEmail').value.trim().toLowerCase();
-    if(!email||!email.includes('@'))return sn('❌ Valid email dalo!','','lose');
+    if(!email||!email.includes('@')||!email.includes('.')){ sn('❌ Valid email dalo!','','lose'); return; }
   }
-  const d=gD();
-  const exists=Object.values(d.users).find(u=>(phone&&u.phone===phone)||(email&&u.email===email));
-  if(exists)return sn('❌ Already registered!','','lose');
-  let bonus=100,ru=null;
-  if(ref){ru=Object.keys(d.users).find(k=>d.users[k].referralCode===ref);if(!ru)return sn('❌ Invalid referral code!','','lose');bonus+=50;}
-  const uid='user_'+Date.now();
-  d.users[uid]={password:p,name,phone,email,balance:bonus,referralCode:gc(),referredBy:ru||null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:''};
-  if(ru){d.users[ru].balance+=100;d.users[ru].referrals.push({uid,name,phone,joined:new Date().toLocaleDateString(),bets:0,earned:100});}
-  sD(d);CU=uid;startApp();
-  sn('🎉 Welcome '+name+'!','+₹'+bonus+' credited!','');
+  
+  // Check duplicate
+  const users = _db.users || {};
+  for(let u of Object.values(users)){
+    if(phone && u.phone===phone){ sn('❌ Yeh number already registered hai!','','lose'); return; }
+    if(email && u.email===email){ sn('❌ Yeh email already registered hai!','','lose'); return; }
+  }
+  
+  // Check referral
+  let bonus=100, ru=null;
+  if(ref){
+    ru=Object.keys(users).find(k=>users[k]&&users[k].referralCode===ref);
+    if(!ru){ sn('❌ Referral code sahi nahi hai!','','lose'); return; }
+    bonus+=50;
+  }
+  
+  const uid='user_'+Date.now()+'_'+Math.floor(Math.random()*999);
+  const newUser={
+    password:p, name, phone, email,
+    balance:bonus, referralCode:gc(),
+    referredBy:ru||null, referrals:[],
+    totalBets:0, totalWagered:0, totalDeposited:0, totalWithdrawn:0,
+    wins:0, losses:0, netPnl:0,
+    joined:new Date().toLocaleDateString(),
+    transactions:[], savedUpi:'', savedUpiName:''
+  };
+  
+  const d = gD();
+  d.users[uid] = newUser;
+  if(ru && d.users[ru]){
+    d.users[ru].balance = (d.users[ru].balance||0)+100;
+    if(!d.users[ru].referrals) d.users[ru].referrals=[];
+    d.users[ru].referrals.push({uid,name,phone,joined:new Date().toLocaleDateString(),bets:0,earned:100});
+  }
+  
+  // Save to Firebase first, then login
+  DB.ref('chromabet').set(d).then(()=>{
+    _db = d;
+    CU = uid;
+    localStorage.setItem('cb_user', CU);
+    showApp();
+    setTimeout(()=>sn('🎉 Welcome '+name+'!','+₹'+bonus+' credited!',''), 500);
+  }).catch(e=>{
+    console.log('Reg error:',e);
+    sn('❌ Registration fail! Internet check karo!','','lose');
+  });
 }
 
-function doOut(){CU=null;clearInterval(tI);document.getElementById('APP').style.display='none';document.getElementById('LS').classList.add('show');}
+function doOut(){
+  CU=null;
+  clearInterval(tI);
+  localStorage.removeItem('cb_user');
+  document.getElementById('APP').style.display='none';
+  showLogin();
+}
 
 function startApp(){
+  localStorage.setItem('cb_user', CU);
+  document.getElementById('loadingScreen').style.display='none';
   document.getElementById('LS').classList.remove('show');
   document.getElementById('APP').style.display='block';
   const d=gD();
@@ -663,6 +784,13 @@ function showRes(){
     addH(res);if(pB)resolveB(res);
     const d2=gD();d2.gameHistory.unshift({round:rnd,result:res,timestamp:new Date().toLocaleTimeString()});
     if(d2.gameHistory.length>100)d2.gameHistory.pop();d2.currentRound=rnd+1;sD(d2);
+    // Clear live bets for this round after 5 seconds
+    setTimeout(()=>{
+      DB.ref('chromabet/liveBets').once('value',snap=>{
+        const bets=snap.val()||{};
+        Object.keys(bets).forEach(k=>{if(bets[k].round===rnd)DB.ref('chromabet/liveBets/'+k).remove();});
+      });
+    },5000);
     setTimeout(()=>{rnd++;startRound();},3000);
   },1200);
 }
