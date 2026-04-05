@@ -156,10 +156,15 @@ tr:last-child td{border-bottom:none;}
 .notif.lose{border-color:var(--red);}
 .na{font-size:1.3rem;}.naw{color:var(--green);}.nal{color:var(--red);}
 .cfp{position:fixed;width:10px;height:10px;top:-20px;animation:cff linear forwards;border-radius:2px;z-index:200;pointer-events:none;}
-.nb-btn{padding:10px 4px;border-radius:10px;border:2px solid rgba(255,215,0,.3);background:rgba(255,215,0,.08);color:var(--gold);font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;cursor:pointer;transition:all .2s;touch-action:manipulation;}
-.nb-btn:hover{border-color:var(--gold);background:rgba(255,215,0,.2);}
-.nb-btn.sel{border-color:var(--gold);background:rgba(255,215,0,.3);transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,215,0,.3);}
+.nb-btn{padding:10px 4px;border-radius:10px;border:2px solid transparent;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;cursor:pointer;transition:all .2s;touch-action:manipulation;}
 .nb-btn.dis{opacity:.4;cursor:not-allowed;transform:none!important;}
+.nb-g{background:rgba(0,230,118,.12);border-color:rgba(0,230,118,.3);color:#00e676;}
+.nb-r{background:rgba(255,59,92,.12);border-color:rgba(255,59,92,.3);color:#ff3b5c;}
+.nb-v{background:rgba(156,39,176,.12);border-color:rgba(156,39,176,.3);color:#ce93d8;}
+.nb-btn.sel{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.4);filter:brightness(1.4);}
+.nb-g.sel{border-color:#00e676;background:rgba(0,230,118,.3);}
+.nb-r.sel{border-color:#ff3b5c;background:rgba(255,59,92,.3);}
+.nb-v.sel{border-color:#ce93d8;background:rgba(156,39,176,.3);}
 @keyframes cff{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 #GV,#WV,#RV,#PV{display:none;}
 #GV.on,#WV.on,#RV.on,#PV.on{display:block;}
@@ -275,16 +280,17 @@ tr:last-child td{border-bottom:none;}
       </div>
       <!-- Number Bet -->
       <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;margin-top:6px;">🔢 Number (9x)</div>
-      <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-bottom:14px;" id="numBtns">
-        <button class="nb-btn" onclick="selN2(1)" id="N-1">1</button>
-        <button class="nb-btn" onclick="selN2(2)" id="N-2">2</button>
-        <button class="nb-btn" onclick="selN2(3)" id="N-3">3</button>
-        <button class="nb-btn" onclick="selN2(4)" id="N-4">4</button>
-        <button class="nb-btn" onclick="selN2(5)" id="N-5">5</button>
-        <button class="nb-btn" onclick="selN2(6)" id="N-6">6</button>
-        <button class="nb-btn" onclick="selN2(7)" id="N-7">7</button>
-        <button class="nb-btn" onclick="selN2(8)" id="N-8">8</button>
-        <button class="nb-btn" onclick="selN2(9)" id="N-9">9</button>
+      <div style="display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:14px;" id="numBtns">
+        <button class="nb-btn nb-v" onclick="selN2(0)" id="N-0">0</button>
+        <button class="nb-btn nb-g" onclick="selN2(1)" id="N-1">1</button>
+        <button class="nb-btn nb-r" onclick="selN2(2)" id="N-2">2</button>
+        <button class="nb-btn nb-g" onclick="selN2(3)" id="N-3">3</button>
+        <button class="nb-btn nb-r" onclick="selN2(4)" id="N-4">4</button>
+        <button class="nb-btn nb-v" onclick="selN2(5)" id="N-5">5</button>
+        <button class="nb-btn nb-r" onclick="selN2(6)" id="N-6">6</button>
+        <button class="nb-btn nb-g" onclick="selN2(7)" id="N-7">7</button>
+        <button class="nb-btn nb-r" onclick="selN2(8)" id="N-8">8</button>
+        <button class="nb-btn nb-g" onclick="selN2(9)" id="N-9">9</button>
       </div>
       <div style="display:flex;gap:10px;margin-bottom:14px;">
         <input class="ainp" type="number" id="BA" placeholder="Amount" value="50" min="10"/>
@@ -767,9 +773,11 @@ function sw(t){
 }
 
 // ══ GAME ═════════════════════════════════════════════
-const COLS=['red','green','violet'],ODDS={red:2,green:2,violet:4.5,1:9,2:9,3:9,4:9,5:9,6:9,7:9,8:9,9:9};
-const CL={red:'Red',green:'Green',violet:'Violet',1:'#1',2:'#2',3:'#3',4:'#4',5:'#5',6:'#6',7:'#7',8:'#8',9:'#9'};
-const NUMS=[1,2,3,4,5,6,7,8,9];
+const COLS=['red','green','violet'],ODDS={red:2,green:2,violet:4.5,0:9,1:9,2:9,3:9,4:9,5:9,6:9,7:9,8:9,9:9};
+const CL={red:'Red',green:'Green',violet:'Violet',0:'#0',1:'#1',2:'#2',3:'#3',4:'#4',5:'#5',6:'#6',7:'#7',8:'#8',9:'#9'};
+const NUMS=[0,1,2,3,4,5,6,7,8,9];
+// Number color mapping: 1,3,7,9=Green | 2,4,6,8=Red | 0,5=Violet
+const NUM_COLOR={0:'violet',1:'green',2:'red',3:'green',4:'red',5:'violet',6:'red',7:'green',8:'red',9:'green'};
 function selC(c){
   if(!bO)return;
   sC=c;
@@ -805,6 +813,17 @@ function startRound(){
   document.getElementById('RN').textContent='#'+String(rnd).padStart(4,'0');
   document.getElementById('WT').style.display='';document.getElementById('RC').style.display='none';
   document.getElementById('RCI').classList.remove('spin','rev');
+  // Load last 10 results from Firebase history
+  if(hist.length===0 && d.gameHistory && d.gameHistory.length>0){
+    hist=d.gameHistory.slice(0,10).map(h=>({c:h.result,n:h.numResult}));
+    const hr=document.getElementById('HR');hr.innerHTML='';
+    hist.forEach(h=>{
+      const el=document.createElement('div');
+      el.className='hd hd-'+h.c[0];
+      el.textContent=h.n!==undefined?h.n:h.c[0].toUpperCase();
+      hr.appendChild(el);
+    });
+  }
   clearInterval(tI);tI=setInterval(tick,1000);updT();
 }
 
@@ -824,8 +843,11 @@ function showRes(){
   const d=gD();const fr=d.forcedResult;let res;let numRes;
   if(fr){res=fr;d.forcedResult=null;sD(d);}
   else{const r=Math.random();res=r<.4?'red':r<.8?'green':'violet';}
-  // Pick random number 1-9 for this round
-  numRes = Math.floor(Math.random()*9)+1;
+  // Pick random number 0-9 for this round (consistent with color)
+  // Numbers matching the result color are more likely but any can appear
+  const colorNums = {red:[2,4,6,8], green:[1,3,7,9], violet:[0,5]};
+  const matchNums = colorNums[res];
+  numRes = matchNums[Math.floor(Math.random()*matchNums.length)];
   const cols={red:'#ff3b5c',green:'#00e676',violet:'#9c27b0'};
   document.getElementById('WT').style.display='none';
   document.getElementById('RC').style.display='flex';
@@ -835,7 +857,7 @@ function showRes(){
     document.getElementById('RT').textContent=CL[res]+' • #'+numRes;document.getElementById('RT').style.color=cols[res];
     document.getElementById('RS').textContent='Round #'+String(rnd).padStart(4,'0');
     addH(res,numRes);if(pB)resolveB(res,numRes);
-    const d2=gD();d2.gameHistory.unshift({round:rnd,result:res,timestamp:new Date().toLocaleTimeString()});
+    const d2=gD();d2.gameHistory.unshift({round:rnd,result:res,numResult:numRes,timestamp:new Date().toLocaleTimeString()});
     if(d2.gameHistory.length>100)d2.gameHistory.pop();d2.currentRound=rnd+1;sD(d2);
     // Clear live bets for this round after 5 seconds
     setTimeout(()=>{
@@ -849,8 +871,9 @@ function showRes(){
 }
 
 function resolveB(res,numRes){
-  const betVal=pB.color; // could be 'red','green','violet' or 1-9
+  const betVal=pB.color; // could be 'red','green','violet' or 0-9
   const isNumBet=typeof betVal==='number';
+  // Number bet: exact match = 9x | Color bet: color match = 2x/4.5x
   const won = isNumBet ? (betVal===numRes) : (betVal===res);
   const{amount}=pB;let p2;
   const color=betVal;
@@ -909,7 +932,7 @@ function addH(c,n){
   hist.forEach(h=>{
     const d=document.createElement('div');
     d.className='hd hd-'+h.c[0];
-    d.textContent=h.n||h.c[0].toUpperCase();
+    d.textContent=h.n!==undefined?h.n:h.c[0].toUpperCase();
     d.title=h.c+' #'+h.n;
     hr.appendChild(d);
   });
