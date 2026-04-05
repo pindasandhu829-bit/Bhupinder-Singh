@@ -180,7 +180,7 @@ tr:last-child td{border-bottom:none;}
     <div class="fl">Password</div>
     <input class="fi" type="password" id="lP" placeholder="Password"/>
     <button class="lbtn" onclick="doLogin()">Login →</button>
-    <div class="ltog">No account? <a onclick="togF(1)">Register</a></div>
+    <div class="ltog" id="regLink" style="display:none;">No account? <a onclick="togF(1)">Register</a></div>
   </div>
   <div id="RF" style="display:none;">
     <div class="fl">Full Name</div>
@@ -571,8 +571,16 @@ function showLogin(){
     document.getElementById('APP').style.display='none';
     document.getElementById('LS').classList.add('show');
     const p = new URLSearchParams(window.location.search);
-    if(p.get('ref')){togF(1);document.getElementById('rRef').value=p.get('ref').toUpperCase();}
-    if(p.get('register')==='true') togF(1);
+    // Only show register link if ?register=true or ?ref= in URL
+    if(p.get('ref') || p.get('register')==='true'){
+      document.getElementById('regLink').style.display='block';
+      togF(1);
+      if(p.get('ref')) document.getElementById('rRef').value=p.get('ref').toUpperCase();
+    } else {
+      // Normal game link - only login, no register option
+      document.getElementById('regLink').style.display='none';
+      togF(0);
+    }
   } catch(e){ console.log('showLogin error:',e); }
 }
 
