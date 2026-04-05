@@ -280,6 +280,32 @@ tr:hover td{background:rgba(255,255,255,.015);}
           <button class="btn bp" onclick="chgPw()">Update Password</button>
         </div>
         <div class="card">
+          <div class="ctit">💳 Payment Settings</div>
+          <div class="fl">INR UPI ID (Deposit ke liye)</div>
+          <input class="fi" id="sUPI" placeholder="yourname@upi"/>
+          <div class="fl">ERC-20 / BEP-20 Address</div>
+          <input class="fi" id="sERC" placeholder="0x..."/>
+          <div class="fl">TRC-20 Address</div>
+          <input class="fi" id="sTRC" placeholder="T..."/>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div><div class="fl">USDT Rate (₹ per USDT)</div><input class="fi" id="sRATE" type="number" placeholder="96" style="margin-bottom:0;"/></div>
+            <div><div class="fl">Min INR Deposit (₹)</div><input class="fi" id="sMDEP" type="number" placeholder="100" style="margin-bottom:0;"/></div>
+          </div>
+          <button class="btn bp" style="width:100%;" onclick="savePaySettings()">💾 Save Payment Settings</button>
+        </div>
+        <div class="card">
+          <div class="ctit">🎮 Game Settings</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div><div class="fl">Round Duration (seconds)</div><input class="fi" id="sRDUR" type="number" placeholder="30" style="margin-bottom:0;"/></div>
+            <div><div class="fl">Min Bet (₹)</div><input class="fi" id="sMBET" type="number" placeholder="10" style="margin-bottom:0;"/></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div><div class="fl">Red/Green Payout</div><input class="fi" id="sRGPAY" type="number" placeholder="2" style="margin-bottom:0;"/></div>
+            <div><div class="fl">Violet Payout</div><input class="fi" id="sVPAY" type="number" placeholder="4.5" style="margin-bottom:0;"/></div>
+          </div>
+          <button class="btn bp" style="width:100%;" onclick="saveGameSettings()">💾 Save Game Settings</button>
+        </div>
+        <div class="card">
           <div class="ctit">🗑️ Danger Zone</div>
           <button class="btn bd" style="margin-right:8px;margin-bottom:8px;" onclick="clrHist()">Clear History</button>
           <button class="btn bd" onclick="rstRnd()">Reset Rounds</button>
@@ -398,6 +424,7 @@ function nav(p){
   else if(p==='game'){ loadGame(); loadLiveBets(); }
   else if(p==='refs') loadRefs();
   else if(p==='hist') loadHist();
+  else if(p==='set') loadSettings();
 }
 
 function refreshPage(){
@@ -768,6 +795,43 @@ function chgPw(){
 }
 function clrHist(){ if(!confirm('Clear all game history?')) return; const d=gD(); d.gameHistory=[]; sD(d); nt('🗑️ History cleared'); }
 function rstRnd(){ if(!confirm('Reset round counter to 1?')) return; const d=gD(); d.currentRound=1; sD(d); nt('✅ Round reset'); }
+
+function loadSettings(){
+  const d=gD();
+  const s=d.settings||{};
+  document.getElementById('sUPI').value=s.upi||'pindasandhu829@pingpay';
+  document.getElementById('sERC').value=s.erc||'0xab594d87682eeE1ECD7B72414177915153885f7c';
+  document.getElementById('sTRC').value=s.trc||'TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc';
+  document.getElementById('sRATE').value=s.rate||96;
+  document.getElementById('sMDEP').value=s.minDep||100;
+  document.getElementById('sRDUR').value=s.roundDur||30;
+  document.getElementById('sMBET').value=s.minBet||10;
+  document.getElementById('sRGPAY').value=s.rgPay||2;
+  document.getElementById('sVPAY').value=s.vPay||4.5;
+}
+
+function savePaySettings(){
+  const d=gD();
+  if(!d.settings) d.settings={};
+  d.settings.upi=document.getElementById('sUPI').value.trim();
+  d.settings.erc=document.getElementById('sERC').value.trim();
+  d.settings.trc=document.getElementById('sTRC').value.trim();
+  d.settings.rate=parseFloat(document.getElementById('sRATE').value)||96;
+  d.settings.minDep=parseInt(document.getElementById('sMDEP').value)||100;
+  sD(d);
+  nt('✅ Payment settings saved!');
+}
+
+function saveGameSettings(){
+  const d=gD();
+  if(!d.settings) d.settings={};
+  d.settings.roundDur=parseInt(document.getElementById('sRDUR').value)||30;
+  d.settings.minBet=parseInt(document.getElementById('sMBET').value)||10;
+  d.settings.rgPay=parseFloat(document.getElementById('sRGPAY').value)||2;
+  d.settings.vPay=parseFloat(document.getElementById('sVPAY').value)||4.5;
+  sD(d);
+  nt('✅ Game settings saved!');
+}
 
 // ══ NOTIF ══════════════════════════════
 let NT;
