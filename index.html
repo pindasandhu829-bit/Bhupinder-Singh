@@ -541,10 +541,13 @@ DB.ref('chromabet').on('value', snap => {
     // Show login
     showLogin();
   } else {
-    // Live update — only refresh balance if logged in
+    // Live update — only refresh balance if logged in AND not in active bet
     if(CU && _db.users && _db.users[CU]){
-      const newBal = _db.users[CU].balance || 0;
-      if(newBal !== bal){ bal = newBal; updBal(); }
+      // Don't overwrite local balance if user has active bet (mid-round)
+      if(!pB) {
+        const newBal = _db.users[CU].balance || 0;
+        bal = newBal; updBal();
+      }
     }
   }
 }, err => {
@@ -726,7 +729,14 @@ function loadUD(){
   bal=u.balance||0;W=u.wins||0;L=u.losses||0;P=u.netPnl||0;
   updBal();updStats();updWalSt();
 }
-function saveUD(){const d=gD();Object.assign(d.users[CU],{balance:bal,wins:W,losses:L,netPnl:P});sD(d);}
+function saveUD(){
+  const d=gD();
+  d.users[CU].balance=bal;
+  d.users[CU].wins=W;
+  d.users[CU].losses=L;
+  d.users[CU].netPnl=P;
+  sD(d);
+}
 
 // ══ TABS ═════════════════════════════════════════════
 function sw(t){
@@ -804,11 +814,54 @@ function showRes(){
 
 function resolveB(res){
   const{color,amount}=pB,won=color===res;let p2;
-  if(won){const pay=Math.floor(amount*ODDS[color]);p2=pay-amount;bal+=pay;W++;P+=p2;sn('🎉 YOU WON!','+₹'+p2,'');confetti();}
-  else{p2=-amount;P+=p2;L++;sn('😞 Better luck!','-₹'+amount,'lose');}
-  const d=gD();d.users[CU].totalBets++;d.users[CU].totalWagered+=amount;
-  if(d.users[CU].referredBy){const rf=d.users[CU].referredBy;const cm=Math.floor(amount*.05);if(d.users[rf]){d.users[rf].balance+=cm;const re=d.users[rf].referrals.find(r=>r.uid===CU);if(re){re.bets++;re.earned=(re.earned||100)+cm;}}}
-  sD(d);updBal();updStats();saveUD();addBR(pB.round,color,amount,res,p2,won);pB=null;
+  
+  if(won){
+    const pay=Math.floor(amount*ODDS[color]);
+    p2=pay-amount;
+    bal+=pay;
+    W++;P+=p2;
+    sn('🎉 YOU WON!','+₹'+p2,'');
+    confetti();
+  } else {
+    p2=-amount;
+    // bal already reduced in placeBet() - do NOT reduce again
+    P+=p2;L++;
+    sn('😞 Better luck!','-₹'+amount,'lose');
+  }
+  
+  // Save directly to Firebase user path — atomic update
+  const userUpdate = {
+    balance: bal,
+    wins: W,
+    losses: L,
+    netPnl: P,
+    totalBets: (_db.users[CU].totalBets||0)+1,
+    totalWagered: (_db.users[CU].totalWagered||0)+amount
+  };
+  
+  // Update local _db
+  Object.assign(_db.users[CU], userUpdate);
+  
+  // Save to Firebase directly
+  DB.ref('chromabet/users/'+CU).update(userUpdate);
+  
+  // Referral commission
+  const d=gD();
+  if(d.users[CU].referredBy){
+    const rf=d.users[CU].referredBy;
+    const cm=Math.floor(amount*.05);
+    if(d.users[rf]){
+      const newRefBal=(d.users[rf].balance||0)+cm;
+      _db.users[rf].balance=newRefBal;
+      DB.ref('chromabet/users/'+rf+'/balance').set(newRefBal);
+      const re=d.users[rf].referrals.find(r=>r.uid===CU);
+      if(re){re.bets++;re.earned=(re.earned||100)+cm;}
+    }
+  }
+  
+  updBal();updStats();
+  addBR(pB.round,color,amount,res,p2,won);
+  pB=null;
 }
 
 function addH(c){
