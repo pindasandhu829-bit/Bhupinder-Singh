@@ -671,6 +671,15 @@ DB.ref('chromabet').on('value', snap => {
   }
 });
 
+// Also handle connection state
+try {
+  firebase.database().ref('.info/connected').on('value', snap => {
+    if(snap.val() === false && !_dbLoaded){
+      console.log('Firebase disconnected - using fallback');
+    }
+  });
+} catch(e){}
+
 // Timeout fallback - if Firebase takes too long
 setTimeout(()=>{
   if(!_dbLoaded){
@@ -678,7 +687,7 @@ setTimeout(()=>{
     _db = defDB();
     showLogin();
   }
-}, 5000);
+}, 3000);
 
 function showLogin(){
   try {
@@ -1173,4 +1182,264 @@ function subWD(){
   if(!d.users[CU].transactions)d.users[CU].transactions=[];
   d.users[CU].transactions.unshift({type:'Withdrawal',amount:'₹'+amt+' ('+ua+' USDT)',network:net,status:'Pending',date:new Date().toLocaleDateString()});
   d.users[CU].totalWithdrawn=(d.users[CU].totalWithdrawn||0)+amt;
-  sD(d);document.getElementById('WDA').value='';document.getElementById('WDR').value='';document.getElementById('WDU').textContent='0 US
+  sD(d);document.getElementById('WDA').value='';document.getElementById('WDR').value='';document.getElementById('WDU').textContent='0 USDT';
+  sn('📤 Withdrawal Request!','Processing 1-24 hrs','');loadTX();updWalSt();
+}
+
+function loadTX(){
+  const d=gD(),txs=d.users[CU]?.transactions||[];
+  const tb=document.getElementById('TXB');
+  if(!txs.length){tb.innerHTML='<tr><td colspan="5" class="nb">No transactions yet</td></tr>';return;}
+  tb.innerHTML=txs.slice(0,15).map(t=>'<tr><td><span class="tag '+(t.type==='Deposit'?'tgreen':'tred')+'">'+t.type+'</span></td><td style="color:'+(t.type==='Deposit'?'var(--green)':'var(--red)')+'">'+t.amount+'</td><td>'+t.network+'</td><td><span class="sbadge '+(t.status==='Approved'?'sa':t.status==='Rejected'?'sr':'sp')+'">'+t.status+'</span></td><td>'+t.date+'</td></tr>').join('');
+}
+
+// ══ REFERRAL ═════════════════════════════════════════
+function setupRef(){
+  const d=gD(),u=d.users[CU];
+  document.getElementById('MRC').textContent=u.referralCode;
+  const lnk=location.origin+location.pathname+'?ref='+u.referralCode;
+  document.getElementById('RLI').value=lnk;
+  const refs=u.referrals||[];
+  document.getElementById('RTOT').textContent=refs.length;
+  const ern=refs.reduce((s,r)=>s+(r.earned||0),0);
+  document.getElementById('RERN').textContent='₹'+ern;
+  const com=refs.reduce((s,r)=>s+Math.max(0,(r.earned||0)-100),0);
+  document.getElementById('RCOM').textContent='₹'+com;
+  document.getElementById('RFB').innerHTML=refs.length?refs.map(r=>'<tr><td>'+(r.name||r.username||'—')+'</td><td>'+r.joined+'</td><td>'+(r.bets||0)+'</td><td style="color:var(--green)">+₹'+(r.earned||0)+'</td></tr>').join(''):'<tr><td colspan="4" class="nb">No referrals yet!</td></tr>';
+}
+function cpyLink(){navigator.clipboard.writeText(document.getElementById('RLI').value).then(()=>sn('✅ Copied!','Share with friends',''));}
+function shrWA(){const l=document.getElementById('RLI').value,c=document.getElementById('MRC').textContent;window.open('https://wa.me/?text='+encodeURIComponent('🎨 ChromaBet join karo!\nCode *'+c+'* se ₹50 bonus!\n'+l));}
+function shrTG(){window.open('https://t.me/share/url?url='+encodeURIComponent(document.getElementById('RLI').value)+'&text='+encodeURIComponent('ChromaBet join karo & get ₹50 bonus!'));}
+
+// ══ PROFILE ══════════════════════════════════════════
+function loadProfile(){
+  const d=gD(),u=d.users[CU];
+  document.getElementById('profName').textContent=u.name||'—';
+  document.getElementById('profPhone').textContent=u.phone||'—';
+  document.getElementById('profEmail').textContent=u.email||'—';
+  document.getElementById('profJoined').textContent=u.joined||'—';
+  document.getElementById('profUpi').textContent=u.savedUpi||'Not saved';
+  document.getElementById('profUpiName').textContent=u.savedUpiName||'—';
+}
+
+function chgPw(){
+  const old=document.getElementById('cpOld').value,nw=document.getElementById('cpNew').value;
+  const d=gD();
+  if(d.users[CU].password!==old)return sn('❌ Current password galat!','','lose');
+  if(nw.length<6)return sn('❌ Min 6 chars!','','lose');
+  d.users[CU].password=nw;sD(d);
+  document.getElementById('cpOld').value='';document.getElementById('cpNew').value='';
+  sn('✅ Password updated!','','');
+}
+
+// ══ ACTIVITY ═════════════════════════════════════════
+const SPIN_PRIZES = [
+  {label:'₹10',val:10,color:'#ff3b5c'},
+  {label:'₹25',val:25,color:'#ff9800'},
+  {label:'₹5',val:5,color:'#3d5afe'},
+  {label:'₹50',val:50,color:'#00e676'},
+  {label:'₹10',val:10,color:'#9c27b0'},
+  {label:'₹100',val:100,color:'#ffd700'},
+  {label:'₹5',val:5,color:'#ff3b5c'},
+  {label:'₹20',val:20,color:'#00bcd4'},
+];
+const CI_REWARDS = [10,20,30,40,50,75,150]; // 7 days
+
+let spinDrawn = false;
+let _spinning = false;
+
+function loadActivity(){
+  const d = gD(), u = d.users[CU]||{};
+  
+  // Rebate
+  const wag = u.totalWagered||0;
+  const rebEarned = Math.floor(wag*0.005);
+  const rebCl = u.rebateClaimed||0;
+  const rebAvail = Math.max(0, rebEarned - rebCl);
+  document.getElementById('rebWag').textContent = '₹'+wag.toLocaleString();
+  document.getElementById('rebAmt').textContent = '₹'+rebAvail;
+  document.getElementById('rebClaimed').textContent = '₹'+rebCl;
+  const rbtn = document.getElementById('rebBtn');
+  if(rebAvail>0){ rbtn.disabled=false; rbtn.textContent='💰 Claim ₹'+rebAvail+' Rebate'; }
+  else{ rbtn.disabled=true; rbtn.textContent='✅ No rebate available'; }
+  
+  // First deposit status
+  const fds = document.getElementById('fdStatus');
+  if(u.totalDeposited>0 && !u.fdBonusClaimed){
+    fds.innerHTML='<div style="background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);border-radius:8px;padding:10px;font-size:.74rem;color:var(--green);margin-bottom:8px;">✅ Tum eligible ho! Admin approve karega deposit ke saath.</div>';
+  } else if(u.fdBonusClaimed){
+    fds.innerHTML='<div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:10px;font-size:.74rem;color:var(--gold);">✅ First deposit bonus already claimed!</div>';
+  } else {
+    fds.innerHTML='<div style="font-size:.74rem;color:var(--muted);margin-bottom:8px;">Pehli deposit karo aur bonus pao!</div>';
+  }
+  
+  // Check-in
+  buildCheckIn(u);
+  
+  // Spin wheel
+  if(!spinDrawn){ drawWheel(); spinDrawn=true; }
+  const today = new Date().toDateString();
+  const spinBtn = document.getElementById('spinBtn');
+  if(u.lastSpin === today){ spinBtn.disabled=true; spinBtn.textContent='✅ Already spun today'; }
+  else{ spinBtn.disabled=false; spinBtn.textContent='🎰 Free Spin'; }
+}
+
+function buildCheckIn(u){
+  const grid = document.getElementById('ciGrid');
+  const today = new Date().toDateString();
+  const streak = u.checkInStreak||0;
+  const lastCI = u.lastCheckIn||'';
+  const alreadyToday = lastCI===today;
+  
+  grid.innerHTML='';
+  for(let i=0;i<7;i++){
+    const div=document.createElement('div');
+    div.className='checkin-day'+(i<streak?' done':i===streak&&!alreadyToday?' today':'');
+    div.innerHTML='<div class="cd-day">Day '+(i+1)+'</div><div class="cd-amt">₹'+CI_REWARDS[i]+'</div><div style="font-size:.9rem;margin-top:3px;">'+(i<streak?'✅':i===streak&&!alreadyToday?'👆':'🔒')+'</div>';
+    grid.appendChild(div);
+  }
+  
+  const btn=document.getElementById('ciBtn');
+  if(alreadyToday){ btn.disabled=true; btn.textContent='✅ Already checked in today!'; }
+  else{ btn.disabled=false; btn.textContent='✅ Check-In — Get ₹'+CI_REWARDS[Math.min(streak,6)]; }
+}
+
+function doCheckIn(){
+  const d=gD(), u=d.users[CU];
+  const today=new Date().toDateString();
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  if(u.lastCheckIn===today){ sn('✅ Already checked in!','',''); return; }
+  
+  const streak=(u.lastCheckIn===yesterday)?(u.checkInStreak||0)+1:1;
+  const reward=CI_REWARDS[Math.min(streak-1,6)];
+  
+  u.lastCheckIn=today;
+  u.checkInStreak=streak;
+  u.balance=(u.balance||0)+reward;
+  bal=u.balance;
+  
+  Object.assign(_db.users[CU],{lastCheckIn:today,checkInStreak:streak,balance:bal});
+  DB.ref('chromabet/users/'+CU).update({lastCheckIn:today,checkInStreak:streak,balance:bal});
+  
+  updBal();
+  sn('🎉 Check-In!','+₹'+reward+' credited! Day '+streak,'');
+  buildCheckIn(u);
+  document.getElementById('ciBtn').disabled=true;
+  document.getElementById('ciBtn').textContent='✅ Done! Come back tomorrow';
+}
+
+function drawWheel(){
+  const canvas=document.getElementById('spinCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const cx=110,cy=110,r=100;
+  const slice=2*Math.PI/SPIN_PRIZES.length;
+  SPIN_PRIZES.forEach((p,i)=>{
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,i*slice,(i+1)*slice);
+    ctx.fillStyle=p.color;ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.3)';ctx.lineWidth=2;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(i*slice+slice/2);
+    ctx.textAlign='right';ctx.fillStyle='#fff';ctx.font='bold 14px Syne,sans-serif';
+    ctx.fillText(p.label,r-12,5);ctx.restore();
+  });
+  ctx.beginPath();ctx.arc(cx,cy,18,0,2*Math.PI);
+  ctx.fillStyle='#1a1a26';ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.3)';ctx.lineWidth=2;ctx.stroke();
+}
+
+function doSpin(){
+  if(_spinning)return;
+  const d=gD(),u=d.users[CU];
+  const today=new Date().toDateString();
+  if(u.lastSpin===today){ sn('✅ Already spun today!','Come back tomorrow',''); return; }
+  
+  _spinning=true;
+  const btn=document.getElementById('spinBtn');
+  btn.disabled=true;btn.textContent='🎰 Spinning...';
+  
+  const winIdx=Math.floor(Math.random()*SPIN_PRIZES.length);
+  const prize=SPIN_PRIZES[winIdx];
+  const canvas=document.getElementById('spinCanvas');
+  const slice=360/SPIN_PRIZES.length;
+  const targetAngle=360*5+(360-winIdx*slice-slice/2);
+  let current=0;const duration=3000;const start=Date.now();
+  
+  function animate(){
+    const elapsed=Date.now()-start;
+    const progress=Math.min(elapsed/duration,1);
+    const ease=1-Math.pow(1-progress,4);
+    current=targetAngle*ease;
+    
+    const canvas2=document.getElementById('spinCanvas');
+    if(!canvas2){_spinning=false;return;}
+    const ctx=canvas2.getContext('2d');
+    ctx.clearRect(0,0,220,220);
+    ctx.save();ctx.translate(110,110);ctx.rotate(current*Math.PI/180);ctx.translate(-110,-110);
+    const slice2=2*Math.PI/SPIN_PRIZES.length;
+    SPIN_PRIZES.forEach((p,i)=>{
+      ctx.beginPath();ctx.moveTo(110,110);
+      ctx.arc(110,110,100,i*slice2,(i+1)*slice2);
+      ctx.fillStyle=p.color;ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.3)';ctx.lineWidth=2;ctx.stroke();
+      ctx.save();ctx.translate(110,110);ctx.rotate(i*slice2+slice2/2);
+      ctx.textAlign='right';ctx.fillStyle='#fff';ctx.font='bold 14px Syne,sans-serif';
+      ctx.fillText(p.label,88,5);ctx.restore();
+    });
+    ctx.beginPath();ctx.arc(110,110,18,0,2*Math.PI);
+    ctx.fillStyle='#1a1a26';ctx.fill();ctx.restore();
+    
+    if(progress<1){requestAnimationFrame(animate);}
+    else{
+      _spinning=false;
+      u.lastSpin=today;
+      u.balance=(u.balance||0)+prize.val;
+      bal=u.balance;
+      _db.users[CU].lastSpin=today;
+      _db.users[CU].balance=bal;
+      DB.ref('chromabet/users/'+CU).update({lastSpin:today,balance:bal});
+      updBal();
+      document.getElementById('spinMsg').textContent='🎉 Tum jeete: '+prize.label+'!';
+      document.getElementById('spinMsg').style.color=prize.color;
+      btn.textContent='✅ Already spun today';
+      sn('🎰 Lucky Spin!','+'+prize.label+' jeeta!','');
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function claimRebate(){
+  const d=gD(),u=d.users[CU];
+  const wag=u.totalWagered||0;
+  const rebEarned=Math.floor(wag*0.005);
+  const rebCl=u.rebateClaimed||0;
+  const rebAvail=Math.max(0,rebEarned-rebCl);
+  if(rebAvail<=0){ sn('❌ No rebate available!','','lose'); return; }
+  
+  u.balance=(u.balance||0)+rebAvail;
+  u.rebateClaimed=(u.rebateClaimed||0)+rebAvail;
+  bal=u.balance;
+  
+  _db.users[CU].balance=bal;
+  _db.users[CU].rebateClaimed=u.rebateClaimed;
+  DB.ref('chromabet/users/'+CU).update({balance:bal,rebateClaimed:u.rebateClaimed});
+  
+  updBal();
+  sn('💰 Rebate Claimed!','+₹'+rebAvail+' credited!','');
+  loadActivity();
+}
+
+// ══ NOTIF & CONFETTI ═════════════════════════════════
+let NT;
+function sn(m,a,t){
+  const e=document.getElementById('NE');
+  e.className='notif'+(t==='lose'?' lose':'')+' show';
+  document.getElementById('NM').textContent=m;
+  const ae=document.getElementById('NAM');ae.textContent=a;
+  ae.className='na'+(a.startsWith&&a.startsWith('+')?'naw':a.startsWith&&a.startsWith('-')?' nal':'');
+  clearTimeout(NT);NT=setTimeout(()=>e.classList.remove('show'),3000);
+}
+function confetti(){const cs=['#ff3b5c','#00e676','#ffd700','#3d5afe','#ce93d8','#fff'];for(let i=0;i<60;i++){const c=document.createElement('div');c.className='cfp';c.style.cssText='left:'+Math.random()*100+'vw;background:'+cs[Math.floor(Math.random()*cs.length)]+';width:'+(6+Math.random()*10)+'px;height:'+(6+Math.random()*10)+'px;animation-duration:'+(1.5+Math.random()*2)+'s;animation-delay:'+Math.random()*.5+'s;border-radius:'+(Math.random()>.5?'50%':'2px')+';';document.body.appendChild(c);setTimeout(()=>c.remove(),4000);}}
+</script>
+</body>
+</html>
