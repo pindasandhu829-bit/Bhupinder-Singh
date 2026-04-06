@@ -207,9 +207,13 @@ tr:last-child td{border-bottom:none;}
   <div class="lsub">Color Prediction Platform</div>
   <div id="LF">
     <div class="fl">Phone / Email</div>
-    <input class="fi" id="lU" placeholder="Phone ya Email"/>
+    <input class="fi" id="lU" placeholder="Phone ya Email" autocomplete="username"/>
     <div class="fl">Password</div>
-    <input class="fi" type="password" id="lP" placeholder="Password"/>
+    <input class="fi" type="password" id="lP" placeholder="Password" autocomplete="current-password"/>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <input type="checkbox" id="rememberMe" style="width:16px;height:16px;cursor:pointer;" onchange="toggleRemember()"/>
+      <label for="rememberMe" style="font-size:.72rem;color:var(--muted);cursor:pointer;">Remember me</label>
+    </div>
     <button class="lbtn" onclick="doLogin()">Login →</button>
     <div class="ltog" id="regLink" style="display:none;">No account? <a onclick="togF(1)">Register</a></div>
   </div>
@@ -302,8 +306,8 @@ tr:last-child td{border-bottom:none;}
         <button class="cb cbv" onclick="selC('violet')" id="B-violet">🟣 Violet<span class="odds">4.5x</span></button>
       </div>
       <!-- Number Bet -->
-      <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;margin-top:6px;">🔢 Number (9x)</div>
-      <div style="display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:14px;" id="numBtns">
+      <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;margin-top:6px;">🔢 Number (9x) &nbsp;|&nbsp; Big/Small (2x)</div>
+      <div style="display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:8px;" id="numBtns">
         <button class="nb-btn nb-v" onclick="selN2(0)" id="N-0">0</button>
         <button class="nb-btn nb-g" onclick="selN2(1)" id="N-1">1</button>
         <button class="nb-btn nb-r" onclick="selN2(2)" id="N-2">2</button>
@@ -314,6 +318,11 @@ tr:last-child td{border-bottom:none;}
         <button class="nb-btn nb-g" onclick="selN2(7)" id="N-7">7</button>
         <button class="nb-btn nb-r" onclick="selN2(8)" id="N-8">8</button>
         <button class="nb-btn nb-g" onclick="selN2(9)" id="N-9">9</button>
+      </div>
+      <!-- Big Small -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+        <button class="cb" id="B-big" onclick="selC('big')" style="background:linear-gradient(135deg,#1565c0,#42a5f5);color:#fff;font-size:.82rem;">Big (5-9)<span class="odds">2x</span></button>
+        <button class="cb" id="B-small" onclick="selC('small')" style="background:linear-gradient(135deg,#4a148c,#ab47bc);color:#fff;font-size:.82rem;">Small (0-4)<span class="odds">2x</span></button>
       </div>
       <div style="display:flex;gap:10px;margin-bottom:14px;">
         <input class="ainp" type="number" id="BA" placeholder="Amount" value="50" min="10"/>
@@ -695,15 +704,15 @@ function showLogin(){
     document.getElementById('APP').style.display='none';
     document.getElementById('LS').classList.add('show');
     const p = new URLSearchParams(window.location.search);
-    // Only show register link if ?register=true or ?ref= in URL
     if(p.get('ref') || p.get('register')==='true'){
       document.getElementById('regLink').style.display='block';
       togF(1);
       if(p.get('ref')) document.getElementById('rRef').value=p.get('ref').toUpperCase();
     } else {
-      // Normal game link - only login, no register option
       document.getElementById('regLink').style.display='none';
       togF(0);
+      // Load saved credentials
+      setTimeout(loadSavedCreds, 100);
     }
   } catch(e){ console.log('showLogin error:',e); }
 }
@@ -737,6 +746,28 @@ function setRT(t){
   document.getElementById('emailF').style.display=t==='email'?'block':'none';
 }
 
+function toggleRemember(){
+  const checked = document.getElementById('rememberMe').checked;
+  if(checked){
+    localStorage.setItem('cb_remember','1');
+  } else {
+    localStorage.removeItem('cb_remember');
+    localStorage.removeItem('cb_saved_user');
+    localStorage.removeItem('cb_saved_pass');
+  }
+}
+
+// Load saved credentials
+function loadSavedCreds(){
+  if(localStorage.getItem('cb_remember')==='1'){
+    const su = localStorage.getItem('cb_saved_user');
+    const sp = localStorage.getItem('cb_saved_pass');
+    if(su) document.getElementById('lU').value = su;
+    if(sp) document.getElementById('lP').value = sp;
+    document.getElementById('rememberMe').checked = true;
+  }
+}
+
 function doLogin(){
   const raw=document.getElementById('lU').value.trim();
   const p=document.getElementById('lP').value.trim();
@@ -760,6 +791,12 @@ function doLogin(){
   
   CU=found;
   localStorage.setItem('cb_user', CU);
+  // Save credentials if remember me is checked
+  if(document.getElementById('rememberMe').checked){
+    localStorage.setItem('cb_remember','1');
+    localStorage.setItem('cb_saved_user', raw);
+    localStorage.setItem('cb_saved_pass', p);
+  }
   showApp();
 }
 
@@ -793,12 +830,13 @@ function doReg(){
     if(email && u.email===email){ sn('❌ Yeh email already registered hai!','','lose'); return; }
   }
   
-  // Check referral
+  // Check referral - both get 150
   let bonus=150, ru=null;
   if(ref){
     ru=Object.keys(users).find(k=>users[k]&&users[k].referralCode===ref);
     if(!ru){ sn('❌ Referral code sahi nahi hai!','','lose'); return; }
-    bonus+=50;
+    // New user gets 150 total (no extra needed, already 150)
+    // Referrer gets 150 too
   }
   
   const uid='user_'+Date.now()+'_'+Math.floor(Math.random()*999);
@@ -815,9 +853,9 @@ function doReg(){
   const d = gD();
   d.users[uid] = newUser;
   if(ru && d.users[ru]){
-    d.users[ru].balance = (d.users[ru].balance||0)+100;
+    d.users[ru].balance = (d.users[ru].balance||0)+150;
     if(!d.users[ru].referrals) d.users[ru].referrals=[];
-    d.users[ru].referrals.push({uid,name,phone,joined:new Date().toLocaleDateString(),bets:0,earned:100});
+    d.users[ru].referrals.push({uid,name,phone,joined:new Date().toLocaleDateString(),bets:0,earned:150});
   }
   
   // Save to Firebase first, then login
@@ -869,8 +907,8 @@ function sw(t){
 }
 
 // ══ GAME ═════════════════════════════════════════════
-const COLS=['red','green','violet'],ODDS={red:2,green:2,violet:4.5,0:9,1:9,2:9,3:9,4:9,5:9,6:9,7:9,8:9,9:9};
-const CL={red:'Red',green:'Green',violet:'Violet',0:'#0',1:'#1',2:'#2',3:'#3',4:'#4',5:'#5',6:'#6',7:'#7',8:'#8',9:'#9'};
+const COLS=['red','green','violet','big','small'],ODDS={red:2,green:2,violet:4.5,big:2,small:2,0:9,1:9,2:9,3:9,4:9,5:9,6:9,7:9,8:9,9:9};
+const CL={red:'Red',green:'Green',violet:'Violet',big:'Big',small:'Small',0:'#0',1:'#1',2:'#2',3:'#3',4:'#4',5:'#5',6:'#6',7:'#7',8:'#8',9:'#9'};
 const NUMS=[0,1,2,3,4,5,6,7,8,9];
 // Number color mapping: 1,3,7,9=Green | 2,4,6,8=Red | 0,5=Violet
 const NUM_COLOR={0:'violet',1:'green',2:'red',3:'green',4:'red',5:'violet',6:'red',7:'green',8:'red',9:'green'};
@@ -878,7 +916,6 @@ function selC(c){
   if(!bO)return;
   sC=c;
   COLS.forEach(x=>document.getElementById('B-'+x).classList.toggle('sel',x===c));
-  // Clear number selection
   NUMS.forEach(n=>document.getElementById('N-'+n).classList.remove('sel'));
 }
 function selN2(n){
@@ -918,7 +955,7 @@ function placeBet(){
 function startRound(){
   const d=gD();rnd=d.currentRound||1;tmr=30;bO=true;pB=null;
   const b=document.getElementById('BB');b.disabled=false;b.textContent='Place Bet';
-  sC=null;COLS.forEach(c=>document.getElementById('B-'+c).classList.remove('sel','dis'));NUMS.forEach(n=>document.getElementById('N-'+n).classList.remove('sel','dis'));
+  sC=null;COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.remove('sel','dis');});NUMS.forEach(n=>document.getElementById('N-'+n).classList.remove('sel','dis'));
   document.getElementById('RN').textContent='#'+String(rnd).padStart(4,'0');
   document.getElementById('WT').style.display='';document.getElementById('RC').style.display='none';
   document.getElementById('RCI').classList.remove('spin','rev');
@@ -938,7 +975,7 @@ function startRound(){
 
 function tick(){
   tmr--;updT();
-  if(tmr===5){bO=false;const b=document.getElementById('BB');b.disabled=true;if(!pB)b.textContent='🔒 Closed';COLS.forEach(c=>document.getElementById('B-'+c).classList.add('dis'));NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));}
+  if(tmr===5){bO=false;const b=document.getElementById('BB');b.disabled=true;if(!pB)b.textContent='🔒 Closed';COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.add('dis');});NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));}
   if(tmr<=0){clearInterval(tI);showRes();}
 }
 
@@ -980,10 +1017,13 @@ function showRes(){
 }
 
 function resolveB(res,numRes){
-  const betVal=pB.color; // could be 'red','green','violet' or 0-9
+  const betVal=pB.color;
   const isNumBet=typeof betVal==='number';
-  // Number bet: exact match = 9x | Color bet: color match = 2x/4.5x
-  const won = isNumBet ? (betVal===numRes) : (betVal===res);
+  let won=false;
+  if(isNumBet){ won=(betVal===numRes); }
+  else if(betVal==='big'){ won=(numRes>=5); }
+  else if(betVal==='small'){ won=(numRes<=4); }
+  else { won=(betVal===res); }
   const{amount}=pB;let p2;
   const color=betVal;
   
