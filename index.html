@@ -485,8 +485,9 @@ tr:last-child td{border-bottom:none;}
     <!-- REFERRAL BONUS -->
     <div class="act-card">
       <div class="act-head"><div class="act-icon">🔗</div><div><div class="act-title">Referral Bonus</div><div class="act-sub">Dost invite karo, paisa kamao!</div></div></div>
-      <div class="bonus-grid" style="grid-template-columns:1fr 1fr;">
-        <div class="bonus-box bb-violet"><div class="bb-val" style="color:#ce93d8">₹50</div><div class="bb-lbl">Friend ko signup bonus</div></div>
+      <div class="bonus-grid" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="bonus-box bb-violet"><div class="bb-val" style="color:#ce93d8">₹150</div><div class="bb-lbl">Friend signup bonus</div></div>
+        <div class="bonus-box bb-gold"><div class="bb-val" style="color:var(--gold)">₹150</div><div class="bb-lbl">You get per ref</div></div>
         <div class="bonus-box bb-green"><div class="bb-val" style="color:var(--green)">5%</div><div class="bb-lbl">Bet commission</div></div>
       </div>
       <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin:10px 0;">
@@ -494,7 +495,8 @@ tr:last-child td{border-bottom:none;}
         <div style="font-size:.76rem;color:var(--text);line-height:2;">
           Friend ₹500+ deposit kare<br>
           <span style="color:var(--green);font-weight:700;">→ Tumhe ₹150 milega!</span><br>
-          <span style="font-size:.68rem;color:var(--muted);">Admin approve karta hai deposit ke saath</span>
+          <span style="color:var(--gold);font-weight:700;">→ Friend ko ₹150 signup bonus!</span><br>
+          <span style="font-size:.68rem;color:var(--muted);">Admin approve karta hai</span>
         </div>
       </div>
       <button class="betbtn" onclick="sw('R')" style="margin-top:4px;">🔗 Referral Page →</button>
@@ -543,7 +545,7 @@ tr:last-child td{border-bottom:none;}
       <div class="rsbox"><div class="rsv" style="color:var(--violet)" id="RCOM">₹0</div><div class="rslbl">Commission</div></div>
     </div>
     <div class="gc">
-      <div class="ibox">🎁 <strong>Friend gets:</strong> ₹50 bonus<br>💰 <strong>You get:</strong> ₹100 per friend<br>⚡ <strong>Commission:</strong> 5% of friend's bets</div>
+      <div class="ibox">🎁 <strong>Friend gets:</strong> ₹150 signup bonus<br>💰 <strong>You get:</strong> ₹150 per referral<br>💰 <strong>Deposit Bonus:</strong> ₹150 jab friend ₹500+ deposit kare<br>⚡ <strong>Commission:</strong> 5% of friend's bets</div>
     </div>
     <div class="gc">
       <div class="sl">Referred Users</div>
@@ -911,7 +913,9 @@ const COLS=['red','green','violet','big','small'],ODDS={red:2,green:2,violet:4.5
 const CL={red:'Red',green:'Green',violet:'Violet',big:'Big',small:'Small',0:'#0',1:'#1',2:'#2',3:'#3',4:'#4',5:'#5',6:'#6',7:'#7',8:'#8',9:'#9'};
 const NUMS=[0,1,2,3,4,5,6,7,8,9];
 // Number color mapping: 1,3,7,9=Green | 2,4,6,8=Red | 0,5=Violet
-const NUM_COLOR={0:'violet',1:'green',2:'red',3:'green',4:'red',5:'violet',6:'red',7:'green',8:'red',9:'green'};
+const NUM_COLOR={0:'red',1:'green',2:'red',3:'green',4:'red',5:'green',6:'red',7:'green',8:'red',9:'green'};
+// 0 = Red+Violet combo, 5 = Green+Violet combo
+const VIOLET_COMBO=[0,5]; // these numbers have violet mixed in
 function selC(c){
   if(!bO)return;
   sC=c;
@@ -991,7 +995,9 @@ function showRes(){
   else{const r=Math.random();res=r<.4?'red':r<.8?'green':'violet';}
   // Pick random number 0-9 for this round (consistent with color)
   // Numbers matching the result color are more likely but any can appear
-  const colorNums = {red:[2,4,6,8], green:[1,3,7,9], violet:[0,5]};
+  // Number selection based on color result
+  // Red = 2,4,6,8 | Green = 1,3,7,9 | Violet = 0,5 (combo numbers)
+  const colorNums = {red:[2,4,6,8,0], green:[1,3,7,9,5], violet:[0,5]};
   const matchNums = colorNums[res];
   numRes = matchNums[Math.floor(Math.random()*matchNums.length)];
   const cols={red:'#ff3b5c',green:'#00e676',violet:'#9c27b0'};
@@ -1000,7 +1006,9 @@ function showRes(){
   const ci=document.getElementById('RCI');ci.style.background='var(--border)';ci.classList.add('spin');
   setTimeout(()=>{
     ci.classList.remove('spin');ci.style.background=cols[res];ci.classList.add('rev');
-    document.getElementById('RT').textContent=CL[res]+' • #'+numRes;document.getElementById('RT').style.color=cols[res];
+    const isVioletNum=(numRes===0||numRes===5);
+    document.getElementById('RT').textContent=CL[res]+(isVioletNum?' + Violet':'')+' • #'+numRes;
+    document.getElementById('RT').style.color=cols[res];
     document.getElementById('RS').textContent='Round #'+String(rnd).padStart(4,'0');
     addH(res,numRes);if(pB)resolveB(res,numRes);
     const d2=gD();d2.gameHistory.unshift({round:rnd,result:res,numResult:numRes,timestamp:new Date().toLocaleTimeString()});
@@ -1020,19 +1028,36 @@ function resolveB(res,numRes){
   const betVal=pB.color;
   const isNumBet=typeof betVal==='number';
   let won=false;
-  if(isNumBet){ won=(betVal===numRes); }
-  else if(betVal==='big'){ won=(numRes>=5); }
-  else if(betVal==='small'){ won=(numRes<=4); }
-  else { won=(betVal===res); }
+  let bonusMulti=1; // extra multiplier for 0 or 5
+  
+  if(isNumBet){ 
+    won=(betVal===numRes); 
+  } else if(betVal==='big'){ 
+    won=(numRes>=5); 
+  } else if(betVal==='small'){ 
+    won=(numRes<=4); 
+  } else { 
+    won=(betVal===res);
+    // 0 or 5 = violet+color combo: 50% extra on color bets!
+    if(won && (numRes===0 || numRes===5)){
+      bonusMulti=1.5; // 50% extra
+    }
+  }
+  
   const{amount}=pB;let p2;
   const color=betVal;
   
   if(won){
-    const pay=Math.floor(amount*(ODDS[color]||2));
+    const basePay=Math.floor(amount*(ODDS[color]||2));
+    const pay=Math.floor(basePay*bonusMulti);
     p2=pay-amount;
     bal+=pay;
     W++;P+=p2;
-    sn('🎉 YOU WON!','+₹'+p2,'');
+    if(bonusMulti>1){
+      sn('🎉 VIOLET BONUS!','+₹'+p2+' (50% extra!)','');
+    } else {
+      sn('🎉 YOU WON!','+₹'+p2,'');
+    }
     confetti();
   } else {
     p2=-amount;
