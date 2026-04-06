@@ -196,10 +196,16 @@ tr:hover td{background:rgba(255,255,255,.015);}
             <button class="btn bp" onclick="opAddU()">+ Add User</button>
           </div>
         </div>
+        <!-- Search -->
+        <div style="margin-bottom:12px;">
+          <input style="width:100%;background:var(--sf);border:1px solid var(--br);border-radius:8px;padding:9px 14px;color:var(--tx);font-family:Space Mono,monospace;font-size:.78rem;outline:none;" placeholder="🔍 Search by name or phone..." id="uSearch" oninput="searchUsers()"/>
+        </div>
         <div class="card"><div class="tbl-wrap"><table>
           <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Balance</th><th>Deposited</th><th>Withdrawn</th><th>Bets</th><th>W/L</th><th>Joined</th><th>Actions</th></tr></thead>
           <tbody id="uTbl"></tbody>
         </table></div></div>
+        <!-- Pagination -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;" id="uPagination"></div>
       </div>
 
       <!-- GAME -->
@@ -396,6 +402,19 @@ DB.ref('chromabet').on('value', snap => {
     }
   } catch(e){ _db = defDB(); }
 
+  // Restore admin session if previously logged in
+  if(!_adminLogged){
+    const savedAdmin = sessionStorage.getItem('admin_logged');
+    const savedUser = sessionStorage.getItem('admin_user');
+    if(savedAdmin && savedUser && _db.users && _db.users[savedUser]){
+      _adminLogged = true;
+      document.getElementById('AL').style.display = 'none';
+      document.getElementById('APP').style.display = 'block';
+      loadDash();
+      setInterval(()=>{ document.getElementById('TT').textContent = '🟢 Live • '+new Date().toLocaleTimeString(); }, 1000);
+    }
+  }
+
   // Auto refresh if admin is logged in
   if(_adminLogged){
     const pt = document.getElementById('PT').textContent;
@@ -445,12 +464,14 @@ function aLogin(){
   const p = document.getElementById('AP').value.trim();
   if(!u||!p){ alert('Username aur password dalo!'); return; }
   
-  // Wait for Firebase
   const tryLogin = () => {
     const d = gD();
     if(!d.users[u]){ alert('❌ User "'+u+'" nahi mila!'); return; }
     if(d.users[u].password !== p){ alert('❌ Password galat hai!'); return; }
     _adminLogged = true;
+    // Save admin session
+    sessionStorage.setItem('admin_logged','1');
+    sessionStorage.setItem('admin_user',u);
     document.getElementById('AL').style.display = 'none';
     document.getElementById('APP').style.display = 'block';
     loadDash();
@@ -463,6 +484,8 @@ function aLogin(){
 
 function aOut(){
   _adminLogged = false;
+  sessionStorage.removeItem('admin_logged');
+  sessionStorage.removeItem('admin_user');
   document.getElementById('APP').style.display = 'none';
   document.getElementById('AL').style.display = 'flex';
   document.getElementById('AP').value = '';
@@ -712,22 +735,57 @@ function loadLiveBets(){
   const d = gD();
   const rnd = d.currentRound||1;
   document.getElementById('curRnd').textContent = '#'+String(rnd).padStart(4,'0');
-  const liveBets = d.liveBets||{};
-  let rA=0,gA=0,vA=0,rC=0,gC=0,vC=0;
-  Object.values(liveBets).forEach(bet=>{
-    if(bet.round===rnd){
-      if(bet.color==='red'){rA+=bet.amount;rC++;}
-      else if(bet.color==='green'){gA+=bet.amount;gC++;}
-      else if(bet.color==='violet'){vA+=bet.amount;vC++;}
+  
+  // Read directly from Firebase liveBets path
+  DB.ref('chromabet/liveBets').once('value', snap => {
+    const liveBets = snap.val()||{};
+    let rA=0,gA=0,vA=0,rC=0,gC=0,vC=0,numA=0,numC=0;
+    
+    Object.values(liveBets).forEach(bet=>{
+      if(bet.round===rnd){
+        const col = bet.color||'';
+        if(col==='red'){rA+=bet.amount;rC++;}
+        else if(col==='green'){gA+=bet.amount;gC++;}
+        else if(col==='violet'){vA+=bet.amount;vC++;}
+        else if(col.startsWith('num_')){numA+=bet.amount;numC++;}
+      }
+    });
+    
+    document.getElementById('betRed').textContent = '₹'+rA.toLocaleString();
+    document.getElementById('betGreen').textContent = '₹'+gA.toLocaleString();
+    document.getElementById('betViolet').textContent = '₹'+vA.toLocaleString();
+    document.getElementById('betRedC').textContent = rC;
+    document.getElementById('betGreenC').textContent = gC;
+    document.getElementById('betVioletC').textContent = vC;
+    document.getElementById('betTotal').textContent = '₹'+(rA+gA+vA+numA).toLocaleString();
+    
+    // Show number bets if any
+    if(numC>0){
+      document.getElementById('betTotal').textContent += ' (incl. ₹'+numA+' on numbers)';
     }
+  }).catch(e=>console.log('liveBets error:',e));
+  
+  // Also set up real-time listener for this round
+  DB.ref('chromabet/liveBets').on('value', snap => {
+    const bets = snap.val()||{};
+    let rA=0,gA=0,vA=0,rC=0,gC=0,vC=0,numA=0,numC=0;
+    Object.values(bets).forEach(bet=>{
+      if(bet.round===rnd){
+        const col=bet.color||'';
+        if(col==='red'){rA+=bet.amount;rC++;}
+        else if(col==='green'){gA+=bet.amount;gC++;}
+        else if(col==='violet'){vA+=bet.amount;vC++;}
+        else if(col.startsWith('num_')){numA+=bet.amount;numC++;}
+      }
+    });
+    document.getElementById('betRed').textContent = '₹'+rA.toLocaleString();
+    document.getElementById('betGreen').textContent = '₹'+gA.toLocaleString();
+    document.getElementById('betViolet').textContent = '₹'+vA.toLocaleString();
+    document.getElementById('betRedC').textContent = rC;
+    document.getElementById('betGreenC').textContent = gC;
+    document.getElementById('betVioletC').textContent = vC;
+    document.getElementById('betTotal').textContent = '₹'+(rA+gA+vA+numA).toLocaleString();
   });
-  document.getElementById('betRed').textContent = '₹'+rA.toLocaleString();
-  document.getElementById('betGreen').textContent = '₹'+gA.toLocaleString();
-  document.getElementById('betViolet').textContent = '₹'+vA.toLocaleString();
-  document.getElementById('betRedC').textContent = rC;
-  document.getElementById('betGreenC').textContent = gC;
-  document.getElementById('betVioletC').textContent = vC;
-  document.getElementById('betTotal').textContent = '₹'+(rA+gA+vA).toLocaleString();
 }
 
 function forceR(c){
