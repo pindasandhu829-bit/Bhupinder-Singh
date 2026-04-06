@@ -166,8 +166,30 @@ tr:last-child td{border-bottom:none;}
 .nb-r.sel{border-color:#ff3b5c;background:rgba(255,59,92,.3);}
 .nb-v.sel{border-color:#ce93d8;background:rgba(156,39,176,.3);}
 @keyframes cff{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
-#GV,#WV,#RV,#PV{display:none;}
-#GV.on,#WV.on,#RV.on,#PV.on{display:block;}
+#GV,#WV,#AV,#RV,#PV{display:none;}
+#GV.on,#WV.on,#AV.on,#RV.on,#PV.on{display:block;}
+.act-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:16px;}
+.act-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.act-icon{font-size:2rem;}
+.act-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;}
+.act-sub{font-size:.7rem;color:var(--muted);margin-top:2px;}
+.bonus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.bonus-box{border-radius:12px;padding:14px;text-align:center;}
+.bb-green{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);}
+.bb-blue{background:rgba(61,90,254,.08);border:1px solid rgba(61,90,254,.2);}
+.bb-gold{background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);}
+.bb-violet{background:rgba(156,39,176,.08);border:1px solid rgba(156,39,176,.2);}
+.bb-red{background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.2);}
+.bb-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;}
+.bb-lbl{font-size:.6rem;color:var(--muted);margin-top:4px;}
+.checkin-day{border-radius:10px;padding:10px 4px;text-align:center;border:1px solid var(--border);background:var(--surface);}
+.checkin-day.done{background:rgba(0,230,118,.15);border-color:rgba(0,230,118,.4);}
+.checkin-day.today{background:rgba(255,215,0,.15);border-color:rgba(255,215,0,.5);animation:pulse2 1s ease infinite alternate;}
+@keyframes pulse2{from{box-shadow:0 0 0 rgba(255,215,0,.3);}to{box-shadow:0 0 10px rgba(255,215,0,.5);}}
+.cd-day{font-size:.55rem;color:var(--muted);text-transform:uppercase;}
+.cd-amt{font-family:'Syne',sans-serif;font-weight:800;font-size:.8rem;color:var(--gold);}
+.spin-wrap{position:relative;width:220px;height:220px;margin:0 auto 16px;}
+.spin-ptr{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:1.6rem;z-index:10;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
 </style>
 </head>
 <body>
@@ -220,7 +242,7 @@ tr:last-child td{border-bottom:none;}
     <div class="fl">Confirm Password</div>
     <input class="fi" type="password" id="rP2" placeholder="Password dobara"/>
     <div class="fl">Referral Code (Optional)</div>
-    <div class="rhint">🎁 ₹50 bonus milega referral code se!</div>
+    <div class="rhint">🎁 Extra ₹50 bonus milega referral code se!</div>
     <input class="fi" id="rRef" placeholder="e.g. ABC123" style="text-transform:uppercase;"/>
     <button class="lbtn" onclick="doReg()">Create Account →</button>
     <div class="ltog">Have account? <a onclick="togF(0)">Login</a></div>
@@ -242,6 +264,7 @@ tr:last-child td{border-bottom:none;}
   <div class="tabs">
     <button class="tab active" id="tG" onclick="sw('G')">🎮 Game</button>
     <button class="tab" id="tW" onclick="sw('W')">💳 Wallet</button>
+    <button class="tab" id="tA" onclick="sw('A')">🎁 Activity</button>
     <button class="tab" id="tR" onclick="sw('R')">🔗 Referral</button>
     <button class="tab" id="tP" onclick="sw('P')">👤 Profile</button>
   </div>
@@ -420,6 +443,70 @@ tr:last-child td{border-bottom:none;}
       <div class="sl">Transaction History</div>
       <table><thead><tr><th>Type</th><th>Amount</th><th>Network</th><th>Status</th><th>Date</th></tr></thead>
       <tbody id="TXB"><tr><td colspan="5" class="nb">No transactions yet</td></tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- ACTIVITY -->
+  <div id="AV">
+    <!-- FIRST DEPOSIT BONUS -->
+    <div class="act-card">
+      <div class="act-head"><div class="act-icon">🎁</div><div><div class="act-title">First Deposit Bonus</div><div class="act-sub">Pehli deposit pe extra bonus!</div></div></div>
+      <div class="bonus-grid">
+        <div class="bonus-box bb-green"><div class="bb-val" style="color:var(--green)">+10%</div><div class="bb-lbl">₹100 – ₹999</div></div>
+        <div class="bonus-box bb-blue"><div class="bb-val" style="color:var(--blue)">+15%</div><div class="bb-lbl">₹1000 – ₹4999</div></div>
+        <div class="bonus-box bb-gold"><div class="bb-val" style="color:var(--gold)">+20%</div><div class="bb-lbl">₹5000+</div></div>
+      </div>
+      <div id="fdStatus" style="margin-bottom:10px;"></div>
+      <div style="font-size:.7rem;color:var(--muted);line-height:1.8;">⚠️ Sirf pehli deposit pe milega &nbsp;|&nbsp; Admin approve karega</div>
+    </div>
+
+
+
+    <!-- BET REBATE -->
+    <div class="act-card">
+      <div class="act-head"><div class="act-icon">🔄</div><div><div class="act-title">Bet Rebate</div><div class="act-sub">Har bet pe 0.5% cashback!</div></div></div>
+      <div style="background:var(--surface);border-radius:12px;padding:16px;margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><div style="font-size:.72rem;color:var(--muted);">Total Wagered</div><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--gold)" id="rebWag">₹0</div></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><div style="font-size:.72rem;color:var(--muted);">Rebate (0.5%)</div><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--green)" id="rebAmt">₹0</div></div>
+        <div style="display:flex;justify-content:space-between;"><div style="font-size:.72rem;color:var(--muted);">Claimed</div><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--muted)" id="rebClaimed">₹0</div></div>
+      </div>
+      <button class="subbtn" id="rebBtn" onclick="claimRebate()">💰 Claim Rebate</button>
+    </div>
+
+    <!-- REFERRAL BONUS -->
+    <div class="act-card">
+      <div class="act-head"><div class="act-icon">🔗</div><div><div class="act-title">Referral Bonus</div><div class="act-sub">Dost invite karo, paisa kamao!</div></div></div>
+      <div class="bonus-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="bonus-box bb-violet"><div class="bb-val" style="color:#ce93d8">₹50</div><div class="bb-lbl">Friend ko signup bonus</div></div>
+        <div class="bonus-box bb-green"><div class="bb-val" style="color:var(--green)">5%</div><div class="bb-lbl">Bet commission</div></div>
+      </div>
+      <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin:10px 0;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--gold);margin-bottom:8px;">💰 Deposit Referral Bonus</div>
+        <div style="font-size:.76rem;color:var(--text);line-height:2;">
+          Friend ₹500+ deposit kare<br>
+          <span style="color:var(--green);font-weight:700;">→ Tumhe ₹150 milega!</span><br>
+          <span style="font-size:.68rem;color:var(--muted);">Admin approve karta hai deposit ke saath</span>
+        </div>
+      </div>
+      <button class="betbtn" onclick="sw('R')" style="margin-top:4px;">🔗 Referral Page →</button>
+    </div>
+
+    <!-- LUCKY SPIN -->
+    <div class="act-card">
+      <div class="act-head"><div class="act-icon">🎰</div><div><div class="act-title">Lucky Spin</div><div class="act-sub">Roz ek free spin — prizes jeeto!</div></div></div>
+      <div class="spin-wrap">
+        <div class="spin-ptr">▼</div>
+        <canvas id="spinCanvas" width="220" height="220"></canvas>
+      </div>
+      <div id="spinMsg" style="text-align:center;font-size:.82rem;color:var(--muted);margin-bottom:12px;">Spin karo aur prize jeeto!</div>
+      <button class="betbtn" id="spinBtn" onclick="doSpin()">🎰 Free Spin</button>
+    </div>
+
+    <!-- DAILY CHECK-IN -->
+    <div class="act-card">
+      <div class="act-head"><div class="act-icon">📅</div><div><div class="act-title">Daily Check-In</div><div class="act-sub">Roz aao, bonus pao!</div></div></div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px;" id="ciGrid"></div>
+      <button class="subbtn" id="ciBtn" onclick="doCheckIn()">✅ Check-In Today</button>
     </div>
   </div>
 
@@ -698,7 +785,7 @@ function doReg(){
   }
   
   // Check referral
-  let bonus=100, ru=null;
+  let bonus=150, ru=null;
   if(ref){
     ru=Object.keys(users).find(k=>users[k]&&users[k].referralCode===ref);
     if(!ru){ sn('❌ Referral code sahi nahi hai!','','lose'); return; }
@@ -730,7 +817,7 @@ function doReg(){
     CU = uid;
     localStorage.setItem('cb_user', CU);
     showApp();
-    setTimeout(()=>sn('🎉 Welcome '+name+'!','+₹'+bonus+' credited!',''), 500);
+    setTimeout(()=>sn('🎉 Welcome '+name+'!','₹'+bonus+' signup bonus credited!',''), 500);
   }).catch(e=>{
     console.log('Reg error:',e);
     sn('❌ Registration fail! Internet check karo!','','lose');
@@ -765,11 +852,11 @@ function saveUD(){
 
 // ══ TABS ═════════════════════════════════════════════
 function sw(t){
-  ['G','W','R','P'].forEach(x=>{
+  ['G','W','A','R','P'].forEach(x=>{
     document.getElementById(x+'V').classList.toggle('on',x===t);
     document.getElementById('t'+x).classList.toggle('active',x===t);
   });
-  if(t==='R')setupRef();if(t==='W')updWalSt();if(t==='P')loadProfile();
+  if(t==='R')setupRef();if(t==='W')updWalSt();if(t==='P')loadProfile();if(t==='A')loadActivity();
 }
 
 // ══ GAME ═════════════════════════════════════════════
@@ -802,8 +889,21 @@ function placeBet(){
   if(!a||a<10)return sn('❗ Min bet ₹10','','lose');
   if(a>bal)return sn('❗ Balance kam hai!','','lose');
   if(pB)return sn('⚠️ Bet already placed!','','');
-  bal-=a;updBal();pB={color:sC,amount:a,round:rnd};
+  bal-=a;updBal();
+  pB={color:sC,amount:a,round:rnd};
   const b=document.getElementById('BB');b.disabled=true;b.textContent='✅ ₹'+a+' on '+CL[sC];
+  // Save live bet to Firebase for admin to see
+  const betKey='bet_'+CU+'_'+rnd;
+  const colorStr=typeof sC==='number'?'num_'+sC:sC;
+  DB.ref('chromabet/liveBets/'+betKey).set({
+    user:CU,
+    name:(_db.users[CU]?.name||'User'),
+    color:colorStr,
+    colorDisplay:typeof sC==='number'?('#'+sC):CL[sC],
+    amount:a,
+    round:rnd,
+    time:Date.now()
+  }).catch(e=>console.log('liveBet save error:',e));
 }
 
 function startRound(){
@@ -1073,67 +1173,4 @@ function subWD(){
   if(!d.users[CU].transactions)d.users[CU].transactions=[];
   d.users[CU].transactions.unshift({type:'Withdrawal',amount:'₹'+amt+' ('+ua+' USDT)',network:net,status:'Pending',date:new Date().toLocaleDateString()});
   d.users[CU].totalWithdrawn=(d.users[CU].totalWithdrawn||0)+amt;
-  sD(d);document.getElementById('WDA').value='';document.getElementById('WDR').value='';document.getElementById('WDU').textContent='0 USDT';
-  sn('📤 Withdrawal Request!','Processing 1-24 hrs','');loadTX();updWalSt();
-}
-
-function loadTX(){
-  const d=gD(),txs=d.users[CU]?.transactions||[];
-  const tb=document.getElementById('TXB');
-  if(!txs.length){tb.innerHTML='<tr><td colspan="5" class="nb">No transactions yet</td></tr>';return;}
-  tb.innerHTML=txs.slice(0,15).map(t=>'<tr><td><span class="tag '+(t.type==='Deposit'?'tgreen':'tred')+'">'+t.type+'</span></td><td style="color:'+(t.type==='Deposit'?'var(--green)':'var(--red)')+'">'+t.amount+'</td><td>'+t.network+'</td><td><span class="sbadge '+(t.status==='Approved'?'sa':t.status==='Rejected'?'sr':'sp')+'">'+t.status+'</span></td><td>'+t.date+'</td></tr>').join('');
-}
-
-// ══ REFERRAL ═════════════════════════════════════════
-function setupRef(){
-  const d=gD(),u=d.users[CU];
-  document.getElementById('MRC').textContent=u.referralCode;
-  const lnk=location.origin+location.pathname+'?ref='+u.referralCode;
-  document.getElementById('RLI').value=lnk;
-  const refs=u.referrals||[];
-  document.getElementById('RTOT').textContent=refs.length;
-  const ern=refs.reduce((s,r)=>s+(r.earned||0),0);
-  document.getElementById('RERN').textContent='₹'+ern;
-  const com=refs.reduce((s,r)=>s+Math.max(0,(r.earned||0)-100),0);
-  document.getElementById('RCOM').textContent='₹'+com;
-  document.getElementById('RFB').innerHTML=refs.length?refs.map(r=>'<tr><td>'+(r.name||r.username||'—')+'</td><td>'+r.joined+'</td><td>'+(r.bets||0)+'</td><td style="color:var(--green)">+₹'+(r.earned||0)+'</td></tr>').join(''):'<tr><td colspan="4" class="nb">No referrals yet!</td></tr>';
-}
-function cpyLink(){navigator.clipboard.writeText(document.getElementById('RLI').value).then(()=>sn('✅ Copied!','Share with friends',''));}
-function shrWA(){const l=document.getElementById('RLI').value,c=document.getElementById('MRC').textContent;window.open('https://wa.me/?text='+encodeURIComponent('🎨 ChromaBet join karo!\nCode *'+c+'* se ₹50 bonus!\n'+l));}
-function shrTG(){window.open('https://t.me/share/url?url='+encodeURIComponent(document.getElementById('RLI').value)+'&text='+encodeURIComponent('ChromaBet join karo & get ₹50 bonus!'));}
-
-// ══ PROFILE ══════════════════════════════════════════
-function loadProfile(){
-  const d=gD(),u=d.users[CU];
-  document.getElementById('profName').textContent=u.name||'—';
-  document.getElementById('profPhone').textContent=u.phone||'—';
-  document.getElementById('profEmail').textContent=u.email||'—';
-  document.getElementById('profJoined').textContent=u.joined||'—';
-  document.getElementById('profUpi').textContent=u.savedUpi||'Not saved';
-  document.getElementById('profUpiName').textContent=u.savedUpiName||'—';
-}
-
-function chgPw(){
-  const old=document.getElementById('cpOld').value,nw=document.getElementById('cpNew').value;
-  const d=gD();
-  if(d.users[CU].password!==old)return sn('❌ Current password galat!','','lose');
-  if(nw.length<6)return sn('❌ Min 6 chars!','','lose');
-  d.users[CU].password=nw;sD(d);
-  document.getElementById('cpOld').value='';document.getElementById('cpNew').value='';
-  sn('✅ Password updated!','','');
-}
-
-// ══ NOTIF & CONFETTI ═════════════════════════════════
-let NT;
-function sn(m,a,t){
-  const e=document.getElementById('NE');
-  e.className='notif'+(t==='lose'?' lose':'')+' show';
-  document.getElementById('NM').textContent=m;
-  const ae=document.getElementById('NAM');ae.textContent=a;
-  ae.className='na'+(a.startsWith&&a.startsWith('+')?'naw':a.startsWith&&a.startsWith('-')?' nal':'');
-  clearTimeout(NT);NT=setTimeout(()=>e.classList.remove('show'),3000);
-}
-function confetti(){const cs=['#ff3b5c','#00e676','#ffd700','#3d5afe','#ce93d8','#fff'];for(let i=0;i<60;i++){const c=document.createElement('div');c.className='cfp';c.style.cssText='left:'+Math.random()*100+'vw;background:'+cs[Math.floor(Math.random()*cs.length)]+';width:'+(6+Math.random()*10)+'px;height:'+(6+Math.random()*10)+'px;animation-duration:'+(1.5+Math.random()*2)+'s;animation-delay:'+Math.random()*.5+'s;border-radius:'+(Math.random()>.5?'50%':'2px')+';';document.body.appendChild(c);setTimeout(()=>c.remove(),4000);}}
-</script>
-</body>
-</html>
+  sD(d);document.getElementById('WDA').value='';document.getElementById('WDR').value='';document.getElementById('WDU').textContent='0 US
