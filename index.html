@@ -165,13 +165,6 @@ tr:last-child td{border-bottom:none;}
 .nb-g.sel{border-color:#00e676;background:rgba(0,230,118,.3);}
 .nb-r.sel{border-color:#ff3b5c;background:rgba(255,59,92,.3);}
 .nb-v.sel{border-color:#ce93d8;background:rgba(156,39,176,.3);}
-/* 0 = Red+Violet, 5 = Green+Violet */
-.nb-rv{background:linear-gradient(135deg,rgba(255,59,92,.2),rgba(156,39,176,.2));border-color:rgba(255,59,92,.5);color:#ff3b5c;position:relative;}
-.nb-rv::after{content:'🟣';position:absolute;top:-4px;right:-4px;font-size:.5rem;}
-.nb-gv{background:linear-gradient(135deg,rgba(0,230,118,.15),rgba(156,39,176,.2));border-color:rgba(0,230,118,.5);color:#00e676;position:relative;}
-.nb-gv::after{content:'🟣';position:absolute;top:-4px;right:-4px;font-size:.5rem;}
-.nb-rv.sel{border-color:#ff3b5c;background:linear-gradient(135deg,rgba(255,59,92,.4),rgba(156,39,176,.3));}
-.nb-gv.sel{border-color:#00e676;background:linear-gradient(135deg,rgba(0,230,118,.3),rgba(156,39,176,.3));}
 @keyframes cff{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 #GV,#WV,#AV,#RV,#PV{display:none;}
 #GV.on,#WV.on,#AV.on,#RV.on,#PV.on{display:block;}
@@ -200,7 +193,7 @@ tr:last-child td{border-bottom:none;}
 </style>
 </head>
 <body>
-  
+
 <!-- LOADING -->
 <div id="loadingScreen">
   <div class="spinner"></div>
@@ -315,12 +308,12 @@ tr:last-child td{border-bottom:none;}
       <!-- Number Bet -->
       <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;margin-top:6px;">🔢 Number (9x) &nbsp;|&nbsp; Big/Small (2x)</div>
       <div style="display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:8px;" id="numBtns">
-        <button class="nb-btn nb-rv" onclick="selN2(0)" id="N-0">0</button>
+        <button class="nb-btn nb-v" onclick="selN2(0)" id="N-0">0</button>
         <button class="nb-btn nb-g" onclick="selN2(1)" id="N-1">1</button>
         <button class="nb-btn nb-r" onclick="selN2(2)" id="N-2">2</button>
         <button class="nb-btn nb-g" onclick="selN2(3)" id="N-3">3</button>
         <button class="nb-btn nb-r" onclick="selN2(4)" id="N-4">4</button>
-        <button class="nb-btn nb-gv" onclick="selN2(5)" id="N-5">5</button>
+        <button class="nb-btn nb-v" onclick="selN2(5)" id="N-5">5</button>
         <button class="nb-btn nb-r" onclick="selN2(6)" id="N-6">6</button>
         <button class="nb-btn nb-g" onclick="selN2(7)" id="N-7">7</button>
         <button class="nb-btn nb-r" onclick="selN2(8)" id="N-8">8</button>
@@ -475,7 +468,33 @@ tr:last-child td{border-bottom:none;}
       <div id="fdStatus" style="margin-bottom:10px;"></div>
       <div style="font-size:.7rem;color:var(--muted);line-height:1.8;">⚠️ Sirf pehli deposit pe milega &nbsp;|&nbsp; Admin approve karega</div>
     </div>
-          <span style="font-size:.68rem;color:var(--muted);">Admin approve karta hai</span>
+
+
+
+    <!-- BET REBATE -->
+    <div class="act-card">
+      <div class="act-head"><div class="act-icon">🔄</div><div><div class="act-title">Bet Rebate</div><div class="act-sub">Har bet pe 0.5% cashback!</div></div></div>
+      <div style="background:var(--surface);border-radius:12px;padding:16px;margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><div style="font-size:.72rem;color:var(--muted);">Total Wagered</div><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--gold)" id="rebWag">₹0</div></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><div style="font-size:.72rem;color:var(--muted);">Rebate (0.5%)</div><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--green)" id="rebAmt">₹0</div></div>
+        <div style="display:flex;justify-content:space-between;"><div style="font-size:.72rem;color:var(--muted);">Claimed</div><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--muted)" id="rebClaimed">₹0</div></div>
+      </div>
+      <button class="subbtn" id="rebBtn" onclick="claimRebate()">💰 Claim Rebate</button>
+    </div>
+
+    <!-- REFERRAL BONUS -->
+    <div class="act-card">
+      <div class="act-head"><div class="act-icon">🔗</div><div><div class="act-title">Referral Bonus</div><div class="act-sub">Dost invite karo, paisa kamao!</div></div></div>
+      <div class="bonus-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="bonus-box bb-violet"><div class="bb-val" style="color:#ce93d8">₹50</div><div class="bb-lbl">Friend ko signup bonus</div></div>
+        <div class="bonus-box bb-green"><div class="bb-val" style="color:var(--green)">5%</div><div class="bb-lbl">Bet commission</div></div>
+      </div>
+      <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin:10px 0;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--gold);margin-bottom:8px;">💰 Deposit Referral Bonus</div>
+        <div style="font-size:.76rem;color:var(--text);line-height:2;">
+          Friend ₹500+ deposit kare<br>
+          <span style="color:var(--green);font-weight:700;">→ Tumhe ₹150 milega!</span><br>
+          <span style="font-size:.68rem;color:var(--muted);">Admin approve karta hai deposit ke saath</span>
         </div>
       </div>
       <button class="betbtn" onclick="sw('R')" style="margin-top:4px;">🔗 Referral Page →</button>
@@ -524,7 +543,7 @@ tr:last-child td{border-bottom:none;}
       <div class="rsbox"><div class="rsv" style="color:var(--violet)" id="RCOM">₹0</div><div class="rslbl">Commission</div></div>
     </div>
     <div class="gc">
-      <div class="ibox">🎁 <strong>Friend gets:</strong> ₹150 signup bonus<br>💰 <strong>You get:</strong> ₹150 per referral<br>💰 <strong>Deposit Bonus:</strong> ₹150 jab friend ₹500+ deposit kare<br>⚡ <strong>Commission:</strong> 5% of friend's bets</div>
+      <div class="ibox">🎁 <strong>Friend gets:</strong> ₹50 bonus<br>💰 <strong>You get:</strong> ₹100 per friend<br>⚡ <strong>Commission:</strong> 5% of friend's bets</div>
     </div>
     <div class="gc">
       <div class="sl">Referred Users</div>
@@ -604,22 +623,7 @@ function gD(){ return _db || defDB(); }
 
 function sD(d){
   _db = d;
-  // Only write non-game parts to avoid conflicts
-  DB.ref('chromabet').update({
-    users: d.users,
-    deposits: d.deposits||[],
-    withdrawals: d.withdrawals||[],
-    settings: d.settings||{}
-  }).catch(e=>console.log('DB write error:',e));
-}
-
-// For game state only (round, history, forcedResult)
-function sGameState(round, history, forced){
-  const upd = {};
-  if(round !== undefined) upd.currentRound = round;
-  if(history !== undefined) upd.gameHistory = history;
-  if(forced !== undefined) upd.forcedResult = forced || null;
-  DB.ref('chromabet').update(upd).catch(e=>console.log('Game state error:',e));
+  DB.ref('chromabet').set(d).catch(e=>console.log('DB write error:',e));
 }
 
 function gc(){
@@ -627,8 +631,7 @@ function gc(){
   return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');
 }
 
-// Firebase listener with debounce to prevent hang
-let _updateTimeout = null;
+// Firebase listener
 DB.ref('chromabet').on('value', snap => {
   try {
     const val = snap.val();
@@ -908,9 +911,7 @@ const COLS=['red','green','violet','big','small'],ODDS={red:2,green:2,violet:4.5
 const CL={red:'Red',green:'Green',violet:'Violet',big:'Big',small:'Small',0:'#0',1:'#1',2:'#2',3:'#3',4:'#4',5:'#5',6:'#6',7:'#7',8:'#8',9:'#9'};
 const NUMS=[0,1,2,3,4,5,6,7,8,9];
 // Number color mapping: 1,3,7,9=Green | 2,4,6,8=Red | 0,5=Violet
-const NUM_COLOR={0:'red',1:'green',2:'red',3:'green',4:'red',5:'green',6:'red',7:'green',8:'red',9:'green'};
-// 0 = Red+Violet combo, 5 = Green+Violet combo
-const VIOLET_COMBO=[0,5]; // these numbers have violet mixed in
+const NUM_COLOR={0:'violet',1:'green',2:'red',3:'green',4:'red',5:'violet',6:'red',7:'green',8:'red',9:'green'};
 function selC(c){
   if(!bO)return;
   sC=c;
@@ -936,12 +937,8 @@ function placeBet(){
   if(pB)return sn('⚠️ Bet already placed!','','');
   bal-=a;updBal();
   pB={color:sC,amount:a,round:rnd};
-  // Update local balance immediately
-  if(_db.users[CU]) _db.users[CU].balance = bal;
-  // Save balance to Firebase - targeted update only
-  DB.ref('chromabet/users/'+CU+'/balance').set(bal).catch(e=>console.log('bal error:',e));
   const b=document.getElementById('BB');b.disabled=true;b.textContent='✅ ₹'+a+' on '+CL[sC];
-  // Save live bet - separate path, no full DB write
+  // Save live bet to Firebase for admin to see
   const betKey='bet_'+CU+'_'+rnd;
   const colorStr=typeof sC==='number'?'num_'+sC:sC;
   DB.ref('chromabet/liveBets/'+betKey).set({
@@ -954,6 +951,25 @@ function placeBet(){
     time:Date.now()
   }).catch(e=>console.log('liveBet save error:',e));
 }
+
+function startRound(){
+  const d=gD();rnd=d.currentRound||1;tmr=30;bO=true;pB=null;
+  const b=document.getElementById('BB');b.disabled=false;b.textContent='Place Bet';
+  sC=null;COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.remove('sel','dis');});NUMS.forEach(n=>document.getElementById('N-'+n).classList.remove('sel','dis'));
+  document.getElementById('RN').textContent='#'+String(rnd).padStart(4,'0');
+  document.getElementById('WT').style.display='';document.getElementById('RC').style.display='none';
+  document.getElementById('RCI').classList.remove('spin','rev');
+  // Load last 10 results from Firebase history
+  if(hist.length===0 && d.gameHistory && d.gameHistory.length>0){
+    hist=d.gameHistory.slice(0,10).map(h=>({c:h.result,n:h.numResult}));
+    const hr=document.getElementById('HR');hr.innerHTML='';
+    hist.forEach(h=>{
+      const el=document.createElement('div');
+      el.className='hd hd-'+h.c[0];
+      el.textContent=h.n!==undefined?h.n:h.c[0].toUpperCase();
+      hr.appendChild(el);
+    });
+  }
   clearInterval(tI);tI=setInterval(tick,1000);updT();
 }
 
@@ -971,13 +987,11 @@ function updT(){
 
 function showRes(){
   const d=gD();const fr=d.forcedResult;let res;let numRes;
-  if(fr){res=fr;_db.forcedResult=null;DB.ref('chromabet/forcedResult').remove();}
+  if(fr){res=fr;d.forcedResult=null;sD(d);}
   else{const r=Math.random();res=r<.4?'red':r<.8?'green':'violet';}
   // Pick random number 0-9 for this round (consistent with color)
   // Numbers matching the result color are more likely but any can appear
-  // Number selection based on color result
-  // Red = 2,4,6,8 | Green = 1,3,7,9 | Violet = 0,5 (combo numbers)
-  const colorNums = {red:[2,4,6,8,0], green:[1,3,7,9,5], violet:[0,5]};
+  const colorNums = {red:[2,4,6,8], green:[1,3,7,9], violet:[0,5]};
   const matchNums = colorNums[res];
   numRes = matchNums[Math.floor(Math.random()*matchNums.length)];
   const cols={red:'#ff3b5c',green:'#00e676',violet:'#9c27b0'};
@@ -986,20 +1000,11 @@ function showRes(){
   const ci=document.getElementById('RCI');ci.style.background='var(--border)';ci.classList.add('spin');
   setTimeout(()=>{
     ci.classList.remove('spin');ci.style.background=cols[res];ci.classList.add('rev');
-    const isVioletNum=(numRes===0||numRes===5);
-    document.getElementById('RT').textContent=CL[res]+(isVioletNum?' + Violet':'')+' • #'+numRes;
-    document.getElementById('RT').style.color=cols[res];
+    document.getElementById('RT').textContent=CL[res]+' • #'+numRes;document.getElementById('RT').style.color=cols[res];
     document.getElementById('RS').textContent='Round #'+String(rnd).padStart(4,'0');
     addH(res,numRes);if(pB)resolveB(res,numRes);
-    const d2=gD();
-    const newHistory = [{round:rnd,result:res,numResult:numRes,timestamp:new Date().toLocaleTimeString()}, ...(d2.gameHistory||[])];
-    if(newHistory.length>100) newHistory.pop();
-    d2.gameHistory = newHistory;
-    d2.currentRound = rnd+1;
-    _db.gameHistory = newHistory;
-    _db.currentRound = rnd+1;
-    // Only update game state - fast & no conflict
-    sGameState(rnd+1, newHistory, null);
+    const d2=gD();d2.gameHistory.unshift({round:rnd,result:res,numResult:numRes,timestamp:new Date().toLocaleTimeString()});
+    if(d2.gameHistory.length>100)d2.gameHistory.pop();d2.currentRound=rnd+1;sD(d2);
     // Clear live bets for this round after 5 seconds
     setTimeout(()=>{
       DB.ref('chromabet/liveBets').once('value',snap=>{
@@ -1015,36 +1020,19 @@ function resolveB(res,numRes){
   const betVal=pB.color;
   const isNumBet=typeof betVal==='number';
   let won=false;
-  let bonusMulti=1; // extra multiplier for 0 or 5
-  
-  if(isNumBet){ 
-    won=(betVal===numRes); 
-  } else if(betVal==='big'){ 
-    won=(numRes>=5); 
-  } else if(betVal==='small'){ 
-    won=(numRes<=4); 
-  } else { 
-    won=(betVal===res);
-    // 0 or 5 = violet+color combo: 50% extra on color bets!
-    if(won && (numRes===0 || numRes===5)){
-      bonusMulti=1.5; // 50% extra
-    }
-  }
-  
+  if(isNumBet){ won=(betVal===numRes); }
+  else if(betVal==='big'){ won=(numRes>=5); }
+  else if(betVal==='small'){ won=(numRes<=4); }
+  else { won=(betVal===res); }
   const{amount}=pB;let p2;
   const color=betVal;
   
   if(won){
-    const basePay=Math.floor(amount*(ODDS[color]||2));
-    const pay=Math.floor(basePay*bonusMulti);
+    const pay=Math.floor(amount*(ODDS[color]||2));
     p2=pay-amount;
     bal+=pay;
     W++;P+=p2;
-    if(bonusMulti>1){
-      sn('🎉 VIOLET BONUS!','+₹'+p2+' (50% extra!)','');
-    } else {
-      sn('🎉 YOU WON!','+₹'+p2,'');
-    }
+    sn('🎉 YOU WON!','+₹'+p2,'');
     confetti();
   } else {
     p2=-amount;
@@ -1092,17 +1080,9 @@ function addH(c,n){
   const hr=document.getElementById('HR');hr.innerHTML='';
   hist.forEach(h=>{
     const d=document.createElement('div');
-    // 0 = red+violet combo, 5 = green+violet combo
-    if(h.n===0||h.n===5){
-      d.className='hd';
-      d.style.background=h.n===0?'linear-gradient(135deg,#c62828,#9c27b0)':'linear-gradient(135deg,#1b5e20,#9c27b0)';
-      d.style.color='#fff';
-      d.style.border='2px solid rgba(255,255,255,.3)';
-    } else {
-      d.className='hd hd-'+h.c[0];
-    }
+    d.className='hd hd-'+h.c[0];
     d.textContent=h.n!==undefined?h.n:h.c[0].toUpperCase();
-    d.title=(h.n===0?'Red+Violet':h.n===5?'Green+Violet':h.c)+' #'+h.n;
+    d.title=h.c+' #'+h.n;
     hr.appendChild(d);
   });
 }
@@ -1159,11 +1139,7 @@ function subDep(){
     d.deposits.unshift(dep);
     if(!d.users[CU].transactions)d.users[CU].transactions=[];
     d.users[CU].transactions.unshift({type:'Deposit',amount:'₹'+ua+' (INR)',network:'INR-UPI',status:'Pending',date:new Date().toLocaleDateString()});
-    // Targeted update - only deposits and user transactions
-    _db = d;
-    DB.ref('chromabet/deposits').set(d.deposits||[]).catch(e=>console.log(e));
-    DB.ref('chromabet/users/'+CU+'/transactions').set(d.users[CU].transactions||[]).catch(e=>console.log(e));
-    document.getElementById('DTH').value='';document.getElementById('DUA').value='';
+    sD(d);document.getElementById('DTH').value='';document.getElementById('DUA').value='';
     sn('✅ Deposit Submit!','Admin 1-2 hrs mein approve karega','');loadTX();return;
   }
   if(ua<1)return sn('❌ Valid amount dalo!','','lose');
@@ -1174,10 +1150,7 @@ function subDep(){
   d.deposits.unshift(dep);
   if(!d.users[CU].transactions)d.users[CU].transactions=[];
   d.users[CU].transactions.unshift({type:'Deposit',amount:'₹'+inr+' ('+ua+' USDT)',network:netlbl[curNet],status:'Pending',date:new Date().toLocaleDateString()});
-  _db = d;
-  DB.ref('chromabet/deposits').set(d.deposits||[]).catch(e=>console.log(e));
-  DB.ref('chromabet/users/'+CU+'/transactions').set(d.users[CU].transactions||[]).catch(e=>console.log(e));
-  document.getElementById('DTH').value='';document.getElementById('DUA').value='';document.getElementById('DINR').textContent='₹0';
+  sD(d);document.getElementById('DTH').value='';document.getElementById('DUA').value='';document.getElementById('DINR').textContent='₹0';
   sn('✅ Deposit Submit!','Admin verify karega','');loadTX();
 }
 
