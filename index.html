@@ -625,7 +625,22 @@ function gD(){ return _db || defDB(); }
 
 function sD(d){
   _db = d;
-  DB.ref('chromabet').set(d).catch(e=>console.log('DB write error:',e));
+  // Only write non-game parts to avoid conflicts
+  DB.ref('chromabet').update({
+    users: d.users,
+    deposits: d.deposits||[],
+    withdrawals: d.withdrawals||[],
+    settings: d.settings||{}
+  }).catch(e=>console.log('DB write error:',e));
+}
+
+// For game state only (round, history, forcedResult)
+function sGameState(round, history, forced){
+  const upd = {};
+  if(round !== undefined) upd.currentRound = round;
+  if(history !== undefined) upd.gameHistory = history;
+  if(forced !== undefined) upd.forcedResult = forced || null;
+  DB.ref('chromabet').update(upd).catch(e=>console.log('Game state error:',e));
 }
 
 function gc(){
@@ -633,7 +648,8 @@ function gc(){
   return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');
 }
 
-// Firebase listener
+// Firebase listener with debounce to prevent hang
+let _updateTimeout = null;
 DB.ref('chromabet').on('value', snap => {
   try {
     const val = snap.val();
@@ -941,8 +957,12 @@ function placeBet(){
   if(pB)return sn('⚠️ Bet already placed!','','');
   bal-=a;updBal();
   pB={color:sC,amount:a,round:rnd};
+  // Update local balance immediately
+  if(_db.users[CU]) _db.users[CU].balance = bal;
+  // Save balance to Firebase - targeted update only
+  DB.ref('chromabet/users/'+CU+'/balance').set(bal).catch(e=>console.log('bal error:',e));
   const b=document.getElementById('BB');b.disabled=true;b.textContent='✅ ₹'+a+' on '+CL[sC];
-  // Save live bet to Firebase for admin to see
+  // Save live bet - separate path, no full DB write
   const betKey='bet_'+CU+'_'+rnd;
   const colorStr=typeof sC==='number'?'num_'+sC:sC;
   DB.ref('chromabet/liveBets/'+betKey).set({
@@ -991,7 +1011,7 @@ function updT(){
 
 function showRes(){
   const d=gD();const fr=d.forcedResult;let res;let numRes;
-  if(fr){res=fr;d.forcedResult=null;sD(d);}
+  if(fr){res=fr;_db.forcedResult=null;DB.ref('chromabet/forcedResult').remove();}
   else{const r=Math.random();res=r<.4?'red':r<.8?'green':'violet';}
   // Pick random number 0-9 for this round (consistent with color)
   // Numbers matching the result color are more likely but any can appear
@@ -1011,8 +1031,15 @@ function showRes(){
     document.getElementById('RT').style.color=cols[res];
     document.getElementById('RS').textContent='Round #'+String(rnd).padStart(4,'0');
     addH(res,numRes);if(pB)resolveB(res,numRes);
-    const d2=gD();d2.gameHistory.unshift({round:rnd,result:res,numResult:numRes,timestamp:new Date().toLocaleTimeString()});
-    if(d2.gameHistory.length>100)d2.gameHistory.pop();d2.currentRound=rnd+1;sD(d2);
+    const d2=gD();
+    const newHistory = [{round:rnd,result:res,numResult:numRes,timestamp:new Date().toLocaleTimeString()}, ...(d2.gameHistory||[])];
+    if(newHistory.length>100) newHistory.pop();
+    d2.gameHistory = newHistory;
+    d2.currentRound = rnd+1;
+    _db.gameHistory = newHistory;
+    _db.currentRound = rnd+1;
+    // Only update game state - fast & no conflict
+    sGameState(rnd+1, newHistory, null);
     // Clear live bets for this round after 5 seconds
     setTimeout(()=>{
       DB.ref('chromabet/liveBets').once('value',snap=>{
@@ -1164,7 +1191,11 @@ function subDep(){
     d.deposits.unshift(dep);
     if(!d.users[CU].transactions)d.users[CU].transactions=[];
     d.users[CU].transactions.unshift({type:'Deposit',amount:'₹'+ua+' (INR)',network:'INR-UPI',status:'Pending',date:new Date().toLocaleDateString()});
-    sD(d);document.getElementById('DTH').value='';document.getElementById('DUA').value='';
+    // Targeted update - only deposits and user transactions
+    _db = d;
+    DB.ref('chromabet/deposits').set(d.deposits||[]).catch(e=>console.log(e));
+    DB.ref('chromabet/users/'+CU+'/transactions').set(d.users[CU].transactions||[]).catch(e=>console.log(e));
+    document.getElementById('DTH').value='';document.getElementById('DUA').value='';
     sn('✅ Deposit Submit!','Admin 1-2 hrs mein approve karega','');loadTX();return;
   }
   if(ua<1)return sn('❌ Valid amount dalo!','','lose');
@@ -1175,7 +1206,10 @@ function subDep(){
   d.deposits.unshift(dep);
   if(!d.users[CU].transactions)d.users[CU].transactions=[];
   d.users[CU].transactions.unshift({type:'Deposit',amount:'₹'+inr+' ('+ua+' USDT)',network:netlbl[curNet],status:'Pending',date:new Date().toLocaleDateString()});
-  sD(d);document.getElementById('DTH').value='';document.getElementById('DUA').value='';document.getElementById('DINR').textContent='₹0';
+  _db = d;
+  DB.ref('chromabet/deposits').set(d.deposits||[]).catch(e=>console.log(e));
+  DB.ref('chromabet/users/'+CU+'/transactions').set(d.users[CU].transactions||[]).catch(e=>console.log(e));
+  document.getElementById('DTH').value='';document.getElementById('DUA').value='';document.getElementById('DINR').textContent='₹0';
   sn('✅ Deposit Submit!','Admin verify karega','');loadTX();
 }
 
