@@ -387,11 +387,11 @@ tr:last-child td{border-bottom:none;}
 
       <div class="timer-card">
         <div class="tc-row">
-          <span class="tc-lbl">Current Round</span>
-          <span class="rnum" id="RN" style="font-family:'Orbitron',sans-serif;font-size:.75rem;color:var(--gold);">#0001</span>
+          <span class="tc-lbl">How to Play</span>
+          <span class="tc-period" id="periodNum" style="font-family:'Orbitron',sans-serif;font-size:.65rem;color:rgba(240,180,41,.7);">20260407100050001</span>
         </div>
         <div class="tc-row">
-          <span class="tc-lbl">Time Remaining</span>
+          <span class="tc-lbl">Current Period</span>
           <div class="timer-wrap">
             <div class="td-box" id="ta">0</div>
             <div class="td-box" id="tb">0</div>
@@ -488,83 +488,107 @@ tr:last-child td{border-bottom:none;}
       <!-- DEPOSIT -->
       <div class="gc" id="depSection">
         <div class="sec-lbl">💰 Deposit</div>
-        <div class="netrow">
-          <button class="nbtn on" id="N-erc" onclick="selN('erc')">ERC-20</button>
-          <button class="nbtn" id="N-bep" onclick="selN('bep')">BEP-20</button>
-          <button class="nbtn" id="N-trc" onclick="selN('trc')">TRC-20</button>
-          <button class="nbtn" id="N-inr" onclick="selN('inr')" style="border-color:var(--gold);color:var(--gold);">🇮🇳 UPI</button>
+
+        <!-- Network tabs -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px;">
+          <button class="nbtn on" id="N-erc" onclick="selN('erc')" style="text-align:center;padding:10px 4px;font-size:.72rem;">🔷<br>ERC-20</button>
+          <button class="nbtn" id="N-bep" onclick="selN('bep')" style="text-align:center;padding:10px 4px;font-size:.72rem;">🟡<br>BEP-20</button>
+          <button class="nbtn" id="N-trc" onclick="selN('trc')" style="text-align:center;padding:10px 4px;font-size:.72rem;">🔴<br>TRC-20</button>
+          <button class="nbtn" id="N-inr" onclick="selN('inr')" style="text-align:center;padding:10px 4px;font-size:.72rem;border-color:var(--gold);color:var(--gold);">🇮🇳<br>UPI</button>
         </div>
+
+        <!-- ERC-20 -->
         <div id="D-erc">
-          <div class="abox"><div class="albl">ERC-20 Address</div><div class="qrph">🔷</div>
-          <div class="aval">0xab594d87682eeE1ECD7B72414177915153885f7c</div>
-          <button class="cpyadd" onclick="cpyA('0xab594d87682eeE1ECD7B72414177915153885f7c')">📋 Copy</button></div>
-          <div class="depinfo">⚠️ <strong>Only USDT ERC-20</strong><br>💱 1 USDT = ₹96 | Min: $1</div>
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;">
+            <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">ERC-20 Address</div>
+            <div style="font-family:monospace;font-size:.72rem;color:var(--gold);word-break:break-all;margin-bottom:10px;">0xab594d87682eeE1ECD7B72414177915153885f7c</div>
+            <button class="cpyadd" onclick="cpyA('0xab594d87682eeE1ECD7B72414177915153885f7c')">📋 Copy Address</button>
+          </div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:14px;">⚠️ Only USDT ERC-20 &nbsp;|&nbsp; 1 USDT = ₹96 &nbsp;|&nbsp; Min $1</div>
         </div>
+
+        <!-- BEP-20 -->
         <div id="D-bep" style="display:none;">
-          <div class="abox"><div class="albl">BEP-20 Address</div><div class="qrph">🟡</div>
-          <div class="aval">0xab594d87682eeE1ECD7B72414177915153885f7c</div>
-          <button class="cpyadd" onclick="cpyA('0xab594d87682eeE1ECD7B72414177915153885f7c')">📋 Copy</button></div>
-          <div class="depinfo">⚠️ <strong>Only USDT BEP-20</strong><br>💱 1 USDT = ₹96 | Min: $1</div>
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;">
+            <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">BEP-20 Address</div>
+            <div style="font-family:monospace;font-size:.72rem;color:var(--gold);word-break:break-all;margin-bottom:10px;">0xab594d87682eeE1ECD7B72414177915153885f7c</div>
+            <button class="cpyadd" onclick="cpyA('0xab594d87682eeE1ECD7B72414177915153885f7c')">📋 Copy Address</button>
+          </div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:14px;">⚠️ Only USDT BEP-20 &nbsp;|&nbsp; 1 USDT = ₹96 &nbsp;|&nbsp; Min $1</div>
         </div>
+
+        <!-- TRC-20 -->
         <div id="D-trc" style="display:none;">
-          <div class="abox"><div class="albl">TRC-20 Address</div><div class="qrph">🔴</div>
-          <div class="aval">TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc</div>
-          <button class="cpyadd" onclick="cpyA('TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc')">📋 Copy</button></div>
-          <div class="depinfo">⚠️ <strong>Only USDT TRC-20</strong><br>💱 1 USDT = ₹96 | Min: $1</div>
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;">
+            <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">TRC-20 Address</div>
+            <div style="font-family:monospace;font-size:.72rem;color:var(--gold);word-break:break-all;margin-bottom:10px;">TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc</div>
+            <button class="cpyadd" onclick="cpyA('TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc')">📋 Copy Address</button>
+          </div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:14px;">⚠️ Only USDT TRC-20 &nbsp;|&nbsp; 1 USDT = ₹96 &nbsp;|&nbsp; Min $1</div>
         </div>
+
+        <!-- UPI -->
         <div id="D-inr" style="display:none;">
-          <div class="abox" style="border-color:var(--gold);">
-            <div class="albl" style="color:var(--gold);">UPI Deposit</div>
-            <div class="qrph">🇮🇳</div>
-            <div style="font-size:.88rem;color:var(--gold);font-weight:700;margin-bottom:8px;">pindasandhu829@pingpay</div>
-            <button class="cpyadd" onclick="cpyA('pindasandhu829@pingpay')">📋 Copy UPI</button>
+          <div style="background:rgba(240,180,41,.06);border:1px solid rgba(240,180,41,.2);border-radius:14px;padding:16px;margin-bottom:10px;text-align:center;">
+            <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">UPI ID</div>
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.1rem;color:var(--gold);margin-bottom:10px;">pindasandhu829@pingpay</div>
+            <button class="cpyadd" onclick="cpyA('pindasandhu829@pingpay')" style="background:var(--gold);color:#000;">📋 Copy UPI ID</button>
           </div>
-          <div class="depinfo" style="background:rgba(240,180,41,.05);border-color:rgba(240,180,41,.15);">
-            💱 Min: <strong>₹100</strong><br>⏱ Approval: 30min - 2hrs
-          </div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:14px;">Min ₹100 &nbsp;|&nbsp; Approval: 30min – 2hrs &nbsp;|&nbsp; Screenshot bhejo proof mein</div>
         </div>
-        <div style="margin-top:8px;">
-          <div class="sec-lbl">Submit Deposit Proof</div>
-          <input class="pinp" id="DTH" placeholder="TX Hash / UTR Number"/>
-          <input class="pinp" type="number" id="DUA" placeholder="Amount (USDT ya ₹)" oninput="updDep()"/>
-          <div style="font-size:.66rem;color:var(--muted);margin-bottom:10px;">Network: <span id="DNL" style="color:var(--gold)">ERC-20</span> | Receive: <span id="DINR" style="color:var(--green)">₹0</span></div>
-          <button class="subbtn" onclick="subDep()">✅ Submit Deposit</button>
+
+        <!-- Submit Proof -->
+        <div style="background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:16px;">
+          <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;">📤 Submit Deposit Proof</div>
+          <input class="pinp" id="DTH" placeholder="TX Hash / UTR Number" style="margin-bottom:8px;"/>
+          <input class="pinp" type="number" id="DUA" placeholder="Amount (USDT ya ₹)" oninput="updDep()" style="margin-bottom:6px;"/>
+          <div style="font-size:.67rem;color:var(--muted);margin-bottom:12px;">Network: <span id="DNL" style="color:var(--gold)">ERC-20</span> &nbsp;|&nbsp; You get: <span id="DINR" style="color:var(--green)">₹0</span></div>
+          <button class="subbtn" onclick="subDep()">✅ Submit</button>
         </div>
       </div>
 
       <!-- WITHDRAW -->
       <div class="gc" id="wdSection">
         <div class="sec-lbl">💸 Withdraw</div>
-        <div class="depinfo">Min: <strong>₹100</strong> | Processed in 1-24 hrs</div>
-        <div class="wt-grid">
-          <button id="wtC" class="wt-btn" onclick="setWT('crypto')">💎 Crypto</button>
-          <button id="wtI" class="wt-btn off" onclick="setWT('inr')">🇮🇳 UPI</button>
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:14px;">Min ₹100 &nbsp;|&nbsp; Processed in 1-24 hrs</div>
+
+        <!-- Type toggle -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+          <button id="wtC" class="wt-btn" onclick="setWT('crypto')" style="padding:12px;border-radius:12px;border:2px solid var(--gold);background:rgba(240,180,41,.1);color:var(--text);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;">💎 Crypto</button>
+          <button id="wtI" class="wt-btn off" onclick="setWT('inr')" style="padding:12px;border-radius:12px;border:2px solid var(--border);background:none;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;">🇮🇳 UPI</button>
         </div>
+
+        <!-- Crypto -->
         <div id="WD-crypto">
-          <select class="wdsel" id="WDN">
+          <select class="wdsel" id="WDN" style="margin-bottom:10px;">
             <option value="ERC-20">USDT ERC-20</option>
             <option value="BEP-20">USDT BEP-20</option>
             <option value="TRC-20">USDT TRC-20</option>
           </select>
-          <input class="pinp" id="WDA" placeholder="Wallet address"/>
-          <input class="pinp" type="number" id="WDR" placeholder="₹ amount" oninput="updWD()"/>
-          <div style="font-size:.66rem;color:var(--muted);margin-bottom:12px;">= <span id="WDU" style="color:var(--gold)">0 USDT</span></div>
+          <input class="pinp" id="WDA" placeholder="Your wallet address" style="margin-bottom:8px;"/>
+          <input class="pinp" type="number" id="WDR" placeholder="Amount in ₹" oninput="updWD()" style="margin-bottom:6px;"/>
+          <div style="font-size:.68rem;color:var(--muted);margin-bottom:14px;">= <span id="WDU" style="color:var(--gold);font-weight:700;">0 USDT</span></div>
         </div>
+
+        <!-- UPI -->
         <div id="WD-inr" style="display:none;">
-          <div class="depinfo" style="background:rgba(240,180,41,.05);border-color:rgba(240,180,41,.15);">💳 Seedha UPI pe milega</div>
           <div id="savedUpiBox" style="display:none;">
-            <div class="upi-saved">
-              <div><div style="font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;">Saved UPI</div><div class="upi-val" id="savedUpiVal">—</div></div>
-              <button class="edit-btn" onclick="editUpi()">Change</button>
+            <div style="background:rgba(240,180,41,.06);border:1px solid rgba(240,180,41,.2);border-radius:12px;padding:13px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:3px;">Saved UPI</div>
+                <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--gold);" id="savedUpiVal">—</div>
+              </div>
+              <button class="edit-btn" onclick="editUpi()" style="background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);border-radius:8px;padding:5px 11px;color:var(--gold);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.7rem;cursor:pointer;">Change</button>
             </div>
           </div>
           <div id="newUpiBox">
-            <input class="pinp" id="WDUPI" placeholder="yourname@paytm"/>
-            <input class="pinp" id="WDNAME" placeholder="Account holder name"/>
+            <input class="pinp" id="WDUPI" placeholder="yourname@paytm / @upi" style="margin-bottom:8px;"/>
+            <input class="pinp" id="WDNAME" placeholder="Account holder name" style="margin-bottom:8px;"/>
           </div>
-          <input class="pinp" type="number" id="WDINR" placeholder="₹ amount"/>
+          <input class="pinp" type="number" id="WDINR" placeholder="Amount in ₹" style="margin-bottom:14px;"/>
         </div>
-        <button class="wdbtn" onclick="subWD()">📤 Withdraw</button>
+
+        <button class="wdbtn" onclick="subWD()" style="width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--red),#c0392b);color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;letter-spacing:1px;">📤 WITHDRAW</button>
       </div>
 
       <!-- TX HISTORY -->
@@ -776,28 +800,41 @@ DB.ref('chromabet').once('value', snap => {
   if(!_dbLoaded){ _dbLoaded=true; _db=defDB(); showLogin(); }
 });
 
-// Step 2: Listen ONLY to game state (round, result) - lightweight
+// Step 2: Listen to game state only (lightweight - not user data)
 DB.ref('chromabet/currentRound').on('value', snap => {
   if(_db && snap.val()) _db.currentRound = snap.val();
 });
-
 DB.ref('chromabet/gameHistory').on('value', snap => {
   if(_db && snap.val()) _db.gameHistory = snap.val();
 });
-
 DB.ref('chromabet/forcedResult').on('value', snap => {
   if(_db) _db.forcedResult = snap.val();
 });
 
-// Step 3: Listen ONLY to current user's balance (not all users)
-function listenMyBalance(){
-  if(!CU) return;
-  DB.ref('chromabet/users/'+CU+'/balance').on('value', snap => {
-    if(snap.val() !== null && !pB){
-      const nb = snap.val() || 0;
+// Step 3: Listen to ALL users (for login to work with new registrations)
+// But debounced - only update local cache, don't re-render UI
+let _usersUpdateTimer = null;
+DB.ref('chromabet/users').on('value', snap => {
+  if(snap.val() && _db){
+    _db.users = snap.val();
+    // If logged in, update balance display (only if not mid-bet)
+    if(CU && _db.users[CU] && !pB){
+      const nb = _db.users[CU].balance || 0;
       if(nb !== bal){ bal = nb; updBal(); }
     }
-  });
+  }
+});
+
+// Step 4: Listen to deposits/withdrawals for wallet updates
+DB.ref('chromabet/deposits').on('value', snap => {
+  if(_db && snap.val()) _db.deposits = snap.val();
+});
+DB.ref('chromabet/withdrawals').on('value', snap => {
+  if(_db && snap.val()) _db.withdrawals = snap.val();
+});
+
+function listenMyBalance(){
+  // Already handled by users listener above
 }
 
 setTimeout(()=>{ if(!_dbLoaded){ _dbLoaded=true; _db=defDB(); showLogin(); } }, 3000);
@@ -914,11 +951,20 @@ function placeBet(){
   DB.ref('chromabet/liveBets/'+betKey).set({user:CU,name:(_db.users[CU]?.name||'User'),color:colorStr,colorDisplay:typeof sC==='number'?('#'+sC):CL[sC],amount:a,round:rnd,time:Date.now()}).catch(e=>console.log(e));
 }
 
+function getPeriod(rnd){
+  const now=new Date();
+  const y=now.getFullYear();
+  const mo=String(now.getMonth()+1).padStart(2,'0');
+  const d=String(now.getDate()).padStart(2,'0');
+  return y+''+mo+''+d+'10005'+String(rnd).padStart(4,'0');
+}
+
 function startRound(){
   const d=gD();rnd=d.currentRound||1;tmr=30;bO=true;pB=null;
   const b=document.getElementById('BB');b.disabled=false;b.textContent='🎯 PLACE BET';
   sC=null;COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.remove('sel','dis');});NUMS.forEach(n=>document.getElementById('N-'+n).classList.remove('sel','dis'));
   document.getElementById('RN').textContent='#'+String(rnd).padStart(4,'0');
+  const pEl=document.getElementById('periodNum');if(pEl)pEl.textContent=getPeriod(rnd);
   document.getElementById('WT').style.display='';document.getElementById('RC').style.display='none';
   document.getElementById('RCI').classList.remove('spin','rev');
   if(hist.length===0&&d.gameHistory&&d.gameHistory.length>0){hist=d.gameHistory.slice(0,10).map(h=>({c:h.result,n:h.numResult}));renderHist();}
@@ -1153,4 +1199,3 @@ function confetti(){const cs=['#f53b57','#0eca7f','#f0b429','#3b82f6','#ce93d8',
 </script>
 </body>
 </html>
-
