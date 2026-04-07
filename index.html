@@ -744,12 +744,63 @@ function sD(d){_db=d;DB.ref('chromabet').update({users:d.users,deposits:d.deposi
 function sGameState(round,history,forced){const u={};if(round!==undefined)u.currentRound=round;if(history!==undefined)u.gameHistory=history;if(forced!==undefined)u.forcedResult=forced||null;DB.ref('chromabet').update(u).catch(e=>console.log(e));}
 function gc(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');}
 
-DB.ref('chromabet').on('value',snap=>{
-  try{const val=snap.val();if(val){_db=val;if(!_db.users)_db.users={};if(!_db.users.admin)_db.users.admin=defDB().users.admin;if(!_db.deposits)_db.deposits=[];if(!_db.withdrawals)_db.withdrawals=[];if(!_db.gameHistory)_db.gameHistory=[];}else{_db=defDB();DB.ref('chromabet').set(_db);}}catch(e){_db=defDB();}
-  if(!_dbLoaded){_dbLoaded=true;try{const s=localStorage.getItem('cb_user');if(s&&_db.users&&_db.users[s]){CU=s;showApp();return;}}catch(e){}showLogin();}
-  else{if(CU&&_db.users&&_db.users[CU]&&!pB){const nb=_db.users[CU].balance||0;if(nb!==bal){bal=nb;updBal();}}}
-},err=>{if(!_dbLoaded){_dbLoaded=true;_db=defDB();showLogin();}});
-setTimeout(()=>{if(!_dbLoaded){_dbLoaded=true;_db=defDB();showLogin();}},3000);
+// Performance fix: Listen to specific paths only, not entire DB
+// This prevents lag when 200-300 users are active
+
+// Step 1: Load initial DB once
+DB.ref('chromabet').once('value', snap => {
+  try {
+    const val = snap.val();
+    if(val){
+      _db = val;
+      if(!_db.users) _db.users = {};
+      if(!_db.users.admin) _db.users.admin = defDB().users.admin;
+      if(!_db.deposits) _db.deposits = [];
+      if(!_db.withdrawals) _db.withdrawals = [];
+      if(!_db.gameHistory) _db.gameHistory = [];
+    } else {
+      _db = defDB();
+      DB.ref('chromabet').set(_db);
+    }
+  } catch(e){ _db = defDB(); }
+
+  if(!_dbLoaded){
+    _dbLoaded = true;
+    try {
+      const s = localStorage.getItem('cb_user');
+      if(s && _db.users && _db.users[s]){ CU=s; showApp(); return; }
+    } catch(e){}
+    showLogin();
+  }
+}, err => {
+  if(!_dbLoaded){ _dbLoaded=true; _db=defDB(); showLogin(); }
+});
+
+// Step 2: Listen ONLY to game state (round, result) - lightweight
+DB.ref('chromabet/currentRound').on('value', snap => {
+  if(_db && snap.val()) _db.currentRound = snap.val();
+});
+
+DB.ref('chromabet/gameHistory').on('value', snap => {
+  if(_db && snap.val()) _db.gameHistory = snap.val();
+});
+
+DB.ref('chromabet/forcedResult').on('value', snap => {
+  if(_db) _db.forcedResult = snap.val();
+});
+
+// Step 3: Listen ONLY to current user's balance (not all users)
+function listenMyBalance(){
+  if(!CU) return;
+  DB.ref('chromabet/users/'+CU+'/balance').on('value', snap => {
+    if(snap.val() !== null && !pB){
+      const nb = snap.val() || 0;
+      if(nb !== bal){ bal = nb; updBal(); }
+    }
+  });
+}
+
+setTimeout(()=>{ if(!_dbLoaded){ _dbLoaded=true; _db=defDB(); showLogin(); } }, 3000);
 
 function showLogin(){
   document.getElementById('loadingScreen').style.display='none';
@@ -767,6 +818,7 @@ function showApp(){
   const d=gD();if(!d.users[CU]){showLogin();return;}
   document.getElementById('hUN').textContent=d.users[CU].name||'User';
   loadUD();setupRef();loadProfile();startRound();sw('G');
+  listenMyBalance(); // Only listen to own balance
 }
 
 // AUTH
@@ -806,7 +858,20 @@ function doReg(){
   const newUser={password:p,name,phone,email,balance:bonus,referralCode:gc(),referredBy:ru||null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:''};
   const d=gD();d.users[uid]=newUser;
   if(ru&&d.users[ru]){d.users[ru].balance=(d.users[ru].balance||0)+150;if(!d.users[ru].referrals)d.users[ru].referrals=[];d.users[ru].referrals.push({uid,name,phone,joined:new Date().toLocaleDateString(),bets:0,earned:150});}
-  DB.ref('chromabet').set(d).then(()=>{_db=d;CU=uid;localStorage.setItem('cb_user',CU);showApp();setTimeout(()=>sn('🎉 Welcome '+name+'!','₹'+bonus+' credited!',''),500);}).catch(()=>sn('❌ Registration fail!','','lose'));
+  // Save only the new user + referrer update (not entire DB)
+const updates = {};
+updates['chromabet/users/'+uid] = newUser;
+if(ru && d.users[ru]){
+  updates['chromabet/users/'+ru+'/balance'] = d.users[ru].balance;
+  updates['chromabet/users/'+ru+'/referrals'] = d.users[ru].referrals;
+}
+DB.ref().update(updates).then(()=>{
+  if(!_db) _db = defDB();
+  _db.users[uid] = newUser;
+  if(ru && _db.users[ru]){ _db.users[ru].balance = d.users[ru].balance; _db.users[ru].referrals = d.users[ru].referrals; }
+  CU=uid;localStorage.setItem('cb_user',CU);showApp();
+  setTimeout(()=>sn('🎉 Welcome '+name+'!','₹'+bonus+' credited!',''),500);
+}).catch(()=>sn('❌ Registration fail!','','lose'));
 }
 
 function doOut(){CU=null;clearInterval(tI);localStorage.removeItem('cb_user');document.getElementById('APP').style.display='none';showLogin();}
@@ -988,7 +1053,7 @@ function loadSavedUpi(){const d=gD(),u=d.users[CU];if(u&&u.savedUpi){document.ge
 function editUpi(){document.getElementById('savedUpiBox').style.display='none';document.getElementById('newUpiBox').style.display='block';const d=gD();document.getElementById('WDUPI').value=d.users[CU].savedUpi||'';document.getElementById('WDNAME').value=d.users[CU].savedUpiName||'';}
 function updWD(){const v=+document.getElementById('WDR').value||0;document.getElementById('WDU').textContent=(v/96).toFixed(2)+' USDT';}
 function subWD(){
-  if(wdType==='inr'){let upi='',upiName='';const d=gD();if(d.users[CU].savedUpi&&document.getElementById('savedUpiBox').style.display!=='none'){upi=d.users[CU].savedUpi;upiName=d.users[CU].savedUpiName;}else{upi=document.getElementById('WDUPI').value.trim();upiName=document.getElementById('WDNAME').value.trim();if(!upi)return sn('❌ UPI ID dalo!','','lose');d.users[CU].savedUpi=upi;d.users[CU].savedUpiName=upiName;sD(d);}const amt=parseInt(document.getElementById('WDINR').value)||0;if(amt<100)return sn('❌ Min ₹100!','','lose');if(amt>bal)return sn('❌ Balance kam!','','lose');bal-=amt;updBal();DB.ref('chromabet/users/'+CU+'/balance').set(bal);const d2=gD();if(!d2.withdrawals)d2.withdrawals=[];d2.withdrawals.unshift({id:'WD'+Date.now(),user:CU,userName:d2.users[CU].name,phone:d2.users[CU].phone,addr:upi,holderName:upiName,amt,usdtAmt:'INR',network:'INR-UPI',status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});if(!d2.users[CU].transactions)d2.users[CU].transactions=[];d2.users[CU].transactions.unshift({type:'Withdrawal',amount:'₹'+amt+' (INR-UPI)',network:'INR-UPI',status:'Pending',date:new Date().toLocaleDateString()});d2.users[CU].totalWithdrawn=(d2.users[CU].totalWithdrawn||0)+amt;_db=d2;DB.ref('chromabet/withdrawals').set(d2.withdrawals);DB.ref('chromabet/users/'+CU).update({totalWithdrawn:d2.users[CU].totalWithdrawn,transactions:d2.users[CU].transactions});document.getElementById('WDINR').value='';loadSavedUpi();sn('📤 Withdrawal sent!','1-24 hrs mein milega','');loadTX();updWalSt();return;}
+  if(wdType==='inr'){let upi='',upiName='';const d=gD();if(d.users[CU].savedUpi&&document.getElementById('savedUpiBox').style.display!=='none'){upi=d.users[CU].savedUpi;upiName=d.users[CU].savedUpiName;}else{upi=document.getElementById('WDUPI').value.trim();upiName=document.getElementById('WDNAME').value.trim();if(!upi)return sn('❌ UPI ID dalo!','','lose');d.users[CU].savedUpi=upi;d.users[CU].savedUpiName=upiName;if(_db&&_db.users&&_db.users[CU]){_db.users[CU].savedUpi=upi;_db.users[CU].savedUpiName=upiName;}DB.ref('chromabet/users/'+CU).update({savedUpi:upi,savedUpiName:upiName});}const amt=parseInt(document.getElementById('WDINR').value)||0;if(amt<100)return sn('❌ Min ₹100!','','lose');if(amt>bal)return sn('❌ Balance kam!','','lose');bal-=amt;updBal();DB.ref('chromabet/users/'+CU+'/balance').set(bal);const d2=gD();if(!d2.withdrawals)d2.withdrawals=[];d2.withdrawals.unshift({id:'WD'+Date.now(),user:CU,userName:d2.users[CU].name,phone:d2.users[CU].phone,addr:upi,holderName:upiName,amt,usdtAmt:'INR',network:'INR-UPI',status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});if(!d2.users[CU].transactions)d2.users[CU].transactions=[];d2.users[CU].transactions.unshift({type:'Withdrawal',amount:'₹'+amt+' (INR-UPI)',network:'INR-UPI',status:'Pending',date:new Date().toLocaleDateString()});d2.users[CU].totalWithdrawn=(d2.users[CU].totalWithdrawn||0)+amt;_db=d2;DB.ref('chromabet/withdrawals').set(d2.withdrawals);DB.ref('chromabet/users/'+CU).update({totalWithdrawn:d2.users[CU].totalWithdrawn,transactions:d2.users[CU].transactions});document.getElementById('WDINR').value='';loadSavedUpi();sn('📤 Withdrawal sent!','1-24 hrs mein milega','');loadTX();updWalSt();return;}
   const addr=document.getElementById('WDA').value.trim(),amt=parseInt(document.getElementById('WDR').value)||0,net=document.getElementById('WDN').value;if(!addr)return sn('❌ Wallet dalo!','','lose');if(amt<100)return sn('❌ Min ₹100!','','lose');if(amt>bal)return sn('❌ Balance kam!','','lose');bal-=amt;updBal();DB.ref('chromabet/users/'+CU+'/balance').set(bal);const ua=(amt/96).toFixed(2);const d=gD();if(!d.withdrawals)d.withdrawals=[];d.withdrawals.unshift({id:'WD'+Date.now(),user:CU,userName:d.users[CU].name,phone:d.users[CU].phone,addr,amt,usdtAmt:ua,network:net,status:'pending',date:new Date().toLocaleDateString(),time:new Date().toLocaleTimeString()});if(!d.users[CU].transactions)d.users[CU].transactions=[];d.users[CU].transactions.unshift({type:'Withdrawal',amount:'₹'+amt+' ('+ua+' USDT)',network:net,status:'Pending',date:new Date().toLocaleDateString()});d.users[CU].totalWithdrawn=(d.users[CU].totalWithdrawn||0)+amt;_db=d;DB.ref('chromabet/withdrawals').set(d.withdrawals);DB.ref('chromabet/users/'+CU).update({totalWithdrawn:d.users[CU].totalWithdrawn,transactions:d.users[CU].transactions});document.getElementById('WDA').value='';document.getElementById('WDR').value='';document.getElementById('WDU').textContent='0 USDT';sn('📤 Withdrawal sent!','Processing...','');loadTX();updWalSt();
 }
 function loadTX(){const d=gD(),txs=d.users[CU]?.transactions||[];const tb=document.getElementById('TXB');if(!txs.length){tb.innerHTML='<tr><td colspan="5" class="nb-empty">No transactions yet</td></tr>';return;}tb.innerHTML=txs.slice(0,15).map(t=>'<tr><td><span class="tag '+(t.type==='Deposit'?'t-green':'t-red')+'">'+t.type+'</span></td><td style="color:'+(t.type==='Deposit'?'var(--green)':'var(--red)')+'">'+t.amount+'</td><td>'+t.network+'</td><td><span class="sbadge '+(t.status==='Approved'?'sa':t.status==='Rejected'?'sr':'sp')+'">'+t.status+'</span></td><td>'+t.date+'</td></tr>').join('');}
@@ -1001,7 +1066,7 @@ function shrTG(){window.open('https://t.me/share/url?url='+encodeURIComponent(do
 
 // PROFILE
 function loadProfile(){const d=gD(),u=d.users[CU];document.getElementById('profName').textContent=u.name||'—';document.getElementById('profName2').textContent=u.name||'—';document.getElementById('profId').textContent='UID: '+CU.slice(-8);document.getElementById('profPhone').textContent=u.phone||'—';document.getElementById('profEmail').textContent=u.email||'—';document.getElementById('profJoined').textContent='Joined: '+(u.joined||'—');document.getElementById('profUpi').textContent=u.savedUpi||'UPI Not saved';document.getElementById('pW').textContent=u.wins||0;document.getElementById('pL').textContent=u.losses||0;document.getElementById('pB2').textContent=u.totalBets||0;}
-function chgPw(){const old=document.getElementById('cpOld').value,nw=document.getElementById('cpNew').value,d=gD();if(d.users[CU].password!==old)return sn('❌ Current password galat!','','lose');if(nw.length<6)return sn('❌ Min 6 chars!','','lose');d.users[CU].password=nw;sD(d);document.getElementById('cpOld').value='';document.getElementById('cpNew').value='';sn('✅ Password updated!','','');}
+function chgPw(){const old=document.getElementById('cpOld').value,nw=document.getElementById('cpNew').value,d=gD();if(d.users[CU].password!==old)return sn('❌ Current password galat!','','lose');if(nw.length<6)return sn('❌ Min 6 chars!','','lose');if(_db&&_db.users&&_db.users[CU])_db.users[CU].password=nw;DB.ref('chromabet/users/'+CU+'/password').set(nw);document.getElementById('cpOld').value='';document.getElementById('cpNew').value='';sn('✅ Password updated!','','');}
 
 // ACTIVITY
 const SPIN_PRIZES=[{label:'₹10',val:10,color:'#f53b57'},{label:'₹25',val:25,color:'#ff9800'},{label:'₹5',val:5,color:'#3b82f6'},{label:'₹50',val:50,color:'#0eca7f'},{label:'₹10',val:10,color:'#a855f7'},{label:'₹100',val:100,color:'#f0b429'},{label:'₹5',val:5,color:'#f53b57'},{label:'₹20',val:20,color:'#00bcd4'}];
@@ -1088,3 +1153,4 @@ function confetti(){const cs=['#f53b57','#0eca7f','#f0b429','#3b82f6','#ce93d8',
 </script>
 </body>
 </html>
+
