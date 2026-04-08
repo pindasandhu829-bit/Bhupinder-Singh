@@ -709,15 +709,27 @@ function gD(){return _db||defDB();}
 function sD(d){_db=d;DB.ref('chromabet').update({users:d.users,deposits:d.deposits||[],withdrawals:d.withdrawals||[],settings:d.settings||{}}).catch(e=>console.log(e));}
 function sGame(rnd2,hist2,forced){const u={};if(rnd2!==undefined)u.currentRound=rnd2;if(hist2!==undefined)u.gameHistory=hist2;if(forced!==undefined)u.forcedResult=forced||null;DB.ref('chromabet').update(u).catch(e=>console.log(e));}
 function gc(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');}
+function getIST(){
+  // Get current IST time (UTC+5:30)
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset()*60000;
+  return new Date(utc + 5.5*3600000);
+}
+
 function getPeriod(){
-  // Period = YYYYMMDD + HHMM format — changes every minute
-  const n=new Date();
-  const y=n.getFullYear();
-  const mo=String(n.getMonth()+1).padStart(2,'0');
-  const d=String(n.getDate()).padStart(2,'0');
-  const h=String(n.getHours()).padStart(2,'0');
-  const mi=String(n.getMinutes()).padStart(2,'0');
+  const ist = getIST();
+  const y = ist.getFullYear();
+  const mo = String(ist.getMonth()+1).padStart(2,'0');
+  const d = String(ist.getDate()).padStart(2,'0');
+  const h = String(ist.getHours()).padStart(2,'0');
+  const mi = String(ist.getMinutes()).padStart(2,'0');
   return y+''+mo+''+d+''+h+''+mi+'001';
+}
+
+function getSecondsLeft(){
+  // Seconds remaining in current minute (IST)
+  const ist = getIST();
+  return 59 - ist.getSeconds();
 }
 
 // Firebase listeners
@@ -838,7 +850,15 @@ function startRound(){
 }
 
 function tick(){
-  tmr--;updT();
+  // Re-sync with IST every tick to prevent drift
+  const realLeft = getSecondsLeft();
+  // Only correct if difference > 2 seconds (avoid jitter)
+  if(Math.abs(realLeft - tmr) > 2 && tmr > 5){
+    tmr = realLeft;
+  } else {
+    tmr--;
+  }
+  updT();
   if(tmr===10){bO=false;const b=document.getElementById('BB');b.disabled=true;if(!pB)b.textContent='🔒 Closed';COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.add('dis');});NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));}
   if(tmr<=0){clearInterval(tI);showRes();}
 }
@@ -881,12 +901,20 @@ function showRes(){
     document.getElementById('RT').style.color=isC?'#f97316':cols[res];
     document.getElementById('RS').textContent='Round #'+String(rnd).padStart(4,'0');
     addH(res,numRes);if(pB)resolveB(res,numRes);
-    const nh=[{round:rnd,result:res,numResult:numRes,timestamp:new Date().toLocaleTimeString()},...(gD().gameHistory||[])];
+    const ist=getIST();
+    const tstamp=ist.toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour12:true});
+    const nh=[{round:rnd,result:res,numResult:numRes,period:getPeriod(),timestamp:tstamp},...(gD().gameHistory||[])];
     if(nh.length>100)nh.pop();
     if(_db){_db.gameHistory=nh;_db.currentRound=rnd+1;}
     sGame(rnd+1,nh,null);
     setTimeout(()=>{DB.ref('chromabet/liveBets').once('value',snap=>{const bets=snap.val()||{};Object.keys(bets).forEach(k=>{if(bets[k].round===rnd)DB.ref('chromabet/liveBets/'+k).remove();});});},5000);
-    setTimeout(()=>{rnd++;startRound();},3000);
+    // Wait for next minute boundary after showing result
+    setTimeout(()=>{
+      rnd++;
+      // Re-sync timer with clock
+      tmr=getSecondsLeft();
+      startRound();
+    },3000);
   },1200);
 }
 
@@ -910,15 +938,17 @@ function resolveB(res,numRes){
 
 function addH(c,n){hist.unshift({c,n});if(hist.length>10)hist.pop();renderHist();}
 function renderHist(){
-  const hr=document.getElementById('HR');hr.innerHTML='';
-  if(!hist.length){hr.innerHTML='<div style="color:var(--muted2);font-size:.74rem;">No results yet</div>';return;}
-  hist.forEach(h=>{
-    const d=document.createElement('div');d.className='hball';
-    if(h.n===0)d.className+=' hb-0';else if(h.n===5)d.className+=' hb-5';
-    else if(h.c==='red')d.className+=' hb-r';else if(h.c==='green')d.className+=' hb-g';else d.className+=' hb-v';
-    d.textContent=h.n!==undefined?h.n:h.c[0].toUpperCase();
-    hr.appendChild(d);
-  });
+  const hr=document.getElementById('HR');
+  if(!hr)return;
+  // Only update if changed (stable render)
+  const newHtml = hist.length ? hist.map(h=>{
+    let cls='hball';
+    if(h.n===0)cls+=' hb-0';else if(h.n===5)cls+=' hb-5';
+    else if(h.c==='red')cls+=' hb-r';else if(h.c==='green')cls+=' hb-g';else cls+=' hb-v';
+    const txt=h.n!==undefined?h.n:h.c[0].toUpperCase();
+    return `<div class="${cls}" title="${h.c} #${h.n}">${txt}</div>`;
+  }).join('') : '<div style="color:var(--muted2);font-size:.74rem;">No results yet</div>';
+  hr.innerHTML=newHtml;
 }
 
 function addBR(r,bc,a,res,p2,won){
