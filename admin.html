@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ChromaBet Admin</title>
+<meta name="theme-color" content="#080810">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CB Admin">
+<link rel="manifest" href="admin-manifest.json">
+<link rel="apple-touch-icon" href="icon-admin.png">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -207,6 +214,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   .main{margin-left:60px;}
   .dash-grid{grid-template-columns:1fr 1fr;}
 }
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -268,6 +276,10 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
         <!-- DASHBOARD -->
         <div class="pg on" id="pg-dash">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);">📊 Overview</div>
+            <button class="btn bp" onclick="loadDash()" style="display:flex;align-items:center;gap:6px;"><span id="refreshIcon">🔄</span> Refresh</button>
+          </div>
           <div class="dash-grid">
             <div class="dbox gold">
               <div class="dbox-icon">👥</div>
@@ -606,6 +618,8 @@ function aOut(){
 }
 
 function loadDash(){
+  const icon = document.getElementById('refreshIcon');
+  if(icon){ icon.style.animation='spin .6s linear'; setTimeout(()=>icon.style.animation='',700); }
   const d=gD();
   const users=Object.keys(d.users);
   const players=users.filter(u=>u!=='admin');
@@ -912,6 +926,11 @@ let NT2;
 function nt(msg,t){
   const e=document.getElementById('AN');e.textContent=msg;e.className='notif'+(t?' '+t:'')+' show';
   clearTimeout(NT2);NT2=setTimeout(()=>e.classList.remove('show'),3000);
+}
+</script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js').catch(e=>console.log(e));
 }
 </script>
 </body>
