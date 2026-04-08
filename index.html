@@ -709,7 +709,16 @@ function gD(){return _db||defDB();}
 function sD(d){_db=d;DB.ref('chromabet').update({users:d.users,deposits:d.deposits||[],withdrawals:d.withdrawals||[],settings:d.settings||{}}).catch(e=>console.log(e));}
 function sGame(rnd2,hist2,forced){const u={};if(rnd2!==undefined)u.currentRound=rnd2;if(hist2!==undefined)u.gameHistory=hist2;if(forced!==undefined)u.forcedResult=forced||null;DB.ref('chromabet').update(u).catch(e=>console.log(e));}
 function gc(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');}
-function getPeriod(r){const n=new Date(),y=n.getFullYear(),m=String(n.getMonth()+1).padStart(2,'0'),d=String(n.getDate()).padStart(2,'0');return y+''+m+''+d+'10005'+String(r).padStart(4,'0');}
+function getPeriod(){
+  // Period = YYYYMMDD + HHMM format — changes every minute
+  const n=new Date();
+  const y=n.getFullYear();
+  const mo=String(n.getMonth()+1).padStart(2,'0');
+  const d=String(n.getDate()).padStart(2,'0');
+  const h=String(n.getHours()).padStart(2,'0');
+  const mi=String(n.getMinutes()).padStart(2,'0');
+  return y+''+mo+''+d+''+h+''+mi+'001';
+}
 
 // Firebase listeners
 DB.ref('chromabet').once('value',snap=>{
@@ -816,12 +825,12 @@ function placeBet(){
 }
 
 function startRound(){
-  const d=gD();rnd=d.currentRound||1;tmr=30;bO=true;pB=null;
+  const d=gD();rnd=d.currentRound||1;tmr=60;bO=true;pB=null;
   const b=document.getElementById('BB');b.disabled=false;b.textContent='Place Bet';
   sC=null;
   COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.remove('sel','dis');});
   NUMS.forEach(n=>document.getElementById('N-'+n).classList.remove('sel','dis'));
-  const pe=document.getElementById('periodNum');if(pe)pe.textContent=getPeriod(rnd);
+  const pe=document.getElementById('periodNum');if(pe)pe.textContent=getPeriod();
   document.getElementById('WT').style.display='';document.getElementById('RC').style.display='none';
   document.getElementById('RCI').classList.remove('spin','rev');
   if(hist.length===0&&d.gameHistory&&d.gameHistory.length>0){hist=d.gameHistory.slice(0,10).map(h=>({c:h.result,n:h.numResult}));renderHist();}
@@ -830,18 +839,24 @@ function startRound(){
 
 function tick(){
   tmr--;updT();
-  if(tmr===5){bO=false;const b=document.getElementById('BB');b.disabled=true;if(!pB)b.textContent='🔒 Closed';COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.add('dis');});NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));}
+  if(tmr===10){bO=false;const b=document.getElementById('BB');b.disabled=true;if(!pB)b.textContent='🔒 Closed';COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.add('dis');});NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));}
   if(tmr<=0){clearInterval(tI);showRes();}
 }
 
 function updT(){
   const m=Math.floor(tmr/60),s=tmr%60;
-  ['ta','tb'].forEach((id,i)=>{ const el=document.getElementById(id);if(el){el.textContent=Math.floor(m/10)==0&&i==0?0:m%10;if(i==0)el.textContent=Math.floor(m/10);else el.textContent=m%10;}});
-  document.getElementById('tc').textContent=Math.floor(s/10);
-  document.getElementById('td2').textContent=s%10;
-  const urg=tmr<=5;
+  const ta=document.getElementById('ta'),tb=document.getElementById('tb');
+  const tc=document.getElementById('tc'),td=document.getElementById('td2');
+  if(ta)ta.textContent=Math.floor(m/10);
+  if(tb)tb.textContent=m%10;
+  if(tc)tc.textContent=Math.floor(s/10);
+  if(td)td.textContent=s%10;
+  const urg=tmr<=10;
   ['ta','tb','tc','td2'].forEach(id=>{const el=document.getElementById(id);if(el)el.className='tbox'+(urg?' urg':'');});
-  document.getElementById('PF').style.width=(tmr/30*100)+'%';
+  document.getElementById('PF').style.width=(tmr/60*100)+'%';
+  // Update period display every tick
+  const pe=document.getElementById('periodNum');
+  if(pe)pe.textContent=getPeriod();
 }
 
 function showRes(){
