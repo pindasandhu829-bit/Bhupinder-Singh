@@ -738,12 +738,34 @@ DB.ref('chromabet').once('value',snap=>{
   if(!_dbLoaded){_dbLoaded=true;try{const s=localStorage.getItem('cb_user');if(s&&_db.users&&_db.users[s]){CU=s;showApp();return;}}catch(e){}showLogin();}
 },err=>{if(!_dbLoaded){_dbLoaded=true;_db=defDB();showLogin();}});
 
+// Game state listeners — lightweight, shared data
 DB.ref('chromabet/currentRound').on('value',s=>{if(_db&&s.val())_db.currentRound=s.val();});
-DB.ref('chromabet/gameHistory').on('value',s=>{if(_db&&s.val())_db.gameHistory=s.val();});
+DB.ref('chromabet/gameHistory').on('value',s=>{
+  if(_db&&s.val()){
+    _db.gameHistory=s.val();
+    // Update history display if changed
+    const newHist=s.val().slice(0,10).map(h=>({c:h.result,n:h.numResult}));
+    const changed=JSON.stringify(newHist)!==JSON.stringify(hist);
+    if(changed&&newHist.length>0){hist=newHist;renderHist();}
+  }
+});
 DB.ref('chromabet/forcedResult').on('value',s=>{if(_db)_db.forcedResult=s.val();});
-DB.ref('chromabet/users').on('value',s=>{if(s.val()&&_db){_db.users=s.val();if(CU&&_db.users[CU]&&!pB){const nb=_db.users[CU].balance||0;if(nb!==bal){bal=nb;updBal();}}}});
-DB.ref('chromabet/deposits').on('value',s=>{if(_db&&s.val())_db.deposits=s.val();});
-DB.ref('chromabet/withdrawals').on('value',s=>{if(_db&&s.val())_db.withdrawals=s.val();});
+
+// Only listen to CURRENT USER balance — not all users (saves bandwidth for 1000 users)
+function startUserListener(){
+  if(!CU)return;
+  DB.ref('chromabet/users/'+CU+'/balance').on('value',s=>{
+    if(s.val()!==null&&!pB){const nb=s.val()||0;if(nb!==bal){bal=nb;updBal();}}
+  });
+  // Listen to own transactions for wallet
+  DB.ref('chromabet/users/'+CU+'/transactions').on('value',s=>{
+    if(_db&&_db.users&&_db.users[CU]&&s.val())_db.users[CU].transactions=s.val();
+  });
+}
+
+// Deposits/withdrawals for wallet tab
+DB.ref('chromabet/deposits').on('value',s=>{if(_db&&s.val())_db.deposits=Array.isArray(s.val())?s.val():Object.values(s.val());});
+DB.ref('chromabet/withdrawals').on('value',s=>{if(_db&&s.val())_db.withdrawals=Array.isArray(s.val())?s.val():Object.values(s.val());});
 setTimeout(()=>{if(!_dbLoaded){_dbLoaded=true;_db=defDB();showLogin();}},3000);
 
 function showLogin(){
@@ -762,6 +784,7 @@ function showApp(){
   const d=gD();if(!d.users[CU]){showLogin();return;}
   document.getElementById('hUN').textContent=d.users[CU].name||'User';
   loadUD();setupRef();loadProfile();startRound();sw('G');
+  startUserListener(); // Only listen to own data
 }
 
 // AUTH
