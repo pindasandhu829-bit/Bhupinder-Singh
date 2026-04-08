@@ -721,13 +721,8 @@ function getIST(){
 }
 
 function getPeriod(){
-  const ist = getIST();
-  const y = ist.getFullYear();
-  const mo = String(ist.getMonth()+1).padStart(2,'0');
-  const d = String(ist.getDate()).padStart(2,'0');
-  const h = String(ist.getHours()).padStart(2,'0');
-  const mi = String(ist.getMinutes()).padStart(2,'0');
-  return y+''+mo+''+d+''+h+''+mi+'001';
+  // Show round number as 4 digit — same as admin panel
+  return String(rnd).padStart(4,'0');
 }
 
 function getSecondsLeft(){
