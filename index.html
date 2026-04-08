@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ChromaBet</title>
+<meta name="description" content="ChromaBet — Color Prediction Platform">
+<meta name="theme-color" content="#0c0c0c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ChromaBet">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -1036,6 +1045,60 @@ function claimRebate(){
 let NT;
 function sn(m,a,t){const e=document.getElementById('NE');e.className='notif'+(t==='lose'?' lose':'')+' show';document.getElementById('NM').textContent=m;const ae=document.getElementById('NAM');ae.textContent=a;ae.className='na'+(a.startsWith&&a.startsWith('+')?'naw':a.startsWith&&a.startsWith('-')?' nal':'');clearTimeout(NT);NT=setTimeout(()=>e.classList.remove('show'),3000);}
 function confetti(){const cs=['#ef4444','#22c55e','#eab308','#3b82f6','#a855f7','#fff'];for(let i=0;i<45;i++){const c=document.createElement('div');c.className='cfp';c.style.cssText='left:'+Math.random()*100+'vw;background:'+cs[Math.floor(Math.random()*cs.length)]+';width:'+(5+Math.random()*8)+'px;height:'+(5+Math.random()*8)+'px;animation-duration:'+(1.5+Math.random()*2)+'s;animation-delay:'+Math.random()*.5+'s;border-radius:'+(Math.random()>.5?'50%':'2px')+';';document.body.appendChild(c);setTimeout(()=>c.remove(),4000);}}
+</script>
+
+<div id="pwaPrompt" style="display:none;position:fixed;bottom:80px;left:16px;right:16px;background:#161616;border:1px solid #22c55e;border-radius:14px;padding:16px;z-index:9998;box-shadow:0 8px 30px rgba(0,0,0,.6);">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+    <div style="width:44px;height:44px;background:#22c55e;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🎨</div>
+    <div><div style="font-weight:700;font-size:.92rem;">Install ChromaBet</div><div style="font-size:.72rem;color:#666;">Add to Home Screen — Free!</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+    <button onclick="dismissPWA()" style="padding:10px;border-radius:9px;border:1px solid #242424;background:none;color:#666;font-size:.82rem;cursor:pointer;">Later</button>
+    <button onclick="installPWA()" style="padding:10px;border-radius:9px;border:none;background:#22c55e;color:#000;font-weight:700;font-size:.82rem;cursor:pointer;">Install App</button>
+  </div>
+</div>
+
+<script>
+// PWA Install
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Show prompt after 3 seconds
+  setTimeout(() => {
+    if(!localStorage.getItem('pwa_dismissed')) {
+      document.getElementById('pwaPrompt').style.display = 'block';
+    }
+  }, 3000);
+});
+
+function installPWA() {
+  document.getElementById('pwaPrompt').style.display = 'none';
+  if(deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if(choice.outcome === 'accepted') {
+        localStorage.setItem('pwa_installed', '1');
+      }
+      deferredPrompt = null;
+    });
+  }
+}
+
+function dismissPWA() {
+  document.getElementById('pwaPrompt').style.display = 'none';
+  localStorage.setItem('pwa_dismissed', '1');
+}
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwaPrompt').style.display = 'none';
+  localStorage.setItem('pwa_installed', '1');
+});
+
+// Service Worker
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(e => console.log('SW:', e));
+}
 </script>
 </body>
 </html>
