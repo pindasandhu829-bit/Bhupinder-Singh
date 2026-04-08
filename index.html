@@ -377,7 +377,10 @@ tr:last-child td{border-bottom:none;}
         <div class="tc-top">
           <div>
             <div class="tc-period">Current Period</div>
-            <div class="tc-period"><span id="periodNum">20260408100050001</span></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="tc-period" id="periodNum" style="color:var(--green);font-family:'Orbitron',sans-serif;font-size:.6rem;">20260408100050001</span>
+              <button onclick="location.reload()" style="background:none;border:1px solid var(--border2);border-radius:6px;padding:2px 8px;color:var(--muted2);font-size:.6rem;cursor:pointer;font-family:'Inter',sans-serif;" title="Refresh">🔄</button>
+            </div>
           </div>
           <div>
             <div style="font-size:.58rem;color:var(--muted2);margin-bottom:4px;text-align:right;">Time Left</div>
@@ -413,10 +416,11 @@ tr:last-child td{border-bottom:none;}
       <div class="bet-sec">
         <div class="sec-lbl">Color</div>
         <div class="c-bets">
-          <div class="cbet cb-r" onclick="selC('red')" id="B-red">Red<span class="cbet-odds">2x</span></div>
+          <div class="cbet cb-r" onclick="selC('red')" id="B-red">Red<span class="cbet-odds">2x / 1.5x*</span></div>
           <div class="cbet cb-v" onclick="selC('violet')" id="B-violet">Violet<span class="cbet-odds" style="font-size:.55rem;">0&5·4.5x</span></div>
-          <div class="cbet cb-g" onclick="selC('green')" id="B-green">Green<span class="cbet-odds">2x</span></div>
+          <div class="cbet cb-g" onclick="selC('green')" id="B-green">Green<span class="cbet-odds">2x / 1.5x*</span></div>
         </div>
+        <div style="font-size:.58rem;color:var(--muted2);margin-bottom:10px;margin-top:-6px;">*1.5x jab 0 ya 5 aaye (Violet combo)</div>
         <div class="sec-lbl">Number — 9x</div>
         <div class="n-grid">
           <div class="nbet n-0" onclick="selN2(0)" id="N-0">0<div class="vdot"></div></div>
@@ -947,7 +951,7 @@ function resolveB(res,numRes){
   if(isNum){won=(bv===numRes);}
   else if(bv==='big'){won=(numRes>=5);if(won&&numRes===5)pm=1.5;}
   else if(bv==='small'){won=(numRes<=4);}
-  else if(bv==='violet'){won=(res==='violet'||isC);if(won)pm=isC?2.25:4.5;}
+  else if(bv==='violet'){won=isC;if(won)pm=4.25;}
   else if(bv==='red'){won=(res==='red');if(won&&numRes===0)pm=1.5;}
   else if(bv==='green'){won=(res==='green');if(won&&numRes===5)pm=1.5;}
   const{amount}=pB;let p2;
