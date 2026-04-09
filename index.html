@@ -928,7 +928,7 @@ function startRound(){
   const now=new Date();
   const ist=new Date(now.getTime()+now.getTimezoneOffset()*60000+5.5*3600000);
   tmr=59-ist.getSeconds();
-  if(tmr<8)tmr=8;
+  if(tmr<3)tmr=3;
   const b=document.getElementById('BB');b.disabled=false;b.textContent='Place Bet';
   sC=null;
   COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.remove('sel','dis');});
