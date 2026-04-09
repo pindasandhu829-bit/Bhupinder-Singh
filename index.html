@@ -931,7 +931,7 @@ function tick(){
   }
   updT();
   if(tmr===10){bO=false;const b=document.getElementById('BB');b.disabled=true;if(!pB)b.textContent='🔒 Closed';COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.add('dis');});NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));}
-  if(tmr<=0){clearInterval(tI);showRes();}
+  if(tmr<=0){clearInterval(tI);if(!_showingResult)showRes();}
 }
 
 function updT(){
@@ -950,7 +950,11 @@ function updT(){
   if(pe)pe.textContent=getPeriod();
 }
 
+let _showingResult = false; // Lock to prevent double result
+
 function showRes(){
+  if(_showingResult) return; // Already showing result!
+  _showingResult = true;
   const d=gD();let res,numRes;
   const fr=d.forcedResult;
   if(fr){res=fr;if(_db)_db.forcedResult=null;DB.ref('chromabet/forcedResult').remove();}
@@ -979,10 +983,9 @@ function showRes(){
     if(_db){_db.gameHistory=nh;_db.currentRound=rnd+1;}
     sGame(rnd+1,nh,null);
     setTimeout(()=>{DB.ref('chromabet/liveBets').once('value',snap=>{const bets=snap.val()||{};Object.keys(bets).forEach(k=>{if(bets[k].round===rnd)DB.ref('chromabet/liveBets/'+k).remove();});});},5000);
-    // Wait for next minute boundary after showing result
     setTimeout(()=>{
+      _showingResult = false; // Release lock
       rnd++;
-      // Re-sync timer with clock
       tmr=getSecondsLeft();
       startRound();
     },3000);
