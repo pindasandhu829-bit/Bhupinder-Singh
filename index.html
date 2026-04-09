@@ -1079,7 +1079,12 @@ function resolveB(res,numRes){
   else if(bv==='red'){won=(res==='red');if(won&&numRes===0)pm=1.5;}
   else if(bv==='green'){won=(res==='green');if(won&&numRes===5)pm=1.5;}
   const{amount}=pB;let p2;
-  if(won){const pay=Math.floor(amount*pm);p2=pay-amount;bal+=pay;W++;P+=p2;let msg='You Won!',sub='+₹'+p2;if(isC&&bv!=='violet'){msg='Win! Half Profit';sub='+₹'+p2+' (1.5x)';}else if(isC&&bv==='violet'){msg='Violet Combo!';sub='+₹'+p2+' (2.25x)';}sn(msg,sub,'');confetti();}
+  if(won){const pay=Math.floor(amount*pm);p2=pay-amount;bal+=pay;W++;P+=p2;
+    let msg,sub='+₹'+p2;
+    if(bv==='green'&&numRes===5){msg='🟢🟣 Green+Violet!';}
+    else if(bv==='red'&&numRes===0){msg='🔴🟣 Red+Violet!';}
+    else if(bv==='violet'){msg='🟣 Violet Win!';}
+    else{msg='🎉 You Won!';}if(isC&&bv!=='violet'){msg='Win! Half Profit';sub='+₹'+p2+' (1.5x)';}else if(isC&&bv==='violet'){msg='Violet Combo!';sub='+₹'+p2+' (2.25x)';}sn(msg,sub,'');confetti();}
   else{p2=-amount;P+=p2;L++;sn('Better luck!','-₹'+amount,'lose');}
   const uu={balance:bal,wins:W,losses:L,netPnl:P,totalBets:(_db.users[CU].totalBets||0)+1,totalWagered:(_db.users[CU].totalWagered||0)+amount};
   Object.assign(_db.users[CU],uu);DB.ref('chromabet/users/'+CU).update(uu);
@@ -1103,7 +1108,13 @@ function renderHist(){
 }
 
 function addBR(r,bc,a,res,p2,won){
-  const tb=document.getElementById('BTB'),ne=tb.querySelector('.nb-e');if(ne)ne.parentElement?.remove();
+  const tb=document.getElementById('BTB');
+  // Remove "no bets" row if present
+  const ne=tb.querySelector('.nb-e');
+  if(ne){
+    const row=ne.closest('tr');
+    if(row)row.remove();
+  }
   const tr=document.createElement('tr'),isNum=typeof bc==='number';
   const btag=isNum?'<span style="background:rgba(234,179,8,.1);color:var(--gold);padding:2px 7px;border-radius:5px;font-size:.6rem;font-weight:700;">#'+bc+'</span>':'<span class="tag t-'+bc+'">'+CL[bc]+'</span>';
   const rtag=isNum?'<span style="background:rgba(234,179,8,.1);color:var(--gold);padding:2px 7px;border-radius:5px;font-size:.6rem;font-weight:700;">#'+res+'</span>':'<span class="tag t-'+res+'">'+CL[res]+'</span>';
