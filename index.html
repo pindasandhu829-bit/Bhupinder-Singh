@@ -757,6 +757,8 @@ DB.ref('chromabet').once('value',snap=>{
 
 // Game state listeners — lightweight, shared data
 DB.ref('chromabet/currentRound').on('value',s=>{if(_db&&s.val())_db.currentRound=s.val();});
+// Keep live bets in cache for instant access in showRes
+DB.ref('chromabet/liveBets').on('value',s=>{if(_db)_db.liveBets=s.val()||{};});
 DB.ref('chromabet/gameHistory').on('value',s=>{
   if(_db&&s.val()){
     _db.gameHistory=s.val();
@@ -944,8 +946,10 @@ function tick(){
     NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));
   }
   if(tmr<=0){
-    clearInterval(tI);tI=null;
-    showRes(); // _showingResult lock handles duplicates
+    if(!_showingResult){
+      clearInterval(tI);tI=null;
+      showRes();
+    }
   }
 }
 
@@ -966,13 +970,15 @@ function updT(){
 }
 
 function showRes(){
+  // IMMEDIATELY lock — before any async work
   if(_showingResult)return;
   _showingResult=true;
   clearInterval(tI);tI=null;
   clearTimeout(_roundTimeout);
   
-  const d=gD();let res,numRes;
+  const d=gD();
   const fr=d.forcedResult;
+  let res;
   
   if(fr){
     res=fr;
@@ -980,34 +986,29 @@ function showRes(){
     DB.ref('chromabet/forcedResult').remove();
     pickNumber(res);
   } else {
-    // Read live bets — pick color with least amount
-    DB.ref('chromabet/liveBets').once('value', snap => {
-      const liveBets = snap.val() || {};
-      let rA=0,gA=0,vA=0;
-      Object.values(liveBets).forEach(bet=>{
-        if(bet.round===rnd){
-          const col=bet.color||'';
-          if(col==='red') rA+=bet.amount||0;
-          else if(col==='green') gA+=bet.amount||0;
-          else if(col==='violet') vA+=bet.amount||0;
-        }
-      });
-      if(rA===0&&gA===0&&vA===0){
-        const r=Math.random();
-        if(r<0.33) res='red';
-        else if(r<0.66) res='green';
-        else res='violet';
-      } else {
-        const amounts={red:rA,green:gA,violet:vA};
-        res=Object.keys(amounts).reduce((a,b)=>amounts[a]<=amounts[b]?a:b);
+    // Use cached live bets from _db (no async needed)
+    // Live bets are already synced via Firebase listener
+    const cached = (_db&&_db.liveBets) ? _db.liveBets : {};
+    let rA=0,gA=0,vA=0;
+    Object.values(cached).forEach(bet=>{
+      if(bet.round===rnd){
+        const col=bet.color||'';
+        if(col==='red') rA+=bet.amount||0;
+        else if(col==='green') gA+=bet.amount||0;
+        else if(col==='violet') vA+=bet.amount||0;
       }
-      pickNumber(res);
-    }).catch(()=>{
+    });
+    
+    if(rA===0&&gA===0&&vA===0){
+      // No bets — random
       const r=Math.random();
       res=r<0.33?'red':r<0.66?'green':'violet';
-      pickNumber(res);
-    });
-    return; // Wait for Firebase callback
+    } else {
+      // Pick color with LEAST amount
+      const amounts={red:rA,green:gA,violet:vA};
+      res=Object.keys(amounts).reduce((a,b)=>amounts[a]<=amounts[b]?a:b);
+    }
+    pickNumber(res);
   }
 }
 
