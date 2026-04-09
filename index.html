@@ -909,7 +909,18 @@ function placeBet(){
 }
 
 function startRound(){
-  const d=gD();rnd=d.currentRound||1;tmr=60;bO=true;pB=null;
+  clearInterval(tI);tI=null;
+  clearTimeout(_roundTimeout);_roundTimeout=null;
+  _showingResult=false;
+  
+  const d=gD();rnd=d.currentRound||1;bO=true;pB=null;
+  
+  // IST sync — timer = seconds remaining in current minute
+  const now=new Date();
+  const istOffset=5.5*60*60*1000;
+  const ist=new Date(now.getTime()+now.getTimezoneOffset()*60000+istOffset);
+  tmr=59-ist.getSeconds();
+  if(tmr<8)tmr=8;
   const b=document.getElementById('BB');b.disabled=false;b.textContent='Place Bet';
   sC=null;
   COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.remove('sel','dis');});
