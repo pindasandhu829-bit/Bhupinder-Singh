@@ -364,11 +364,14 @@ tr:hover td{background:rgba(255,255,255,.02);}
           <div class="card">
             <div class="ctit" style="justify-content:space-between;">
               <span id="uCnt">👥 Users</span>
-              <button class="btn bp bsm" onclick="opAddU()">+ Add User</button>
+              <div style="display:flex;gap:8px;">
+                <button class="btn bsm" style="background:var(--card2);border:1px solid var(--border2);color:var(--muted2);" onclick="loadUsers()">🔄 Refresh</button>
+                <button class="btn bp bsm" onclick="opAddU()">+ Add User</button>
+              </div>
             </div>
             <input class="search-inp" placeholder="🔍 Search by name or phone..." id="uSearch" oninput="searchUsers()"/>
             <div class="tbl-wrap"><table>
-              <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Balance</th><th>Deposited</th><th>Withdrawn</th><th>Bets</th><th>W/L</th><th>Referred By</th><th>Joined</th><th>Actions</th></tr></thead>
+              <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Password</th><th>Balance</th><th>Deposited</th><th>Withdrawn</th><th>Bets</th><th>W/L</th><th>Referred By</th><th>Joined</th><th>Actions</th></tr></thead>
               <tbody id="uTbl"></tbody>
             </table></div>
             <div class="pgn" id="uPagination"></div>
