@@ -724,7 +724,7 @@ const firebaseConfig={apiKey:"AIzaSyAbWxd0BmH1Km1BYMV3hDeojCRRlZkr3oo",authDomai
 firebase.initializeApp(firebaseConfig);
 const DB=firebase.database();
 let _db=null,_dbLoaded=false,CU=null,bal=0,rnd=1,tmr=60,tI=null,sC=null,bO=true,pB=null,hist=[],W=0,L=0,P=0,curNet='erc',wdType='crypto',regType='phone';
-let _showingResult=false,_roundTimeout=null;
+let _showingResult=false,_roundTimeout=null,_activeRound=0;
 
 function defDB(){return{users:{admin:{password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:''}},gameHistory:[],currentRound:1,deposits:[],withdrawals:[]};}
 function gD(){return _db||defDB();}
@@ -911,16 +911,22 @@ function placeBet(){
 }
 
 function startRound(){
+  const d=gD();
+  const newRnd=d.currentRound||1;
+  
+  // Prevent duplicate start for same round
+  if(_activeRound===newRnd && tI!==null) return;
+  _activeRound=newRnd;
+  
   clearInterval(tI);tI=null;
   clearTimeout(_roundTimeout);_roundTimeout=null;
   _showingResult=false;
   
-  const d=gD();rnd=d.currentRound||1;bO=true;pB=null;
+  rnd=newRnd;bO=true;pB=null;
   
-  // IST sync — timer = seconds remaining in current minute
+  // IST sync
   const now=new Date();
-  const istOffset=5.5*60*60*1000;
-  const ist=new Date(now.getTime()+now.getTimezoneOffset()*60000+istOffset);
+  const ist=new Date(now.getTime()+now.getTimezoneOffset()*60000+5.5*3600000);
   tmr=59-ist.getSeconds();
   if(tmr<8)tmr=8;
   const b=document.getElementById('BB');b.disabled=false;b.textContent='Place Bet';
@@ -970,9 +976,10 @@ function updT(){
 }
 
 function showRes(){
-  // IMMEDIATELY lock — before any async work
   if(_showingResult)return;
+  if(!tI&&_showingResult)return; // Extra safety
   _showingResult=true;
+  tI=null; // Prevent any tick from running
   clearInterval(tI);tI=null;
   clearTimeout(_roundTimeout);
   
@@ -1045,7 +1052,14 @@ function showResult(res,numRes){
     const nh=[{round:rnd,result:res,numResult:numRes,period:getPeriod(),timestamp:tstamp},...(gD().gameHistory||[])];
     if(nh.length>100)nh.pop();
     if(_db){_db.gameHistory=nh;_db.currentRound=rnd+1;}
-    sGame(rnd+1,nh,null);
+    // Use Firebase transaction to prevent duplicate round results
+    DB.ref('chromabet/lastResultRound').transaction(current=>{
+      if(current===rnd) return; // Already processed this round!
+      return rnd;
+    }).then(result=>{
+      if(!result.committed) return; // Another client already processed
+      sGame(rnd+1,nh,null);
+    });
     setTimeout(()=>{DB.ref('chromabet/liveBets').once('value',snap=>{const bets=snap.val()||{};Object.keys(bets).forEach(k=>{if(bets[k].round===rnd)DB.ref('chromabet/liveBets/'+k).remove();});});},5000);
     _roundTimeout = setTimeout(()=>{
       _roundTimeout=null;
