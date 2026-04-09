@@ -319,7 +319,24 @@ tr:last-child td{border-bottom:none;}
     </div>
     <button class="lbtn" onclick="doLogin()">Login</button>
     <div class="ltog" id="regLink" style="display:none;">No account? <a onclick="togF(1)">Register</a></div>
+    <div class="ltog" style="margin-top:8px;"><a onclick="togF(2)" style="color:#f97316;">🔑 Forgot Password?</a></div>
   </div>
+  <div id="FP" style="display:none;">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:1.5rem;margin-bottom:6px;">🔑</div>
+      <div style="font-weight:700;font-size:.95rem;">Reset Password</div>
+      <div style="font-size:.72rem;color:var(--muted2);margin-top:4px;">Phone number se password reset karo</div>
+    </div>
+    <div class="fl">Phone Number</div>
+    <input class="fi" id="fpPhone" placeholder="+91XXXXXXXXXX"/>
+    <div class="fl">New Password</div>
+    <input class="fi" type="password" id="fpNew" placeholder="New password (min 6)"/>
+    <div class="fl">Confirm Password</div>
+    <input class="fi" type="password" id="fpNew2" placeholder="Dobara password"/>
+    <button class="lbtn" onclick="doForgotPw()">Reset Password</button>
+    <div class="ltog" style="margin-top:10px;"><a onclick="togF(0)" style="color:var(--green);">← Back to Login</a></div>
+  </div>
+
   <div id="RF" style="display:none;">
     <div class="fl">Full Name</div>
     <input class="fi" id="rName" placeholder="Apna naam"/>
@@ -787,10 +804,42 @@ function showApp(){
 }
 
 // AUTH
-function togF(r){document.getElementById('LF').style.display=r?'none':'block';document.getElementById('RF').style.display=r?'block':'none';}
+function togF(r){
+  document.getElementById('LF').style.display=r===0?'block':'none';
+  document.getElementById('RF').style.display=r===1?'block':'none';
+  document.getElementById('FP').style.display=r===2?'block':'none';
+}
 function setRT(t){regType=t;document.getElementById('rtP').className='rt-btn'+(t==='phone'?'':' off');document.getElementById('rtE').className='rt-btn'+(t==='email'?'':' off');document.getElementById('phoneF').style.display=t==='phone'?'block':'none';document.getElementById('emailF').style.display=t==='email'?'block':'none';}
 function toggleRemember(){const ch=document.getElementById('rememberMe').checked;if(ch)localStorage.setItem('cb_remember','1');else{localStorage.removeItem('cb_remember');localStorage.removeItem('cb_saved_user');localStorage.removeItem('cb_saved_pass');}}
 function loadSavedCreds(){if(localStorage.getItem('cb_remember')==='1'){const su=localStorage.getItem('cb_saved_user'),sp=localStorage.getItem('cb_saved_pass');if(su)document.getElementById('lU').value=su;if(sp)document.getElementById('lP').value=sp;document.getElementById('rememberMe').checked=true;}}
+
+function doForgotPw(){
+  const phone = document.getElementById('fpPhone').value.trim();
+  const pw = document.getElementById('fpNew').value;
+  const pw2 = document.getElementById('fpNew2').value;
+  if(!phone){ sn('Phone number dalo','','lose'); return; }
+  if(pw.length<6){ sn('Password min 6 chars','','lose'); return; }
+  if(pw!==pw2){ sn('Password match nahi','','lose'); return; }
+  if(!_db||!_db.users){ sn('Loading... wait karo','','lose'); return; }
+  // Find user by phone
+  let found = null;
+  for(let u of Object.keys(_db.users)){
+    const ud = _db.users[u];
+    if(ud.phone && (ud.phone===phone || ud.phone==='+91'+phone.replace('+91','') || '+91'+ud.phone===phone)){
+      found = u; break;
+    }
+  }
+  if(!found){ sn('Phone number nahi mila!','Account nahi hai','lose'); return; }
+  // Update password
+  _db.users[found].password = pw;
+  DB.ref('chromabet/users/'+found+'/password').set(pw).then(()=>{
+    sn('✅ Password reset!','Ab login karo','');
+    togF(0);
+    document.getElementById('fpPhone').value='';
+    document.getElementById('fpNew').value='';
+    document.getElementById('fpNew2').value='';
+  }).catch(()=>sn('Error! Try again','','lose'));
+}
 
 function doLogin(){
   const raw=document.getElementById('lU').value.trim(),p=document.getElementById('lP').value.trim();
