@@ -921,17 +921,21 @@ function startRound(){
 }
 
 function tick(){
-  // Re-sync with IST every tick to prevent drift
-  const realLeft = getSecondsLeft();
-  // Only correct if difference > 2 seconds (avoid jitter)
-  if(Math.abs(realLeft - tmr) > 2 && tmr > 5){
-    tmr = realLeft;
-  } else {
-    tmr--;
-  }
+  tmr--;
   updT();
-  if(tmr===10){bO=false;const b=document.getElementById('BB');b.disabled=true;if(!pB)b.textContent='🔒 Closed';COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.add('dis');});NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));}
-  if(tmr<=0){clearInterval(tI);if(!_showingResult)showRes();}
+  if(tmr===10){
+    bO=false;
+    const b=document.getElementById('BB');
+    b.disabled=true;
+    if(!pB)b.textContent='🔒 Closed';
+    COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.add('dis');});
+    NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));
+  }
+  if(tmr<=0){
+    clearInterval(tI);
+    tI=null;
+    if(!_showingResult) showRes();
+  }
 }
 
 function updT(){
@@ -984,10 +988,8 @@ function showRes(){
     sGame(rnd+1,nh,null);
     setTimeout(()=>{DB.ref('chromabet/liveBets').once('value',snap=>{const bets=snap.val()||{};Object.keys(bets).forEach(k=>{if(bets[k].round===rnd)DB.ref('chromabet/liveBets/'+k).remove();});});},5000);
     setTimeout(()=>{
-      _showingResult = false; // Release lock
       rnd++;
-      tmr=getSecondsLeft();
-      startRound();
+      startRound(); // startRound resets _showingResult and syncs timer
     },3000);
   },1200);
 }
