@@ -723,7 +723,8 @@ tr:last-child td{border-bottom:none;}
 const firebaseConfig={apiKey:"AIzaSyAbWxd0BmH1Km1BYMV3hDeojCRRlZkr3oo",authDomain:"chromabet-34c53.firebaseapp.com",databaseURL:"https://chromabet-34c53-default-rtdb.firebaseio.com",projectId:"chromabet-34c53",storageBucket:"chromabet-34c53.firebasestorage.app",messagingSenderId:"205630233421",appId:"1:205630233421:web:0bd80b39e900af7b543504"};
 firebase.initializeApp(firebaseConfig);
 const DB=firebase.database();
-let _db=null,_dbLoaded=false,CU=null,bal=0,rnd=1,tmr=30,tI=null,sC=null,bO=true,pB=null,hist=[],W=0,L=0,P=0,curNet='erc',wdType='crypto',regType='phone';
+let _db=null,_dbLoaded=false,CU=null,bal=0,rnd=1,tmr=60,tI=null,sC=null,bO=true,pB=null,hist=[],W=0,L=0,P=0,curNet='erc',wdType='crypto',regType='phone';
+let _showingResult=false,_roundTimeout=null;
 
 function defDB(){return{users:{admin:{password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:''}},gameHistory:[],currentRound:1,deposits:[],withdrawals:[]};}
 function gD(){return _db||defDB();}
@@ -921,20 +922,19 @@ function startRound(){
 }
 
 function tick(){
-  tmr--;
+  if(tmr>0) tmr--;
   updT();
   if(tmr===10){
     bO=false;
     const b=document.getElementById('BB');
     b.disabled=true;
     if(!pB)b.textContent='🔒 Closed';
-    COLS.forEach(c=>{const el=document.getElementById('B-'+c);if(el)el.classList.add('dis');});
+    COLS.forEach(col=>{const el=document.getElementById('B-'+col);if(el)el.classList.add('dis');});
     NUMS.forEach(n=>document.getElementById('N-'+n).classList.add('dis'));
   }
   if(tmr<=0){
-    clearInterval(tI);
-    tI=null;
-    if(!_showingResult) showRes();
+    clearInterval(tI);tI=null;
+    showRes(); // _showingResult lock handles duplicates
   }
 }
 
@@ -954,17 +954,65 @@ function updT(){
   if(pe)pe.textContent=getPeriod();
 }
 
-let _showingResult = false; // Lock to prevent double result
-
 function showRes(){
-  if(_showingResult) return; // Already showing result!
-  _showingResult = true;
+  if(_showingResult)return;
+  _showingResult=true;
+  clearInterval(tI);tI=null;
+  clearTimeout(_roundTimeout);
+  
   const d=gD();let res,numRes;
   const fr=d.forcedResult;
-  if(fr){res=fr;if(_db)_db.forcedResult=null;DB.ref('chromabet/forcedResult').remove();}
-  else{const r=Math.random();res=r<.4?'red':r<.8?'green':'violet';}
-  if(res==='violet'){numRes=Math.random()<.5?0:5;}
-  else{const cn={red:[2,4,6,8,0],green:[1,3,7,9,5]};numRes=cn[res][Math.floor(Math.random()*cn[res].length)];}
+  
+  if(fr){
+    res=fr;
+    if(_db)_db.forcedResult=null;
+    DB.ref('chromabet/forcedResult').remove();
+    pickNumber(res);
+  } else {
+    // Read live bets — pick color with least amount
+    DB.ref('chromabet/liveBets').once('value', snap => {
+      const liveBets = snap.val() || {};
+      let rA=0,gA=0,vA=0;
+      Object.values(liveBets).forEach(bet=>{
+        if(bet.round===rnd){
+          const col=bet.color||'';
+          if(col==='red') rA+=bet.amount||0;
+          else if(col==='green') gA+=bet.amount||0;
+          else if(col==='violet') vA+=bet.amount||0;
+        }
+      });
+      if(rA===0&&gA===0&&vA===0){
+        const r=Math.random();
+        if(r<0.33) res='red';
+        else if(r<0.66) res='green';
+        else res='violet';
+      } else {
+        const amounts={red:rA,green:gA,violet:vA};
+        res=Object.keys(amounts).reduce((a,b)=>amounts[a]<=amounts[b]?a:b);
+      }
+      pickNumber(res);
+    }).catch(()=>{
+      const r=Math.random();
+      res=r<0.33?'red':r<0.66?'green':'violet';
+      pickNumber(res);
+    });
+    return; // Wait for Firebase callback
+  }
+}
+
+function pickNumber(res){
+  let numRes;
+  if(res==='violet'){
+    numRes=Math.random()<0.5?0:5;
+  } else {
+    const cn={red:[2,4,6,8,0],green:[1,3,7,9,5]};
+    const pool=cn[res];
+    numRes=pool[Math.floor(Math.random()*pool.length)];
+  }
+  showResult(res,numRes);
+}
+
+function showResult(res,numRes){
   const cols={red:'#ef4444',green:'#22c55e',violet:'#a855f7'};
   document.getElementById('WT').style.display='none';
   document.getElementById('RC').style.display='flex';
@@ -987,9 +1035,10 @@ function showRes(){
     if(_db){_db.gameHistory=nh;_db.currentRound=rnd+1;}
     sGame(rnd+1,nh,null);
     setTimeout(()=>{DB.ref('chromabet/liveBets').once('value',snap=>{const bets=snap.val()||{};Object.keys(bets).forEach(k=>{if(bets[k].round===rnd)DB.ref('chromabet/liveBets/'+k).remove();});});},5000);
-    setTimeout(()=>{
+    _roundTimeout = setTimeout(()=>{
+      _roundTimeout=null;
       rnd++;
-      startRound(); // startRound resets _showingResult and syncs timer
+      startRound();
     },3000);
   },1200);
 }
