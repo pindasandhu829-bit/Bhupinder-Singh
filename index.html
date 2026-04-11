@@ -1071,20 +1071,34 @@ function showResult(res,numRes){
 
 function resolveB(res,numRes){
   const bv=pB.color,isNum=typeof bv==='number',isC=VCOMBO.includes(numRes);
-  let won=false,pm=ODDS[bv]||2;
-  if(isNum){won=(bv===numRes);}
-  else if(bv==='big'){won=(numRes>=5);if(won&&numRes===5)pm=1.5;}
-  else if(bv==='small'){won=(numRes<=4);}
-  else if(bv==='violet'){won=isC;if(won)pm=4.25;}
-  else if(bv==='red'){won=(res==='red');if(won&&numRes===0)pm=1.5;}
-  else if(bv==='green'){won=(res==='green');if(won&&numRes===5)pm=1.5;}
+  let won=false,pm=2;
+
+  if(isNum){
+    // Number bet: exact match = 9x
+    won=(bv===numRes);
+    pm=9;
+  } else if(bv==='big'){
+    won=(numRes>=5);
+    pm=2;
+  } else if(bv==='small'){
+    won=(numRes<=4);
+    pm=2;
+  } else if(bv==='violet'){
+    // Violet wins only on 0 or 5 = 4.5x
+    won=isC;
+    pm=4.5;
+  } else if(bv==='red'){
+    won=(res==='red');
+    pm=isC?1.5:2; // 1.5x if 0 came, 2x normal
+  } else if(bv==='green'){
+    won=(res==='green');
+    pm=isC?1.5:2; // 1.5x if 5 came, 2x normal
+  }
   const{amount}=pB;let p2;
   if(won){const pay=Math.floor(amount*pm);p2=pay-amount;bal+=pay;W++;P+=p2;
-    let msg,sub='+₹'+p2;
-    if(bv==='green'&&numRes===5){msg='🟢🟣 Green+Violet!';}
-    else if(bv==='red'&&numRes===0){msg='🔴🟣 Red+Violet!';}
-    else if(bv==='violet'){msg='🟣 Violet Win!';}
-    else{msg='🎉 You Won!';}if(isC&&bv!=='violet'){msg='Win! Half Profit';sub='+₹'+p2+' (1.5x)';}else if(isC&&bv==='violet'){msg='Violet Combo!';sub='+₹'+p2+' (2.25x)';}sn(msg,sub,'');confetti();}
+    let msg='🎉 You Won!',sub='+₹'+p2;
+    if(isC&&bv==='violet') msg='🟣 Violet! (4.5x)';
+    else if(isC) msg='🎉 Win! (1.5x Combo)';if(isC&&bv!=='violet'){msg='Win! Half Profit';sub='+₹'+p2+' (1.5x)';}else if(isC&&bv==='violet'){msg='Violet Combo!';sub='+₹'+p2+' (2.25x)';}sn(msg,sub,'');confetti();}
   else{p2=-amount;P+=p2;L++;sn('Better luck!','-₹'+amount,'lose');}
   const uu={balance:bal,wins:W,losses:L,netPnl:P,totalBets:(_db.users[CU].totalBets||0)+1,totalWagered:(_db.users[CU].totalWagered||0)+amount};
   Object.assign(_db.users[CU],uu);DB.ref('chromabet/users/'+CU).update(uu);
