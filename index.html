@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -102,6 +102,14 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
   .cert-actions{display:none;}
   #certificate{box-shadow:none;width:297mm;height:210mm;}
 }
+.type-btn{background:#fff;border:2px solid #e5e5e5;border-radius:12px;padding:14px;text-align:center;cursor:pointer;font-size:.78rem;color:#333;transition:all .2s;line-height:1.6;}
+.type-btn:hover{border-color:#8b6914;}
+.type-btn.on{border-color:#8b6914;background:linear-gradient(135deg,rgba(139,105,20,.08),rgba(212,160,23,.05));}
+.type-btn strong{display:block;font-size:.88rem;color:#1a1a1a;}
+.type-btn small{color:#888;font-size:.7rem;}
+/* Dynamic sections */
+.cert-section{display:none;}
+.cert-section.on{display:block;}
 </style>
 </head>
 <body>
@@ -122,9 +130,20 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
 
 <!-- FORM -->
 <div id="formPage" style="display:none;">
-  <div class="f-title">🎓 Diploma Certificate Generator</div>
-  <div class="f-sub">Details bharke professional certificate banao</div>
+  <div class="f-title">🏆 Certificate Generator</div>
+  <div class="f-sub">Type select karo aur details bharo</div>
 
+  <!-- TYPE SELECT -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+    <div class="type-btn on" onclick="setType('diploma')" id="t-diploma">🎓<br><strong>Diploma</strong><br><small>Graduation</small></div>
+    <div class="type-btn" onclick="setType('achievement')" id="t-achievement">🏆<br><strong>Achievement</strong><br><small>Sports/Awards</small></div>
+    <div class="type-btn" onclick="setType('training')" id="t-training">📚<br><strong>Training</strong><br><small>Education/Course</small></div>
+    <div class="type-btn" onclick="setType('business')" id="t-business">💼<br><strong>Business</strong><br><small>Organization</small></div>
+    <div class="type-btn" onclick="setType('martial')" id="t-martial" style="grid-column:span 2;">🥋<br><strong>Martial Arts</strong><br><small>Belt/Rank Certificate</small></div>
+  </div>
+
+  <!-- DIPLOMA SECTION -->
+  <div id="sec-diploma" class="cert-section on">
   <div class="f-card">
     <div class="f-section">University / Institution</div>
     <div class="f-full">
@@ -244,7 +263,118 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
     <div style="font-size:.72rem;color:#888;">QR code scan karne pe student ki saari details dikhegi</div>
   </div>
 
-  <button class="gen-btn" onclick="generateCert()">🎓 Generate Diploma Certificate</button>
+  </div><!-- /sec-diploma -->
+
+  <!-- ACHIEVEMENT SECTION -->
+  <div id="sec-achievement" class="cert-section">
+  <div class="f-card">
+    <div class="f-section">Organization / Event</div>
+    <div class="f-full"><div class="f-label">Organization Name *</div><input class="f-inp" id="a-org" placeholder="e.g. Punjab Sports Academy"/></div>
+    <div class="f-full"><div class="f-label">Event Name *</div><input class="f-inp" id="a-event" placeholder="e.g. State Level Cricket Championship 2024"/></div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Recipient</div>
+    <div class="f-full"><div class="f-label">Name *</div><input class="f-inp" id="a-name" placeholder="e.g. Bhupinder Singh"/></div>
+    <div class="f-row">
+      <div><div class="f-label">Achievement *</div><select class="f-sel" id="a-pos"><option>1st Place 🥇</option><option>2nd Place 🥈</option><option>3rd Place 🥉</option><option>Participation</option><option>Best Player</option><option>MVP</option><option>Custom...</option></select></div>
+      <div><div class="f-label">Sport / Category</div><input class="f-inp" id="a-sport" placeholder="e.g. Cricket, Football"/></div>
+    </div>
+    <div class="f-row">
+      <div><div class="f-label">Date</div><input class="f-inp" type="date" id="a-date"/></div>
+      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="a-certno" placeholder="ACH/2024/001"/></div>
+    </div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Authorized By</div>
+    <div class="f-row">
+      <div><div class="f-label">President / Director</div><input class="f-inp" id="a-sig1" placeholder="Name"/></div>
+      <div><div class="f-label">Secretary</div><input class="f-inp" id="a-sig2" placeholder="Name"/></div>
+    </div>
+  </div>
+  </div><!-- /sec-achievement -->
+
+  <!-- TRAINING SECTION -->
+  <div id="sec-training" class="cert-section">
+  <div class="f-card">
+    <div class="f-section">Training Institute</div>
+    <div class="f-full"><div class="f-label">Institute Name *</div><input class="f-inp" id="tr-inst" placeholder="e.g. Digital Skills Academy"/></div>
+    <div class="f-full"><div class="f-label">Course Name *</div><input class="f-inp" id="tr-course" placeholder="e.g. Advanced Web Development"/></div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Participant</div>
+    <div class="f-full"><div class="f-label">Name *</div><input class="f-inp" id="tr-name" placeholder="e.g. Bhupinder Singh"/></div>
+    <div class="f-row">
+      <div><div class="f-label">Duration</div><input class="f-inp" id="tr-dur" placeholder="e.g. 3 Months / 40 Hours"/></div>
+      <div><div class="f-label">Grade / Score</div><input class="f-inp" id="tr-grade" placeholder="e.g. A+ / 95%"/></div>
+    </div>
+    <div class="f-row">
+      <div><div class="f-label">Completion Date</div><input class="f-inp" type="date" id="tr-date"/></div>
+      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="tr-certno" placeholder="TR/2024/001"/></div>
+    </div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Signatures</div>
+    <div class="f-row">
+      <div><div class="f-label">Director / Principal</div><input class="f-inp" id="tr-sig1" placeholder="Name"/></div>
+      <div><div class="f-label">Trainer / Instructor</div><input class="f-inp" id="tr-sig2" placeholder="Name"/></div>
+    </div>
+  </div>
+  </div><!-- /sec-training -->
+
+  <!-- BUSINESS SECTION -->
+  <div id="sec-business" class="cert-section">
+  <div class="f-card">
+    <div class="f-section">Organization</div>
+    <div class="f-full"><div class="f-label">Organization Name *</div><input class="f-inp" id="b-org" placeholder="e.g. Punjab Chamber of Commerce"/></div>
+    <div class="f-full"><div class="f-label">Certificate Type *</div><select class="f-sel" id="b-type"><option>Certificate of Membership</option><option>Certificate of Excellence</option><option>Certificate of Appreciation</option><option>Certificate of Recognition</option><option>Business License Certificate</option></select></div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Recipient</div>
+    <div class="f-full"><div class="f-label">Name / Company *</div><input class="f-inp" id="b-name" placeholder="e.g. Bhupinder Singh / Singh Enterprises"/></div>
+    <div class="f-full"><div class="f-label">For / Reason</div><input class="f-inp" id="b-reason" placeholder="e.g. Outstanding contribution to trade..."/></div>
+    <div class="f-row">
+      <div><div class="f-label">Date</div><input class="f-inp" type="date" id="b-date"/></div>
+      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="b-certno" placeholder="BIZ/2024/001"/></div>
+    </div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Authorized By</div>
+    <div class="f-row">
+      <div><div class="f-label">President / CEO</div><input class="f-inp" id="b-sig1" placeholder="Name"/></div>
+      <div><div class="f-label">Secretary / Director</div><input class="f-inp" id="b-sig2" placeholder="Name"/></div>
+    </div>
+  </div>
+  </div><!-- /sec-business -->
+
+  <!-- MARTIAL ARTS SECTION -->
+  <div id="sec-martial" class="cert-section">
+  <div class="f-card">
+    <div class="f-section">Martial Arts Academy</div>
+    <div class="f-full"><div class="f-label">Academy / Dojo Name *</div><input class="f-inp" id="m-acad" placeholder="e.g. Punjab Martial Arts Academy"/></div>
+    <div class="f-full"><div class="f-label">Martial Art Style *</div><input class="f-inp" id="m-style" placeholder="e.g. Karate, Taekwondo, Kung Fu, Pencak Silat"/></div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Student</div>
+    <div class="f-full"><div class="f-label">Student Name *</div><input class="f-inp" id="m-name" placeholder="e.g. Bhupinder Singh"/></div>
+    <div class="f-row">
+      <div><div class="f-label">Belt / Rank Awarded *</div><select class="f-sel" id="m-belt"><option>White Belt</option><option>Yellow Belt</option><option>Orange Belt</option><option>Green Belt</option><option>Blue Belt</option><option>Purple Belt</option><option>Brown Belt</option><option>Red Belt</option><option>Black Belt — 1st Dan</option><option>Black Belt — 2nd Dan</option><option>Black Belt — 3rd Dan</option><option>Black Belt — 4th Dan</option><option>Master</option><option>Grand Master</option></select></div>
+      <div><div class="f-label">Years of Training</div><input class="f-inp" id="m-years" placeholder="e.g. 3 Years"/></div>
+    </div>
+    <div class="f-row">
+      <div><div class="f-label">Grading Date</div><input class="f-inp" type="date" id="m-date"/></div>
+      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="m-certno" placeholder="MA/2024/001"/></div>
+    </div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Authorized By</div>
+    <div class="f-row">
+      <div><div class="f-label">Head Instructor / Sensei</div><input class="f-inp" id="m-sig1" placeholder="Name"/></div>
+      <div><div class="f-label">Association President</div><input class="f-inp" id="m-sig2" placeholder="Name"/></div>
+    </div>
+  </div>
+  </div><!-- /sec-martial -->
+
+  <button class="gen-btn" id="genBtn" onclick="generateCert()">🎓 Generate Certificate</button>
 </div>
 
 <!-- CERTIFICATE -->
@@ -351,6 +481,18 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
 </div>
 
 <script>
+// Certificate type
+let certType = 'diploma';
+function setType(t){
+  certType = t;
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('t-'+t).classList.add('on');
+  document.querySelectorAll('.cert-section').forEach(s=>s.classList.remove('on'));
+  document.getElementById('sec-'+t).classList.add('on');
+  const labels={diploma:'🎓 Generate Diploma',achievement:'🏆 Generate Achievement Certificate',training:'📚 Generate Training Certificate',business:'💼 Generate Business Certificate',martial:'🥋 Generate Martial Arts Certificate'};
+  document.getElementById('genBtn').textContent=labels[t];
+}
+
 // Password check
 function checkPw(){
   const pw = document.getElementById('pwInp').value;
@@ -374,6 +516,9 @@ document.getElementById('degree').addEventListener('change',function(){
 
 // Set today's date
 document.getElementById('certDate').valueAsDate=new Date();
+['a-date','tr-date','b-date','m-date'].forEach(id=>{
+  const el=document.getElementById(id);if(el)el.valueAsDate=new Date();
+});
 
 // Load logo
 function loadLogo(input){
