@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -580,15 +580,22 @@ function generateCert(){
 
   // QR Code
   document.getElementById('qrcode').innerHTML='';
-  const qrData = verifyUrl||
-    'Certificate: '+certNo+
-    '\nName: '+stuName+
-    '\nDegree: '+degree+
-    '\nMajor: '+major+
-    '\nUniversity: '+uniName+
-    '\nYear: '+gradYear+
-    (enrollNo?'\nEnroll: '+enrollNo:'')+
-    (rollNo?'\nRoll: '+rollNo:'');
+  // Save certificate to localStorage for verification
+  const certData = {
+    type: certType,
+    certNo, stuName, degree, major, uniName, uniSub,
+    gradYear, honors, vcName, regName, enrollNo, rollNo,
+    date: certDate, issued: new Date().toISOString()
+  };
+  // Save by certNo
+  const allCerts = JSON.parse(localStorage.getItem('saved_certs')||'{}');
+  allCerts[certNo] = certData;
+  localStorage.setItem('saved_certs', JSON.stringify(allCerts));
+
+  // QR points to verify page with cert number
+  const baseUrl = window.location.href.replace('index.html','').replace(/\?.*$/,'');
+  const verifyLink = verifyUrl || (baseUrl + 'verify.html?id=' + encodeURIComponent(certNo));
+  const qrData = verifyLink;
 
   new QRCode(document.getElementById('qrcode'),{
     text:qrData,
@@ -597,6 +604,9 @@ function generateCert(){
     colorLight:'#ffffff',
     correctLevel:QRCode.CorrectLevel.M
   });
+  
+  // Store verify link for display
+  window._lastVerifyLink = qrData;
 
   document.getElementById('formPage').style.display='none';
   document.getElementById('certPage').style.display='block';
