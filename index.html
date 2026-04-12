@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diploma Certificate Generator</title>
+<title>VerifyCert5 — Certificate Generator</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -62,8 +62,8 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
 .cert-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:5% 8%;}
 
 .cert-logo{margin-bottom:2%;height:60px;object-fit:contain;}
-.cert-logo-placeholder{width:60px;height:60px;background:linear-gradient(135deg,#8b6914,#d4a017);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2%;}
-.cert-logo-placeholder span{font-family:'Cinzel',serif;color:#fff;font-size:1.2rem;font-weight:700;}
+.cert-logo-placeholder{width:70px;height:70px;background:linear-gradient(135deg,#5c4200,#8b6914,#d4a017,#f5c842);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2%;box-shadow:0 3px 12px rgba(212,160,23,.5);border:2px solid #d4a017;}
+.cert-logo-placeholder span{font-family:'Cinzel',serif;color:#fff;font-size:1.2rem;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.4);}
 
 .cert-university{font-family:'Cinzel',serif;font-size:1.4em;color:#2c1810;font-weight:700;text-align:center;letter-spacing:2px;margin-bottom:.5%;}
 .cert-university-sub{font-size:.75em;color:#666;letter-spacing:3px;text-transform:uppercase;margin-bottom:3%;}
@@ -118,7 +118,7 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
 <div id="pwGate" style="position:fixed;inset:0;background:#0c0c0c;z-index:9999;display:flex;align-items:center;justify-content:center;">
   <div style="background:#161616;border:1px solid #2a2a2a;border-radius:20px;padding:32px;width:90%;max-width:380px;text-align:center;">
     <div style="font-size:2rem;margin-bottom:12px;">🎓</div>
-    <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:#fff;margin-bottom:4px;">Diploma Generator</div>
+    <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:#fff;margin-bottom:4px;">VerifyCert5</div>
     <div style="font-size:.75rem;color:#555;margin-bottom:24px;">Authorized access only</div>
     <input id="pwInp" type="password" placeholder="Enter Password" 
       style="width:100%;background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:12px 14px;color:#fff;font-size:.9rem;outline:none;margin-bottom:10px;text-align:center;letter-spacing:4px;"
@@ -130,7 +130,7 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
 
 <!-- FORM -->
 <div id="formPage" style="display:none;">
-  <div class="f-title">🏆 Certificate Generator</div>
+  <div class="f-title">🏆 VerifyCert5 — Certificate Generator</div>
   <div class="f-sub">Type select karo aur details bharo</div>
 
   <!-- TYPE SELECT -->
@@ -444,6 +444,12 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
         <div class="cert-field" id="c-field">in Computer Science & Engineering</div>
         <div class="cert-honors" id="c-honors"></div>
 
+        <!-- Extra Box -->
+        <div id="c-extra" style="display:none;border:1px solid #d4a017;border-radius:8px;padding:8px 14px;margin-bottom:2%;text-align:center;min-width:60%;background:rgba(212,160,23,.04);">
+          <div id="c-extra-title" style="font-family:'Cinzel',serif;font-size:.6em;color:#8b6914;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;"></div>
+          <div id="c-extra-content" style="font-size:.7em;color:#444;line-height:1.7;font-style:italic;"></div>
+        </div>
+
         <!-- Bottom -->
         <div class="cert-bottom">
           <div class="cert-sig">
@@ -580,6 +586,17 @@ function generateCert(){
 
   // QR Code
   document.getElementById('qrcode').innerHTML='';
+  // Extra box
+  const extraTitle = document.getElementById('extraTitle').value.trim();
+  const extraContent = document.getElementById('extraContent').value.trim();
+  if(extraTitle || extraContent){
+    document.getElementById('c-extra').style.display='block';
+    document.getElementById('c-extra-title').textContent=extraTitle;
+    document.getElementById('c-extra-content').textContent=extraContent;
+  } else {
+    document.getElementById('c-extra').style.display='none';
+  }
+
   // Save certificate to localStorage for verification
   const certData = {
     type: certType,
