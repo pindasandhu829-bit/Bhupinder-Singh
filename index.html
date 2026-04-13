@@ -376,7 +376,7 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
 </div>
 
 <!-- CERTIFICATE -->
-<div id="certPage">
+<div id="certPage" style="display:none;">
   <div class="cert-actions">
     <button class="act-btn act-back" onclick="goBack()">← Edit Details</button>
     <button class="act-btn act-print" onclick="window.print()">🖨️ Print Certificate</button>
@@ -515,9 +515,7 @@ document.addEventListener('keyup',function(e){
   if(e.key==='Enter' && document.getElementById('pwGate').style.display!=='none'){
     checkPw();
   }
-});').style.display='none';
-  document.getElementById('formPage').style.display='block';
-}
+});
 
 // Show custom degree input
 document.getElementById('degree').addEventListener('change',function(){
