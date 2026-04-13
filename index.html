@@ -516,6 +516,7 @@ function loadLogo(input){
 }
 
 function generateCert(){
+  try {
   // Get values based on certType
   let uniName,uniSub,stuName,enrollNo='',rollNo='',degree,major='',honors='',gradYear='2024',certDate,vcName,regName,certNo,verifyUrl='';
 
@@ -654,12 +655,14 @@ function generateCert(){
   window._lastVerifyLink = qrData;
   const vl = document.getElementById('c-verifylink');
   if(vl) vl.textContent = '🔍 Verify: ' + verifyLink;
-  const vl = document.getElementById('c-verifylink');
-  if(vl) vl.textContent = '🔍 Verify: ' + verifyLink;
 
   document.getElementById('formPage').style.display='none';
   document.getElementById('certPage').style.display='block';
   window.scrollTo(0,0);
+  } catch(err){
+    alert('Error: ' + err.message);
+    console.error(err);
+  }
 }
 
 function goBack(){
