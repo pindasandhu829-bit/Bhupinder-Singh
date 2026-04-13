@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>5ChromaBet — Certificate Verification</title>
+<title>Certificate Verification</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
@@ -14,7 +16,8 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:#2c1810;text-align:center;m
 .inp{width:100%;background:#f8f8f8;border:1px solid #e5e5e5;border-radius:10px;padding:12px 14px;font-size:.88rem;outline:none;margin-bottom:10px;}
 .inp:focus{border-color:#8b6914;}
 .btn{width:100%;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,#8b6914,#d4a017);color:#fff;font-weight:700;font-size:.9rem;cursor:pointer;}
-#res{margin-top:16px;display:none;}
+#res{margin-top:16px;}
+.loading{text-align:center;padding:20px;color:#888;font-size:.85rem;}
 .ok{background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:16px;}
 .ok-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .ok-icon{font-size:1.5rem;}
@@ -28,79 +31,102 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:#2c1810;text-align:center;m
 .fail-icon{font-size:2rem;margin-bottom:8px;}
 .fail-title{font-weight:700;color:#ef4444;margin-bottom:4px;}
 .fail-sub{font-size:.72rem;color:#888;}
-.back{display:block;text-align:center;margin-top:14px;color:#8b6914;font-size:.78rem;font-weight:600;}
 </style>
 </head>
 <body>
 <div class="box">
-  <h1>🔍 Verify Certificate</h1>
+  <h1>🔍 Certificate Verify</h1>
   <div class="sub">Certificate number daalo</div>
-  <input class="inp" id="inp" placeholder="e.g. PU/2024/001234" onkeydown="if(event.key==='Enter')go()"/>
+  <input class="inp" id="inp" placeholder="e.g. PU/2024/001234"/>
   <button class="btn" onclick="go()">Verify →</button>
   <div id="res"></div>
-  <a class="back" href="index.html">← 5ChromaBet</a>
 </div>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <script>
-window.onload=function(){
-  var id=new URLSearchParams(location.search).get('id');
-  if(id){document.getElementById('inp').value=decodeURIComponent(id);go();}
-};
 // Firebase init
 var firebaseConfig = {
   apiKey: "AIzaSyAbWxdOBmH1Km1BYMV3hDeojCRRlZkr3oo",
   authDomain: "chromabet-34c53.firebaseapp.com",
   databaseURL: "https://chromabet-34c53-default-rtdb.firebaseio.com",
-  projectId: "chromabet-34c53"
+  projectId: "chromabet-34c53",
+  storageBucket: "chromabet-34c53.firebasestorage.app",
+  messagingSenderId: "205630233421",
+  appId: "1:205630233421:web:0bd80b39e900af7b543504"
 };
-try {
-  if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-} catch(e) { firebase.initializeApp(firebaseConfig, 'verify'); }
-var CERTDB = firebase.database();
 
-function showResult(no, d){
-  var r = document.getElementById('res');
-  if(!d){
-    r.innerHTML='<div class="fail"><div class="fail-icon">❌</div><div class="fail-title">Not Found</div><div class="fail-sub">Certificate "'+no+'" nahi mila</div></div>';
-    return;
+firebase.initializeApp(firebaseConfig);
+var DB = firebase.database();
+
+// Enter key
+document.getElementById('inp').addEventListener('keyup', function(e){
+  if(e.key === 'Enter') go();
+});
+
+// Auto search from URL
+window.onload = function(){
+  var id = new URLSearchParams(location.search).get('id');
+  if(id){
+    document.getElementById('inp').value = decodeURIComponent(id);
+    go();
   }
-  var types={diploma:'🎓 Diploma',achievement:'🏆 Achievement',training:'📚 Training',business:'💼 Business',martial:'🥋 Martial Arts'};
-  var issued=d.issued?new Date(d.issued).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'—';
-  r.innerHTML='<div class="ok"><div class="ok-top"><div class="ok-icon">✅</div><div><div class="ok-title">Verified!</div><div class="ok-sub">'+(types[d.type]||'Certificate')+'</div></div></div>'
-    +'<div class="row"><span class="lbl">Name</span><span class="val">'+(d.stuName||'—')+'</span></div>'
-    +'<div class="row"><span class="lbl">Institute</span><span class="val">'+(d.uniName||'—')+'</span></div>'
-    +'<div class="row"><span class="lbl">Degree</span><span class="val">'+(d.degree||'—')+'</span></div>'
-    +(d.major?'<div class="row"><span class="lbl">Major</span><span class="val">'+d.major+'</span></div>':'')
-    +(d.gradYear?'<div class="row"><span class="lbl">Year</span><span class="val">'+d.gradYear+'</span></div>':'')
-    +'<div class="row"><span class="lbl">Cert No.</span><span class="val" style="color:#8b6914;font-family:monospace;">'+no+'</span></div>'
-    +'<div class="row"><span class="lbl">Issued</span><span class="val">'+issued+'</span></div></div>';
-}
+};
 
 function go(){
   var no = document.getElementById('inp').value.trim();
   if(!no) return;
+  
   var r = document.getElementById('res');
-  r.style.display='block';
-  r.innerHTML='<div style="text-align:center;padding:20px;color:#888;font-size:.85rem;">🔄 Checking...</div>';
+  r.innerHTML = '<div class="loading">🔄 Checking...</div>';
 
-  // Check Firebase first
-  var safeKey = no.replace(/[.#$\/\[\]]/g,'_');
-  CERTDB.ref('certificates/' + safeKey).once('value', function(snap){
-    var d = snap.val();
-    if(d){
-      showResult(no, d);
-    } else {
-      // Fallback to localStorage
-      var all = JSON.parse(localStorage.getItem('saved_certs')||'{}');
-      showResult(no, all[no]||null);
-    }
-  })).catch(function(err){
-    console.log('Firebase error:', err);
-    // Fallback to localStorage
-    var all = JSON.parse(localStorage.getItem('saved_certs')||'{}');
-    showResult(no, all[no]||null);
-  });
+  // Safe key for Firebase
+  var safeKey = no.replace(/[\.#\$\/\[\]]/g, '_');
+  
+  DB.ref('certificates/' + safeKey).once('value')
+    .then(function(snap){
+      var d = snap.val();
+      if(d){
+        showOk(no, d);
+      } else {
+        showFail(no);
+      }
+    })
+    .catch(function(err){
+      r.innerHTML = '<div class="fail"><div class="fail-icon">⚠️</div><div class="fail-title">Connection Error</div><div class="fail-sub">Internet check karo aur dobara try karo</div></div>';
+    });
+}
+
+function showOk(no, d){
+  var types = {diploma:'🎓 Diploma', achievement:'🏆 Achievement', training:'📚 Training', business:'💼 Business', martial:'🥋 Martial Arts'};
+  var issued = d.issued ? new Date(d.issued).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) : '—';
+  
+  document.getElementById('res').innerHTML = 
+    '<div class="ok">' +
+    '<div class="ok-top"><div class="ok-icon">✅</div><div>' +
+    '<div class="ok-title">Verified!</div>' +
+    '<div class="ok-sub">' + (types[d.type] || 'Certificate') + '</div>' +
+    '</div></div>' +
+    row('Name', d.stuName) +
+    row('Institute', d.uniName) +
+    row('Degree', d.degree) +
+    (d.major ? row('Major/Field', d.major) : '') +
+    (d.gradYear ? row('Year', d.gradYear) : '') +
+    (d.honors ? row('Honors', d.honors) : '') +
+    '<div class="row"><span class="lbl">Cert No.</span><span class="val" style="color:#8b6914;font-family:monospace;">' + no + '</span></div>' +
+    row('Issued On', issued) +
+    '</div>';
+}
+
+function showFail(no){
+  document.getElementById('res').innerHTML = 
+    '<div class="fail">' +
+    '<div class="fail-icon">❌</div>' +
+    '<div class="fail-title">Not Found</div>' +
+    '<div class="fail-sub">Certificate "' + no + '" ka koi record nahi mila.<br>Number check karke dobara try karo.</div>' +
+    '</div>';
+}
+
+function row(lbl, val){
+  return '<div class="row"><span class="lbl">' + lbl + '</span><span class="val">' + (val||'—') + '</span></div>';
 }
 </script>
 </body>
