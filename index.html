@@ -504,7 +504,7 @@ function setType(t){
 
 // Password check
 function checkPw(){
-  const pw = document.getElementById('pwInp').value;
+  var pw = document.getElementById('pwInp').value.trim();
   if(pw === 'diploma@2024'){
     sessionStorage.setItem('cert_auth','1');
     document.getElementById('pwGate').style.display='none';
@@ -512,20 +512,14 @@ function checkPw(){
   } else {
     document.getElementById('pwErr').style.display='block';
     document.getElementById('pwInp').value='';
-    document.getElementById('pwInp').style.borderColor='#ef4444';
-    setTimeout(()=>{
-      document.getElementById('pwInp').style.borderColor='#2a2a2a';
-    },1500);
   }
 }
 
-// Auto login if already authenticated
-window.addEventListener('load',()=>{
-  if(sessionStorage.getItem('cert_auth')==='1'){
-    document.getElementById('pwGate').style.display='none';
-    document.getElementById('formPage').style.display='block';
-  }
-});
+// Auto login check
+if(sessionStorage.getItem('cert_auth')==='1'){
+  document.getElementById('pwGate').style.display='none';
+  document.getElementById('formPage').style.display='block';
+}
 
 // Show custom degree input
 document.getElementById('degree').addEventListener('change',function(){
