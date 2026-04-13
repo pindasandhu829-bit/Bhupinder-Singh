@@ -40,18 +40,25 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:#2c1810;text-align:center;m
   <div id="res"></div>
   <a class="back" href="index.html">← 5ChromaBet</a>
 </div>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script>
 window.onload=function(){
   var id=new URLSearchParams(location.search).get('id');
   if(id){document.getElementById('inp').value=decodeURIComponent(id);go();}
 };
-function go(){
-  var no=document.getElementById('inp').value.trim();
-  if(!no)return;
-  var all=JSON.parse(localStorage.getItem('saved_certs')||'{}');
-  var d=all[no];
-  var r=document.getElementById('res');
-  r.style.display='block';
+// Firebase init
+var firebaseConfig = {
+  apiKey: "AIzaSyAbWxd0BmH1Km1BYMV3hDeojCRRlZkr3oo",
+  authDomain: "chromabet-34c53.firebaseapp.com",
+  databaseURL: "https://chromabet-34c53-default-rtdb.firebaseio.com",
+  projectId: "chromabet-34c53"
+};
+if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+var CERTDB = firebase.database();
+
+function showResult(no, d){
+  var r = document.getElementById('res');
   if(!d){
     r.innerHTML='<div class="fail"><div class="fail-icon">❌</div><div class="fail-title">Not Found</div><div class="fail-sub">Certificate "'+no+'" nahi mila</div></div>';
     return;
@@ -66,6 +73,31 @@ function go(){
     +(d.gradYear?'<div class="row"><span class="lbl">Year</span><span class="val">'+d.gradYear+'</span></div>':'')
     +'<div class="row"><span class="lbl">Cert No.</span><span class="val" style="color:#8b6914;font-family:monospace;">'+no+'</span></div>'
     +'<div class="row"><span class="lbl">Issued</span><span class="val">'+issued+'</span></div></div>';
+}
+
+function go(){
+  var no = document.getElementById('inp').value.trim();
+  if(!no) return;
+  var r = document.getElementById('res');
+  r.style.display='block';
+  r.innerHTML='<div style="text-align:center;padding:20px;color:#888;font-size:.85rem;">🔄 Checking...</div>';
+
+  // Check Firebase first
+  var safeKey = no.replace(/[.#$\/\[\]]/g,'_');
+  CERTDB.ref('certificates/' + safeKey).once('value', function(snap){
+    var d = snap.val();
+    if(d){
+      showResult(no, d);
+    } else {
+      // Fallback to localStorage
+      var all = JSON.parse(localStorage.getItem('saved_certs')||'{}');
+      showResult(no, all[no]||null);
+    }
+  }).catch(function(){
+    // Offline fallback
+    var all = JSON.parse(localStorage.getItem('saved_certs')||'{}');
+    showResult(no, all[no]||null);
+  });
 }
 </script>
 </body>
