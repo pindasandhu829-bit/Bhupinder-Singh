@@ -483,6 +483,7 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
 
         <!-- Cert No -->
         <div style="font-size:.5em;color:#aaa;margin-top:1%;letter-spacing:2px;" id="c-certno">Certificate No: —</div>
+        <div style="font-size:.45em;color:#8b6914;margin-top:.5%;letter-spacing:1px;" id="c-verifylink">🔍 Verify: 5chromabet.com/verify.html</div>
       </div>
     </div>
   </div>
@@ -505,6 +506,7 @@ function setType(t){
 function checkPw(){
   const pw = document.getElementById('pwInp').value;
   if(pw === 'diploma@2024'){
+    sessionStorage.setItem('cert_auth','1');
     document.getElementById('pwGate').style.display='none';
     document.getElementById('formPage').style.display='block';
   } else {
@@ -516,6 +518,14 @@ function checkPw(){
     },1500);
   }
 }
+
+// Auto login if already authenticated
+window.addEventListener('load',()=>{
+  if(sessionStorage.getItem('cert_auth')==='1'){
+    document.getElementById('pwGate').style.display='none';
+    document.getElementById('formPage').style.display='block';
+  }
+});
 
 // Show custom degree input
 document.getElementById('degree').addEventListener('change',function(){
@@ -542,21 +552,71 @@ function loadLogo(input){
 }
 
 function generateCert(){
-  const uniName=document.getElementById('uniName').value||'University Name';
-  const uniSub=document.getElementById('uniSub').value||'';
-  const stuName=document.getElementById('stuName').value||'Student Name';
-  const enrollNo=document.getElementById('enrollNo').value||'';
-  const rollNo=document.getElementById('rollNo').value||'';
-  let degree=document.getElementById('degree').value;
-  if(degree==='Custom...') degree=document.getElementById('customDegree').value||'Degree';
-  const major=document.getElementById('major').value||'';
-  const honors=document.getElementById('honors').value||'';
-  const gradYear=document.getElementById('gradYear').value||'2024';
-  const certDate=document.getElementById('certDate').value;
-  const vcName=document.getElementById('vcName').value||'Vice Chancellor';
-  const regName=document.getElementById('regName').value||'Registrar';
-  const certNo=document.getElementById('certNo').value||'CERT/'+Date.now();
-  const verifyUrl=document.getElementById('verifyUrl').value||'';
+  // Get values based on certType
+  let uniName,uniSub,stuName,enrollNo='',rollNo='',degree,major='',honors='',gradYear='2024',certDate,vcName,regName,certNo,verifyUrl='';
+
+  if(certType==='diploma'||!certType){
+    uniName=document.getElementById('uniName').value||'University Name';
+    uniSub=document.getElementById('uniSub').value||'';
+    stuName=document.getElementById('stuName').value||'Student Name';
+    enrollNo=document.getElementById('enrollNo').value||'';
+    rollNo=document.getElementById('rollNo').value||'';
+    degree=document.getElementById('degree').value;
+    if(degree==='Custom...') degree=document.getElementById('customDegree').value||'Degree';
+    major=document.getElementById('major').value||'';
+    honors=document.getElementById('honors').value||'';
+    gradYear=document.getElementById('gradYear').value||'2024';
+    certDate=document.getElementById('certDate').value;
+    vcName=document.getElementById('vcName').value||'Vice Chancellor';
+    regName=document.getElementById('regName').value||'Registrar';
+    certNo=document.getElementById('certNo').value||'CERT/'+Date.now();
+    verifyUrl=document.getElementById('verifyUrl').value||'';
+  } else if(certType==='achievement'){
+    uniName=document.getElementById('a-org').value||'Organization';
+    uniSub='Achievement Certificate';
+    stuName=document.getElementById('a-name').value||'Name';
+    degree=document.getElementById('a-pos').value||'1st Place';
+    major=document.getElementById('a-sport').value||'';
+    certDate=document.getElementById('a-date').value;
+    vcName=document.getElementById('a-sig1').value||'President';
+    regName=document.getElementById('a-sig2').value||'Secretary';
+    certNo=document.getElementById('a-certno').value||'ACH/'+Date.now();
+    gradYear=new Date().getFullYear().toString();
+  } else if(certType==='training'){
+    uniName=document.getElementById('tr-inst').value||'Institute';
+    uniSub='Training Certificate';
+    stuName=document.getElementById('tr-name').value||'Name';
+    degree=document.getElementById('tr-course').value||'Course';
+    major=document.getElementById('tr-dur').value||'';
+    honors=document.getElementById('tr-grade').value||'';
+    certDate=document.getElementById('tr-date').value;
+    vcName=document.getElementById('tr-sig1').value||'Director';
+    regName=document.getElementById('tr-sig2').value||'Trainer';
+    certNo=document.getElementById('tr-certno').value||'TR/'+Date.now();
+    gradYear=new Date().getFullYear().toString();
+  } else if(certType==='business'){
+    uniName=document.getElementById('b-org').value||'Organization';
+    uniSub='Business Certificate';
+    stuName=document.getElementById('b-name').value||'Name';
+    degree=document.getElementById('b-type').value||'Certificate';
+    major=document.getElementById('b-reason').value||'';
+    certDate=document.getElementById('b-date').value;
+    vcName=document.getElementById('b-sig1').value||'President';
+    regName=document.getElementById('b-sig2').value||'Secretary';
+    certNo=document.getElementById('b-certno').value||'BIZ/'+Date.now();
+    gradYear=new Date().getFullYear().toString();
+  } else if(certType==='martial'){
+    uniName=document.getElementById('m-acad').value||'Academy';
+    uniSub=document.getElementById('m-style').value||'Martial Arts';
+    stuName=document.getElementById('m-name').value||'Student';
+    degree=document.getElementById('m-belt').value||'Belt';
+    major=document.getElementById('m-years').value||'';
+    certDate=document.getElementById('m-date').value;
+    vcName=document.getElementById('m-sig1').value||'Head Instructor';
+    regName=document.getElementById('m-sig2').value||'President';
+    certNo=document.getElementById('m-certno').value||'MA/'+Date.now();
+    gradYear=new Date().getFullYear().toString();
+  }
 
   // Fill certificate
   document.getElementById('c-uni').textContent=uniName.toUpperCase();
@@ -589,8 +649,10 @@ function generateCert(){
   // QR Code
   document.getElementById('qrcode').innerHTML='';
   // Extra box
-  const extraTitle = document.getElementById('extraTitle').value.trim();
-  const extraContent = document.getElementById('extraContent').value.trim();
+  const extraTitleEl = document.getElementById('extraTitle');
+  const extraContentEl = document.getElementById('extraContent');
+  const extraTitle = extraTitleEl ? extraTitleEl.value.trim() : '';
+  const extraContent = extraContentEl ? extraContentEl.value.trim() : '';
   if(extraTitle || extraContent){
     document.getElementById('c-extra').style.display='block';
     document.getElementById('c-extra-title').textContent=extraTitle;
@@ -626,6 +688,10 @@ function generateCert(){
   
   // Store verify link for display
   window._lastVerifyLink = qrData;
+  const vl = document.getElementById('c-verifylink');
+  if(vl) vl.textContent = '🔍 Verify: ' + verifyLink;
+  const vl = document.getElementById('c-verifylink');
+  if(vl) vl.textContent = '🔍 Verify: ' + verifyLink;
 
   document.getElementById('formPage').style.display='none';
   document.getElementById('certPage').style.display='block';
