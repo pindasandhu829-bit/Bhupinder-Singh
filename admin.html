@@ -3,972 +3,773 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ChromaBet Admin</title>
-<meta name="theme-color" content="#080810">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CB Admin">
-<link rel="manifest" href="admin-manifest.json">
-<link rel="apple-touch-icon" href="icon-admin.png">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<title>5ChromaBet — Certificate Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#080810;--sb:#0f0f1a;--card:#141420;--card2:#1a1a28;--border:#252538;
-  --gold:#f0b429;--red:#f53b57;--green:#0eca7f;--violet:#a855f7;--blue:#3b82f6;
-  --orange:#ff9800;--text:#f0f0ff;--muted:#6b7280;--mu:#6b7280;
-  --bl:#3b82f6;--gr:#0eca7f;--gd:#f0b429;--or:#ff9800;--sf:#1a1a28;--br:#252538;--tx:#f0f0ff;
-}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 10% 10%,rgba(168,85,247,.05) 0%,transparent 40%),radial-gradient(circle at 90% 90%,rgba(240,180,41,.04) 0%,transparent 40%);pointer-events:none;z-index:0;}
+body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
 
-/* LOGIN */
-#AL{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;}
-.albox{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:36px;width:100%;max-width:400px;position:relative;z-index:1;}
-.alt{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.6rem;text-align:center;margin-bottom:4px;letter-spacing:2px;}
-.alt .c{color:var(--gold);}
-.als{text-align:center;color:var(--muted);font-size:.75rem;margin-bottom:8px;}
-.abadge{display:inline-block;background:rgba(240,180,41,.12);color:var(--gold);font-size:.65rem;font-weight:700;padding:3px 12px;border-radius:20px;border:1px solid rgba(240,180,41,.25);margin:0 auto 22px;display:block;text-align:center;width:fit-content;margin:0 auto 22px;}
-.fl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px;}
-.fi{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.95rem;outline:none;margin-bottom:12px;transition:border-color .2s;}
-.fi:focus{border-color:var(--gold);}
-.lbtn{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--gold),#e8960a);color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;letter-spacing:1px;}
-.def{text-align:center;margin-top:12px;font-size:.68rem;color:var(--muted);}
-#loadTxt{text-align:center;margin-top:10px;font-size:.7rem;color:var(--muted);display:none;}
+/* FORM PAGE */
+#formPage{max-width:600px;margin:0 auto;padding:24px;}
+.f-title{font-family:'Cinzel',serif;font-size:1.3rem;color:#1a1a1a;text-align:center;margin-bottom:4px;}
+.f-sub{font-size:.78rem;color:#888;text-align:center;margin-bottom:24px;}
+.f-card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:16px;}
+.f-section{font-size:.65rem;color:#999;text-transform:uppercase;letter-spacing:2px;font-weight:600;margin-bottom:12px;}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.f-full{margin-bottom:12px;}
+.f-label{font-size:.72rem;color:#666;margin-bottom:4px;font-weight:500;}
+.f-inp{width:100%;background:#f8f8f8;border:1px solid #e5e5e5;border-radius:9px;padding:10px 13px;font-size:.88rem;outline:none;transition:border-color .2s;color:#1a1a1a;}
+.f-inp:focus{border-color:#8b6914;background:#fff;}
+.f-sel{width:100%;background:#f8f8f8;border:1px solid #e5e5e5;border-radius:9px;padding:10px 13px;font-size:.88rem;outline:none;color:#1a1a1a;}
+.logo-up{border:2px dashed #ddd;border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:border-color .2s;}
+.logo-up:hover{border-color:#8b6914;}
+.logo-up input{display:none;}
+.logo-preview{max-height:60px;max-width:200px;object-fit:contain;margin:8px auto;display:block;}
+.gen-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#8b6914,#d4a017);color:#fff;font-family:'Cinzel',serif;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:1px;}
+.gen-btn:hover{opacity:.9;}
 
-/* APP LAYOUT */
-#APP{display:none;min-height:100vh;position:relative;z-index:1;}
-.layout{display:flex;min-height:100vh;}
+/* CERTIFICATE PAGE */
+#certPage{display:none;padding:20px;}
+.cert-actions{display:flex;gap:10px;max-width:900px;margin:0 auto 16px;flex-wrap:wrap;}
+.act-btn{padding:10px 20px;border-radius:9px;border:none;font-size:.85rem;font-weight:600;cursor:pointer;}
+.act-back{background:#f0f0f0;color:#333;}
+.act-print{background:linear-gradient(135deg,#8b6914,#d4a017);color:#fff;}
+.act-download{background:#1a1a1a;color:#fff;}
 
-/* SIDEBAR */
-.sb{width:220px;background:var(--sb);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100;}
-.sblogo{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
-.sblogo-txt{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.1rem;letter-spacing:2px;}
-.sblogo-txt .c{color:var(--gold);}
-.sbadmin{display:inline-block;background:rgba(240,180,41,.1);color:var(--gold);font-size:.6rem;font-weight:700;padding:2px 10px;border-radius:20px;border:1px solid rgba(240,180,41,.2);margin-top:4px;}
-.sbnav{flex:1;padding:14px 10px;overflow-y:auto;}
-.ni{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:all .2s;margin-bottom:3px;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.88rem;}
-.ni:hover{background:var(--card2);color:var(--text);}
-.ni.on{background:rgba(240,180,41,.1);color:var(--gold);border:1px solid rgba(240,180,41,.2);}
-.ni-icon{font-size:1.1rem;width:22px;text-align:center;}
-.sb-logout{padding:14px 10px;border-top:1px solid var(--border);}
-.logout-btn{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(245,59,87,.3);background:rgba(245,59,87,.08);color:var(--red);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s;}
-.logout-btn:hover{background:rgba(245,59,87,.15);}
-
-/* MAIN */
-.main{margin-left:220px;flex:1;min-height:100vh;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);background:var(--sb);position:sticky;top:0;z-index:50;}
-.tb-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.3rem;display:flex;align-items:center;gap:10px;}
-.tb-right{display:flex;align-items:center;gap:12px;}
-.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:blink 1.5s ease infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.live-txt{font-size:.72rem;color:var(--green);font-family:'Rajdhani',sans-serif;font-weight:600;}
-#TT{font-size:.72rem;color:var(--muted);}
-.rbtn{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.25);border-radius:8px;padding:7px 14px;color:var(--gold);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer;}
-
-.content{padding:24px;}
-
-/* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:18px;}
-.ctit{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-
-/* DASHBOARD */
-.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
-.dbox{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;position:relative;overflow:hidden;}
-.dbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.dbox.gold::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-.dbox.green::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
-.dbox.red::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
-.dbox.blue::before{background:linear-gradient(90deg,transparent,var(--blue),transparent);}
-.dbox-icon{font-size:1.6rem;margin-bottom:10px;}
-.dbox-val{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:4px;}
-.dbox.gold .dbox-val{color:var(--gold);}
-.dbox.green .dbox-val{color:var(--green);}
-.dbox.red .dbox-val{color:var(--red);}
-.dbox.blue .dbox-val{color:var(--blue);}
-.dbox-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;}
-
-/* TOP PLAYERS */
-.tp-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03);}
-.tp-row:last-child{border-bottom:none;}
-.tp-rank{font-family:'Orbitron',sans-serif;font-weight:700;font-size:.8rem;color:var(--muted);width:24px;}
-.tp-rank.gold{color:var(--gold);}
-.tp-rank.silver{color:#aaa;}
-.tp-rank.bronze{color:#cd7f32;}
-.tp-name{flex:1;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.92rem;}
-.tp-bal{font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--gold);}
-
-/* COLOR STATS */
-.cbar{margin-bottom:10px;}
-.cbar-row{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
-.cbar-lbl{font-size:.72rem;color:var(--muted);width:50px;}
-.cbar-track{flex:1;height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;}
-.cbar-fill{height:100%;border-radius:4px;transition:width .5s ease;}
-.cbar-pct{font-size:.7rem;font-family:'Rajdhani',sans-serif;font-weight:700;width:35px;text-align:right;}
-
-/* PENDING */
-.pend-item{background:var(--card2);border-radius:10px;padding:11px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
-.pend-item:last-child{margin-bottom:0;}
-.pend-info{font-size:.75rem;}
-.pend-type{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.82rem;}
-
-/* TABLES */
-.tbl-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;}
-th{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
-td{padding:11px 12px;font-size:.78rem;border-bottom:1px solid rgba(255,255,255,.03);white-space:nowrap;}
-tr:last-child td{border-bottom:none;}
-tr:hover td{background:rgba(255,255,255,.02);}
-.tag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.6rem;font-weight:700;text-transform:uppercase;}
-.tappr{background:rgba(14,202,127,.12);color:var(--green);}
-.trej{background:rgba(245,59,87,.12);color:var(--red);}
-.tinr{background:rgba(168,85,247,.12);color:var(--violet);}
-.tpend{background:rgba(255,152,0,.12);color:var(--orange);}
-.tadm{background:rgba(240,180,41,.12);color:var(--gold);}
-.sno{color:var(--muted);font-size:.68rem;}
-
-/* BUTTONS */
-.btn{padding:8px 16px;border-radius:10px;border:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;transition:all .2s;}
-.bp{background:linear-gradient(135deg,var(--gold),#e8960a);color:#000;}
-.bg{background:rgba(14,202,127,.12);border:1px solid rgba(14,202,127,.25);color:var(--green);}
-.bgo{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.25);color:var(--gold);}
-.bd{background:rgba(245,59,87,.1);border:1px solid rgba(245,59,87,.25);color:var(--red);}
-.bsm{padding:5px 11px;font-size:.72rem;}
-.btn:hover{opacity:.85;transform:translateY(-1px);}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
-
-/* FORCE RESULT */
-.frc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
-.frc-btn{padding:14px;border-radius:14px;border:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s;}
-.frc-r{background:linear-gradient(135deg,#a93226,#e74c3c);color:#fff;}
-.frc-g{background:linear-gradient(135deg,#0e8c5a,#0eca7f);color:#000;}
-.frc-v{background:linear-gradient(135deg,#6c3483,#a855f7);color:#fff;}
-.frc-btn:hover{transform:translateY(-2px);filter:brightness(1.1);}
-.fstatus{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:.78rem;color:var(--muted);margin-bottom:10px;}
-.fclear{width:100%;padding:11px;border-radius:10px;border:1px solid rgba(245,59,87,.3);background:rgba(245,59,87,.08);color:var(--red);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;}
-
-/* LIVE BETS */
-.live-bets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px;}
-.lbcard{border-radius:16px;padding:18px;text-align:center;position:relative;overflow:hidden;}
-.lbcard::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06) 0%,transparent 60%);}
-.lbc-r{background:linear-gradient(135deg,rgba(169,50,38,.4),rgba(231,76,60,.2));border:1px solid rgba(245,59,87,.3);}
-.lbc-g{background:linear-gradient(135deg,rgba(14,140,90,.35),rgba(14,202,127,.15));border:1px solid rgba(14,202,127,.3);}
-.lbc-v{background:linear-gradient(135deg,rgba(108,52,131,.4),rgba(168,85,247,.2));border:1px solid rgba(168,85,247,.3);}
-.lbc-icon{font-size:1.8rem;margin-bottom:8px;}
-.lbc-amt{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.3rem;margin-bottom:3px;}
-.lbc-r .lbc-amt{color:var(--red);}
-.lbc-g .lbc-amt{color:var(--green);}
-.lbc-v .lbc-amt{color:var(--violet);}
-.lbc-lbl{font-size:.65rem;color:rgba(255,255,255,.6);}
-.round-info{display:flex;justify-content:space-between;align-items:center;background:var(--card2);border-radius:12px;padding:12px 16px;margin-bottom:12px;}
-.ri-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;}
-.ri-val{font-family:'Orbitron',sans-serif;font-weight:700;color:var(--gold);font-size:.9rem;}
-
-/* MODALS */
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
-.mo.op{display:flex;}
-.mobox{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:420px;}
-.motit{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;}
-.moclo{background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;}
-
-/* PAGES */
-.pg{display:none;}
-.pg.on{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-.pg.on{animation:fadeUp .2s ease;}
-
-/* FORM */
-.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-
-/* PAGINATION */
-.pgn{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;flex-wrap:wrap;}
-.pgn-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.75rem;cursor:pointer;transition:all .2s;}
-.pgn-btn:hover{border-color:var(--gold);color:var(--gold);}
-.pgn-btn.on{background:var(--gold);color:#000;border-color:var(--gold);}
-.pgn-btn:disabled{opacity:.4;cursor:not-allowed;}
-.pgn-info{font-size:.7rem;color:var(--muted);}
-
-/* SEARCH */
-.search-inp{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.85rem;outline:none;margin-bottom:14px;transition:border-color .2s;}
-.search-inp:focus{border-color:var(--gold);}
-
-/* SETTINGS */
-.set-section{margin-bottom:20px;}
-.set-title{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
-.fi-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
-
-/* NOTIF */
-.notif{position:fixed;top:16px;right:20px;background:var(--card);border:1px solid var(--green);border-radius:12px;padding:12px 20px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;z-index:9999;transform:translateX(120%);transition:transform .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 30px rgba(0,0,0,.4);}
-.notif.show{transform:translateX(0);}
-.notif.err{border-color:var(--red);}
-
-/* RESPONSIVE */
-@media(max-width:768px){
-  .sb{width:60px;}
-  .ni span.ni-txt{display:none;}
-  .sblogo-txt{display:none;}
-  .sbadmin{display:none;}
-  .main{margin-left:60px;}
-  .dash-grid{grid-template-columns:1fr 1fr;}
+/* CERTIFICATE */
+.cert-wrap{max-width:900px;margin:0 auto;}
+#certificate{
+  background:#fff;
+  width:100%;
+  aspect-ratio:1.414/1;
+  position:relative;
+  overflow:hidden;
+  font-family:'EB Garamond',serif;
+  box-shadow:0 8px 40px rgba(0,0,0,.15);
 }
-@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Border Design */
+.cert-outer-border{position:absolute;inset:12px;border:3px solid #8b6914;}
+.cert-inner-border{position:absolute;inset:18px;border:1px solid #d4a017;}
+.cert-corner{position:absolute;width:40px;height:40px;}
+.cert-corner svg{width:100%;height:100%;}
+.cc-tl{top:6px;left:6px;}
+.cc-tr{top:6px;right:6px;transform:scaleX(-1);}
+.cc-bl{bottom:6px;left:6px;transform:scaleY(-1);}
+.cc-br{bottom:6px;right:6px;transform:scale(-1);}
+
+.cert-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:5% 8%;}
+
+.cert-logo{margin-bottom:2%;height:60px;object-fit:contain;}
+.cert-logo-placeholder{width:70px;height:70px;background:linear-gradient(135deg,#5c4200,#8b6914,#d4a017,#f5c842);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2%;box-shadow:0 3px 12px rgba(212,160,23,.5);border:2px solid #d4a017;}
+.cert-logo-placeholder span{font-family:'Cinzel',serif;color:#fff;font-size:1.2rem;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.4);}
+
+.cert-university{font-family:'Cinzel',serif;font-size:1.4em;color:#2c1810;font-weight:700;text-align:center;letter-spacing:2px;margin-bottom:.5%;}
+.cert-university-sub{font-size:.75em;color:#666;letter-spacing:3px;text-transform:uppercase;margin-bottom:3%;}
+
+.cert-presents{font-size:.7em;color:#888;letter-spacing:4px;text-transform:uppercase;margin-bottom:1%;}
+.cert-diploma-text{font-family:'Cinzel',serif;font-size:1.8em;color:#8b6914;font-weight:700;letter-spacing:3px;margin-bottom:2%;}
+
+.cert-to{font-size:.7em;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:.5%;}
+.cert-name{font-family:'Cinzel',serif;font-size:2.2em;color:#1a1a1a;font-weight:700;text-align:center;border-bottom:1px solid #d4a017;padding-bottom:.5%;margin-bottom:2%;min-width:60%;}
+
+.cert-body{font-size:.75em;color:#444;text-align:center;line-height:1.8;margin-bottom:3%;max-width:80%;}
+
+.cert-degree{font-family:'Cinzel',serif;font-size:1em;color:#2c1810;font-weight:700;letter-spacing:1px;}
+.cert-field{font-size:.8em;color:#8b6914;font-style:italic;margin-bottom:.5%;}
+.cert-honors{font-size:.65em;color:#666;letter-spacing:2px;text-transform:uppercase;margin-bottom:3%;}
+
+.cert-bottom{display:flex;justify-content:space-between;align-items:flex-end;width:100%;margin-top:auto;}
+
+.cert-sig{text-align:center;flex:1;}
+.cert-sig-line{border-top:1px solid #333;margin-bottom:4px;margin-left:10%;margin-right:10%;}
+.cert-sig-name{font-family:'Cinzel',serif;font-size:.65em;color:#1a1a1a;font-weight:600;}
+.cert-sig-title{font-size:.55em;color:#888;}
+
+.cert-qr{text-align:center;flex:0 0 auto;}
+.cert-qr-label{font-size:.5em;color:#888;letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+
+.cert-seal{text-align:center;flex:1;}
+.seal-circle{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#d4a017);border:3px solid #8b6914;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;box-shadow:0 2px 8px rgba(139,105,20,.3);}
+.seal-inner{width:55px;height:55px;border-radius:50%;border:1px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.seal-inner span{font-family:'Cinzel',serif;color:#fff;font-size:.35em;font-weight:700;letter-spacing:1px;text-align:center;line-height:1.3;}
+.cert-date{font-size:.55em;color:#888;text-align:center;}
+
+@media print{
+  body{background:#fff;}
+  #certPage{padding:0;}
+  .cert-actions{display:none;}
+  #certificate{box-shadow:none;width:297mm;height:210mm;}
+}
+.type-btn{background:#fff;border:2px solid #e5e5e5;border-radius:12px;padding:14px;text-align:center;cursor:pointer;font-size:.78rem;color:#333;transition:all .2s;line-height:1.6;}
+.type-btn:hover{border-color:#8b6914;}
+.type-btn.on{border-color:#8b6914;background:linear-gradient(135deg,rgba(139,105,20,.08),rgba(212,160,23,.05));}
+.type-btn strong{display:block;font-size:.88rem;color:#1a1a1a;}
+.type-btn small{color:#888;font-size:.7rem;}
+/* Dynamic sections */
+.cert-section{display:none;}
+.cert-section.on{display:block;}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="AL">
-  <div class="albox">
-    <div class="alt"><span class="c">CHROMA</span>BET</div>
-    <div class="als">Admin Control Panel</div>
-    <div class="abadge">🔐 ADMIN ACCESS</div>
-    <div class="fl">Username</div>
-    <input class="fi" id="AU" placeholder="admin" autocomplete="username"/>
-    <div class="fl">Password</div>
-    <input class="fi" type="password" id="AP" placeholder="Password" autocomplete="current-password"/>
-    <button class="lbtn" onclick="aLogin()">LOGIN →</button>
-    <div class="def">Default: admin / admin123</div>
-    <div id="loadTxt">⏳ Connecting to Firebase...</div>
+<!-- PASSWORD GATE -->
+<div id="pwGate" style="position:fixed;inset:0;background:#0c0c0c;z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#161616;border:1px solid #2a2a2a;border-radius:20px;padding:32px;width:90%;max-width:380px;text-align:center;">
+    <div style="font-size:2rem;margin-bottom:12px;">🎓</div>
+    <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:#fff;margin-bottom:4px;">5ChromaBet</div>
+    <div style="font-size:.75rem;color:#555;margin-bottom:24px;">Authorized access only</div>
+    <input id="pwInp" type="password" placeholder="Enter Password" 
+      style="width:100%;background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:12px 14px;color:#fff;font-size:.9rem;outline:none;margin-bottom:10px;text-align:center;letter-spacing:4px;"
+      onkeydown="if(event.key==='Enter')checkPw()"/>
+    <button onclick="checkPw()" style="width:100%;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,#8b6914,#d4a017);color:#fff;font-family:'Cinzel',serif;font-weight:600;font-size:.95rem;cursor:pointer;">Enter →</button>
+    <div id="pwErr" style="color:#ef4444;font-size:.72rem;margin-top:10px;display:none;">❌ Wrong password!</div>
   </div>
 </div>
 
-<!-- APP -->
-<div id="APP">
-  <div class="layout">
+<!-- FORM -->
+<div id="formPage" style="display:none;">
+  <div class="f-title">🏆 5ChromaBet — Certificate Generator</div>
+  <div class="f-sub">Type select karo aur details bharo</div>
 
-    <!-- SIDEBAR -->
-    <div class="sb">
-      <div class="sblogo">
-        <div class="sblogo-txt"><span class="c">CHROMA</span>BET</div>
-        <div class="sbadmin">ADMIN</div>
-      </div>
-      <div class="sbnav">
-        <div class="ni on" id="ni-dash" onclick="nav('dash')"><span class="ni-icon">📊</span><span class="ni-txt">Dashboard</span></div>
-        <div class="ni" id="ni-dep" onclick="nav('dep')"><span class="ni-icon">💰</span><span class="ni-txt">Deposits</span></div>
-        <div class="ni" id="ni-wd" onclick="nav('wd')"><span class="ni-icon">💸</span><span class="ni-txt">Withdrawals</span></div>
-        <div class="ni" id="ni-users" onclick="nav('users')"><span class="ni-icon">👥</span><span class="ni-txt">Users</span></div>
-        <div class="ni" id="ni-game" onclick="nav('game')"><span class="ni-icon">🎮</span><span class="ni-txt">Game</span></div>
-        <div class="ni" id="ni-refs" onclick="nav('refs')"><span class="ni-icon">🔗</span><span class="ni-txt">Referrals</span></div>
-        <div class="ni" id="ni-hist" onclick="nav('hist')"><span class="ni-icon">📜</span><span class="ni-txt">History</span></div>
-        <div class="ni" id="ni-set" onclick="nav('set')"><span class="ni-icon">⚙️</span><span class="ni-txt">Settings</span></div>
-      </div>
-      <div class="sb-logout">
-        <button class="logout-btn" onclick="aOut()">🚪 Logout</button>
+  <!-- TYPE SELECT -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+    <div class="type-btn on" onclick="setType('diploma')" id="t-diploma">🎓<br><strong>Diploma</strong><br><small>Graduation</small></div>
+    <div class="type-btn" onclick="setType('achievement')" id="t-achievement">🏆<br><strong>Achievement</strong><br><small>Sports/Awards</small></div>
+    <div class="type-btn" onclick="setType('training')" id="t-training">📚<br><strong>Training</strong><br><small>Education/Course</small></div>
+    <div class="type-btn" onclick="setType('business')" id="t-business">💼<br><strong>Business</strong><br><small>Organization</small></div>
+    <div class="type-btn" onclick="setType('martial')" id="t-martial" style="grid-column:span 2;">🥋<br><strong>Martial Arts</strong><br><small>Belt/Rank Certificate</small></div>
+  </div>
+
+  <!-- DIPLOMA SECTION -->
+  <div id="sec-diploma" class="cert-section on">
+  <div class="f-card">
+    <div class="f-section">University / Institution</div>
+    <div class="f-full">
+      <div class="f-label">University / College Name *</div>
+      <input class="f-inp" id="uniName" placeholder="e.g. Punjab University, Chandigarh"/>
+    </div>
+    <div class="f-full">
+      <div class="f-label">Tagline / Location</div>
+      <input class="f-inp" id="uniSub" placeholder="e.g. Established 1882 · Chandigarh, India"/>
+    </div>
+    <div class="f-full">
+      <div class="f-label">University Logo (optional)</div>
+      <div class="logo-up" onclick="document.getElementById('logoFile').click()">
+        <input type="file" id="logoFile" accept="image/*" onchange="loadLogo(this)"/>
+        <div id="logoPlaceholder">📷 Click to upload logo</div>
+        <img id="logoImg" class="logo-preview" style="display:none;"/>
       </div>
     </div>
-
-    <!-- MAIN -->
-    <div class="main">
-      <div class="topbar">
-        <div class="tb-title" id="pgTitle">📊 Dashboard</div>
-        <div class="tb-right">
-          <div class="live-dot"></div>
-          <div class="live-txt">Live</div>
-          <div id="TT">—</div>
-          <button class="rbtn" onclick="refreshPage()">🔄 Refresh</button>
-        </div>
-      </div>
-
-      <div class="content">
-
-        <!-- DASHBOARD -->
-        <div class="pg on" id="pg-dash">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);">📊 Overview</div>
-            <button class="btn bp" onclick="loadDash()" style="display:flex;align-items:center;gap:6px;"><span id="refreshIcon">🔄</span> Refresh</button>
-          </div>
-          <div class="dash-grid">
-            <div class="dbox gold">
-              <div class="dbox-icon">👥</div>
-              <div class="dbox-val" id="dUsers">0</div>
-              <div class="dbox-lbl">Total Users</div>
-            </div>
-            <div class="dbox green">
-              <div class="dbox-icon">💰</div>
-              <div class="dbox-val" id="dDep">₹0</div>
-              <div class="dbox-lbl">Total Deposited</div>
-            </div>
-            <div class="dbox red">
-              <div class="dbox-icon">💸</div>
-              <div class="dbox-val" id="dWd">₹0</div>
-              <div class="dbox-lbl">Total Withdrawn</div>
-            </div>
-            <div class="dbox blue">
-              <div class="dbox-icon">⏳</div>
-              <div class="dbox-val" id="dPend">0</div>
-              <div class="dbox-lbl">Pending</div>
-            </div>
-          </div>
-
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
-            <div class="card">
-              <div class="ctit">📊 Color Stats</div>
-              <div class="cbar">
-                <div class="cbar-row"><span class="cbar-lbl" style="color:var(--red);">🔴 Red</span><div class="cbar-track"><div class="cbar-fill" id="cbrR" style="background:var(--red);width:0%"></div></div><span class="cbar-pct" id="cprR" style="color:var(--red);">0%</span></div>
-                <div class="cbar-row"><span class="cbar-lbl" style="color:var(--green);">🟢 Green</span><div class="cbar-track"><div class="cbar-fill" id="cbrG" style="background:var(--green);width:0%"></div></div><span class="cbar-pct" id="cprG" style="color:var(--green);">0%</span></div>
-                <div class="cbar-row"><span class="cbar-lbl" style="color:var(--violet);">🟣 Violet</span><div class="cbar-track"><div class="cbar-fill" id="cbrV" style="background:var(--violet);width:0%"></div></div><span class="cbar-pct" id="cprV" style="color:var(--violet);">0%</span></div>
-              </div>
-            </div>
-            <div class="card">
-              <div class="ctit">⚡ Pending Requests</div>
-              <div id="pendList"><div style="color:var(--muted);font-size:.8rem;">No pending requests</div></div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="ctit">🏆 Top Players (by Balance)</div>
-            <div id="topPlayers"></div>
-          </div>
-        </div>
-
-        <!-- DEPOSITS -->
-        <div class="pg" id="pg-dep">
-          <div class="card">
-            <div class="ctit" style="justify-content:space-between;">
-              <span>💰 Deposits</span>
-              <div style="display:flex;gap:8px;">
-                <button class="btn bsm" style="background:var(--card2);border:1px solid var(--border);color:var(--muted);" onclick="loadDeps('all')">All</button>
-                <button class="btn bsm bg" onclick="loadDeps('pending')">Pending</button>
-                <button class="btn bsm bd" onclick="loadDeps('approved')">Approved</button>
-              </div>
-            </div>
-            <div class="tbl-wrap"><table>
-              <thead><tr><th>#</th><th>User</th><th>Phone</th><th>TX Hash/UTR</th><th>USDT</th><th>INR</th><th>Network</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-              <tbody id="depTbl"></tbody>
-            </table></div>
-          </div>
-        </div>
-
-        <!-- WITHDRAWALS -->
-        <div class="pg" id="pg-wd">
-          <div class="card">
-            <div class="ctit" style="justify-content:space-between;">
-              <span>💸 Withdrawals</span>
-              <div style="display:flex;gap:8px;">
-                <button class="btn bsm" style="background:var(--card2);border:1px solid var(--border);color:var(--muted);" onclick="loadWds('all')">All</button>
-                <button class="btn bsm bg" onclick="loadWds('pending')">Pending</button>
-              </div>
-            </div>
-            <div class="tbl-wrap"><table>
-              <thead><tr><th>#</th><th>User</th><th>Phone</th><th>Address/UPI</th><th>Amount</th><th>USDT</th><th>Network</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-              <tbody id="wdTbl"></tbody>
-            </table></div>
-          </div>
-        </div>
-
-        <!-- USERS -->
-        <div class="pg" id="pg-users">
-          <div class="card">
-            <div class="ctit" style="justify-content:space-between;">
-              <span id="uCnt">👥 Users</span>
-              <div style="display:flex;gap:8px;">
-                <button class="btn bsm" style="background:var(--card2);border:1px solid var(--border2);color:var(--muted2);" onclick="loadUsers()">🔄 Refresh</button>
-                <button class="btn bp bsm" onclick="opAddU()">+ Add User</button>
-              </div>
-            </div>
-            <input class="search-inp" placeholder="🔍 Search by name or phone..." id="uSearch" oninput="searchUsers()"/>
-            <div class="tbl-wrap"><table>
-              <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Password</th><th>Balance</th><th>Deposited</th><th>Withdrawn</th><th>Bets</th><th>W/L</th><th>Referred By</th><th>Joined</th><th>Actions</th></tr></thead>
-              <tbody id="uTbl"></tbody>
-            </table></div>
-            <div class="pgn" id="uPagination"></div>
-          </div>
-        </div>
-
-        <!-- GAME -->
-        <div class="pg" id="pg-game">
-          <div class="card">
-            <div class="ctit" style="justify-content:space-between;">
-              <span>🎮 Game Control</span>
-              <button class="rbtn" onclick="loadLiveBets()">🔄 Refresh Live Bets</button>
-            </div>
-            <div class="round-info">
-              <div><div class="ri-lbl">Current Round</div><div class="ri-val" id="curRnd">#0001</div></div>
-              <div><div class="ri-lbl">Total Bets This Round</div><div class="ri-val" id="betTotal">₹0</div></div>
-            </div>
-            <div class="live-bets-grid">
-              <div class="lbcard lbc-r"><div class="lbc-icon">🔴</div><div class="lbc-amt" id="betRed">₹0</div><div class="lbc-lbl"><span id="betRedC">0</span> players</div></div>
-              <div class="lbcard lbc-g"><div class="lbc-icon">🟢</div><div class="lbc-amt" id="betGreen">₹0</div><div class="lbc-lbl"><span id="betGreenC">0</span> players</div></div>
-              <div class="lbcard lbc-v"><div class="lbc-icon">🟣</div><div class="lbc-amt" id="betViolet">₹0</div><div class="lbc-lbl"><span id="betVioletC">0</span> players</div></div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="ctit">🎯 Force Next Result</div>
-            <div class="frc-grid">
-              <button class="frc-btn frc-r" onclick="forceR('red')">🔴 RED</button>
-              <button class="frc-btn frc-g" onclick="forceR('green')">🟢 GREEN</button>
-              <button class="frc-btn frc-v" onclick="forceR('violet')">🟣 VIOLET</button>
-            </div>
-            <div class="fstatus" id="fStatus">Status: Random (default)</div>
-            <button class="fclear" onclick="clearF()">✕ Clear — Back to Random</button>
-          </div>
-        </div>
-
-        <!-- REFERRALS -->
-        <div class="pg" id="pg-refs">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
-            <div class="dbox gold"><div class="dbox-icon">🔗</div><div class="dbox-val" id="rTot">0</div><div class="dbox-lbl">Total Referrals</div></div>
-            <div class="dbox green"><div class="dbox-icon">💰</div><div class="dbox-val" id="rBonus">₹0</div><div class="dbox-lbl">Bonus Paid</div></div>
-          </div>
-          <div class="card">
-            <div class="ctit">🔗 Referral Leaderboard</div>
-            <div class="tbl-wrap"><table>
-              <thead><tr><th>#</th><th>Name</th><th>Code</th><th>Referrals</th><th>Earned</th></tr></thead>
-              <tbody id="refTbl"></tbody>
-            </table></div>
-          </div>
-        </div>
-
-        <!-- HISTORY -->
-        <div class="pg" id="pg-hist">
-          <div class="card">
-            <div class="ctit">📜 Game History</div>
-            <div class="tbl-wrap"><table>
-              <thead><tr><th>#</th><th>Round</th><th>Number</th><th>Result</th><th>Time</th></tr></thead>
-              <tbody id="hTbl"></tbody>
-            </table></div>
-            <div class="pgn" id="hPagination"></div>
-          </div>
-        </div>
-
-        <!-- SETTINGS -->
-        <div class="pg" id="pg-set">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
-            <div class="card">
-              <div class="ctit">🔑 Admin Password</div>
-              <div class="fi-label">New Password</div>
-              <input class="fi" type="password" id="sNP" placeholder="New password"/>
-              <button class="btn bp" style="width:100%;" onclick="chgPw()">Update Password</button>
-            </div>
-            <div class="card">
-              <div class="ctit">🗑️ Danger Zone</div>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="btn bd" onclick="clrHist()">Clear History</button>
-                <button class="btn bd" onclick="rstRnd()">Reset Rounds</button>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="ctit">🎬 Video / Promotion</div>
-            <div class="fi-label">Video Link (YouTube ya koi bhi)</div>
-            <input class="fi" id="sVIDEO" placeholder="https://youtube.com/watch?v=..."/>
-            <div style="font-size:.7rem;color:var(--mu);margin-bottom:10px;">YouTube, YouTube Shorts — koi bhi link paste karo. Users ko login ke baad dikhega.</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-              <button class="btn bp" style="width:100%;" onclick="saveVideo()">💾 Save & Show</button>
-              <button class="btn bd" style="width:100%;" onclick="removeVideo()">🗑️ Remove Video</button>
-            </div>
-            <div id="curVideoStatus" style="margin-top:10px;font-size:.72rem;color:var(--mu);"></div>
-          </div>
-
-          <div class="card">
-            <div class="ctit">💳 Payment Settings</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-              <div><div class="fi-label">INR UPI ID</div><input class="fi" id="sUPI" placeholder="yourname@upi"/></div>
-              <div><div class="fi-label">ERC-20 / BEP-20 Address</div><input class="fi" id="sERC" placeholder="0x..."/></div>
-              <div><div class="fi-label">TRC-20 Address</div><input class="fi" id="sTRC" placeholder="T..."/></div>
-              <div><div class="fi-label">USDT Rate (₹ per USDT)</div><input class="fi" id="sRATE" type="number" placeholder="96"/></div>
-              <div><div class="fi-label">Min INR Deposit (₹)</div><input class="fi" id="sMDEP" type="number" placeholder="100"/></div>
-            </div>
-            <button class="btn bp" style="width:100%;margin-top:4px;" onclick="savePaySettings()">💾 Save Payment Settings</button>
-          </div>
-          <div class="card">
-            <div class="ctit">🎮 Game Settings</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-              <div><div class="fi-label">Round Duration (seconds)</div><input class="fi" id="sRDUR" type="number" placeholder="30"/></div>
-              <div><div class="fi-label">Min Bet (₹)</div><input class="fi" id="sMBET" type="number" placeholder="10"/></div>
-              <div><div class="fi-label">Red/Green Payout</div><input class="fi" id="sRGPAY" type="number" placeholder="2"/></div>
-              <div><div class="fi-label">Violet Payout</div><input class="fi" id="sVPAY" type="number" placeholder="4.5"/></div>
-            </div>
-            <button class="btn bp" style="width:100%;margin-top:4px;" onclick="saveGameSettings()">💾 Save Game Settings</button>
-          </div>
-        </div>
-
-      </div><!-- /content -->
-    </div><!-- /main -->
-  </div><!-- /layout -->
-</div><!-- /APP -->
-
-<!-- MODALS -->
-<div class="mo" id="moAddU">
-  <div class="mobox">
-    <div class="motit">➕ Add User <button class="moclo" onclick="cloMo()">✕</button></div>
-    <div class="fi-label">Full Name</div>
-    <input class="fi" id="muName" placeholder="Name"/>
-    <div class="fi-label">Phone (+91...)</div>
-    <input class="fi" id="muPhone" placeholder="+91XXXXXXXXXX"/>
-    <div class="fi-label">Password</div>
-    <input class="fi" type="password" id="muPass" placeholder="Password"/>
-    <div class="fi-label">Starting Balance (₹)</div>
-    <input class="fi" type="number" id="muBal" placeholder="150"/>
-    <button class="btn bp" style="width:100%;" onclick="addU()">Add User</button>
   </div>
+
+  <div class="f-card">
+    <div class="f-section">Student Details</div>
+    <div class="f-full">
+      <div class="f-label">Student Full Name *</div>
+      <input class="f-inp" id="stuName" placeholder="e.g. Bhupinder Singh"/>
+    </div>
+    <div class="f-row">
+      <div>
+        <div class="f-label">Enrollment Number</div>
+        <input class="f-inp" id="enrollNo" placeholder="e.g. 2024-MBA-0421"/>
+      </div>
+      <div>
+        <div class="f-label">Roll Number</div>
+        <input class="f-inp" id="rollNo" placeholder="e.g. 1234"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="f-card">
+    <div class="f-section">Degree Details</div>
+    <div class="f-row">
+      <div>
+        <div class="f-label">Degree *</div>
+        <select class="f-sel" id="degree">
+          <option>Bachelor of Arts (B.A.)</option>
+          <option>Bachelor of Science (B.Sc.)</option>
+          <option>Bachelor of Commerce (B.Com.)</option>
+          <option>Bachelor of Technology (B.Tech.)</option>
+          <option>Bachelor of Engineering (B.E.)</option>
+          <option>Master of Arts (M.A.)</option>
+          <option>Master of Science (M.Sc.)</option>
+          <option>Master of Business Administration (MBA)</option>
+          <option>Doctor of Philosophy (Ph.D.)</option>
+          <option>Custom...</option>
+        </select>
+      </div>
+      <div>
+        <div class="f-label">Field / Major *</div>
+        <input class="f-inp" id="major" placeholder="e.g. Computer Science"/>
+      </div>
+    </div>
+    <div class="f-full" id="customDegreeBox" style="display:none;">
+      <div class="f-label">Custom Degree Name</div>
+      <input class="f-inp" id="customDegree" placeholder="Enter degree name"/>
+    </div>
+    <div class="f-row">
+      <div>
+        <div class="f-label">Honors / Grade</div>
+        <select class="f-sel" id="honors">
+          <option value="">— None —</option>
+          <option>With Distinction</option>
+          <option>With Honors</option>
+          <option>Summa Cum Laude</option>
+          <option>Magna Cum Laude</option>
+          <option>Cum Laude</option>
+          <option>First Class</option>
+          <option>Second Class</option>
+        </select>
+      </div>
+      <div>
+        <div class="f-label">Graduation Year *</div>
+        <input class="f-inp" id="gradYear" placeholder="e.g. 2024" value="2024"/>
+      </div>
+    </div>
+    <div class="f-full">
+      <div class="f-label">Convocation Date</div>
+      <input class="f-inp" type="date" id="certDate"/>
+    </div>
+  </div>
+
+  <div class="f-card">
+    <div class="f-section">Signatures</div>
+    <div class="f-row">
+      <div>
+        <div class="f-label">Vice Chancellor / Principal</div>
+        <input class="f-inp" id="vcName" placeholder="Dr. Rajinder Kumar"/>
+      </div>
+      <div>
+        <div class="f-label">Registrar</div>
+        <input class="f-inp" id="regName" placeholder="Prof. Suresh Sharma"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="f-card">
+    <div class="f-section">Certificate ID & QR Code</div>
+    <div class="f-row">
+      <div>
+        <div class="f-label">Certificate Number *</div>
+        <input class="f-inp" id="certNo" placeholder="e.g. PU/2024/001234"/>
+      </div>
+      <div>
+        <div class="f-label">Verification URL (optional)</div>
+        <input class="f-inp" id="verifyUrl" placeholder="https://verify.yoursite.com"/>
+      </div>
+    </div>
+    <div style="font-size:.72rem;color:#888;">QR code scan karne pe student ki saari details dikhegi</div>
+  </div>
+
+  </div><!-- /sec-diploma -->
+
+  <!-- ACHIEVEMENT SECTION -->
+  <div id="sec-achievement" class="cert-section">
+  <div class="f-card">
+    <div class="f-section">Organization / Event</div>
+    <div class="f-full"><div class="f-label">Organization Name *</div><input class="f-inp" id="a-org" placeholder="e.g. Punjab Sports Academy"/></div>
+    <div class="f-full"><div class="f-label">Event Name *</div><input class="f-inp" id="a-event" placeholder="e.g. State Level Cricket Championship 2024"/></div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Recipient</div>
+    <div class="f-full"><div class="f-label">Name *</div><input class="f-inp" id="a-name" placeholder="e.g. Bhupinder Singh"/></div>
+    <div class="f-row">
+      <div><div class="f-label">Achievement *</div><select class="f-sel" id="a-pos"><option>1st Place 🥇</option><option>2nd Place 🥈</option><option>3rd Place 🥉</option><option>Participation</option><option>Best Player</option><option>MVP</option><option>Custom...</option></select></div>
+      <div><div class="f-label">Sport / Category</div><input class="f-inp" id="a-sport" placeholder="e.g. Cricket, Football"/></div>
+    </div>
+    <div class="f-row">
+      <div><div class="f-label">Date</div><input class="f-inp" type="date" id="a-date"/></div>
+      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="a-certno" placeholder="ACH/2024/001"/></div>
+    </div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Authorized By</div>
+    <div class="f-row">
+      <div><div class="f-label">President / Director</div><input class="f-inp" id="a-sig1" placeholder="Name"/></div>
+      <div><div class="f-label">Secretary</div><input class="f-inp" id="a-sig2" placeholder="Name"/></div>
+    </div>
+  </div>
+  </div><!-- /sec-achievement -->
+
+  <!-- TRAINING SECTION -->
+  <div id="sec-training" class="cert-section">
+  <div class="f-card">
+    <div class="f-section">Training Institute</div>
+    <div class="f-full"><div class="f-label">Institute Name *</div><input class="f-inp" id="tr-inst" placeholder="e.g. Digital Skills Academy"/></div>
+    <div class="f-full"><div class="f-label">Course Name *</div><input class="f-inp" id="tr-course" placeholder="e.g. Advanced Web Development"/></div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Participant</div>
+    <div class="f-full"><div class="f-label">Name *</div><input class="f-inp" id="tr-name" placeholder="e.g. Bhupinder Singh"/></div>
+    <div class="f-row">
+      <div><div class="f-label">Duration</div><input class="f-inp" id="tr-dur" placeholder="e.g. 3 Months / 40 Hours"/></div>
+      <div><div class="f-label">Grade / Score</div><input class="f-inp" id="tr-grade" placeholder="e.g. A+ / 95%"/></div>
+    </div>
+    <div class="f-row">
+      <div><div class="f-label">Completion Date</div><input class="f-inp" type="date" id="tr-date"/></div>
+      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="tr-certno" placeholder="TR/2024/001"/></div>
+    </div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Signatures</div>
+    <div class="f-row">
+      <div><div class="f-label">Director / Principal</div><input class="f-inp" id="tr-sig1" placeholder="Name"/></div>
+      <div><div class="f-label">Trainer / Instructor</div><input class="f-inp" id="tr-sig2" placeholder="Name"/></div>
+    </div>
+  </div>
+  </div><!-- /sec-training -->
+
+  <!-- BUSINESS SECTION -->
+  <div id="sec-business" class="cert-section">
+  <div class="f-card">
+    <div class="f-section">Organization</div>
+    <div class="f-full"><div class="f-label">Organization Name *</div><input class="f-inp" id="b-org" placeholder="e.g. Punjab Chamber of Commerce"/></div>
+    <div class="f-full"><div class="f-label">Certificate Type *</div><select class="f-sel" id="b-type"><option>Certificate of Membership</option><option>Certificate of Excellence</option><option>Certificate of Appreciation</option><option>Certificate of Recognition</option><option>Business License Certificate</option></select></div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Recipient</div>
+    <div class="f-full"><div class="f-label">Name / Company *</div><input class="f-inp" id="b-name" placeholder="e.g. Bhupinder Singh / Singh Enterprises"/></div>
+    <div class="f-full"><div class="f-label">For / Reason</div><input class="f-inp" id="b-reason" placeholder="e.g. Outstanding contribution to trade..."/></div>
+    <div class="f-row">
+      <div><div class="f-label">Date</div><input class="f-inp" type="date" id="b-date"/></div>
+      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="b-certno" placeholder="BIZ/2024/001"/></div>
+    </div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Authorized By</div>
+    <div class="f-row">
+      <div><div class="f-label">President / CEO</div><input class="f-inp" id="b-sig1" placeholder="Name"/></div>
+      <div><div class="f-label">Secretary / Director</div><input class="f-inp" id="b-sig2" placeholder="Name"/></div>
+    </div>
+  </div>
+  </div><!-- /sec-business -->
+
+  <!-- MARTIAL ARTS SECTION -->
+  <div id="sec-martial" class="cert-section">
+  <div class="f-card">
+    <div class="f-section">Martial Arts Academy</div>
+    <div class="f-full"><div class="f-label">Academy / Dojo Name *</div><input class="f-inp" id="m-acad" placeholder="e.g. Punjab Martial Arts Academy"/></div>
+    <div class="f-full"><div class="f-label">Martial Art Style *</div><input class="f-inp" id="m-style" placeholder="e.g. Karate, Taekwondo, Kung Fu, Pencak Silat"/></div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Student</div>
+    <div class="f-full"><div class="f-label">Student Name *</div><input class="f-inp" id="m-name" placeholder="e.g. Bhupinder Singh"/></div>
+    <div class="f-row">
+      <div><div class="f-label">Belt / Rank Awarded *</div><select class="f-sel" id="m-belt"><option>White Belt</option><option>Yellow Belt</option><option>Orange Belt</option><option>Green Belt</option><option>Blue Belt</option><option>Purple Belt</option><option>Brown Belt</option><option>Red Belt</option><option>Black Belt — 1st Dan</option><option>Black Belt — 2nd Dan</option><option>Black Belt — 3rd Dan</option><option>Black Belt — 4th Dan</option><option>Master</option><option>Grand Master</option></select></div>
+      <div><div class="f-label">Years of Training</div><input class="f-inp" id="m-years" placeholder="e.g. 3 Years"/></div>
+    </div>
+    <div class="f-row">
+      <div><div class="f-label">Grading Date</div><input class="f-inp" type="date" id="m-date"/></div>
+      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="m-certno" placeholder="MA/2024/001"/></div>
+    </div>
+  </div>
+  <div class="f-card">
+    <div class="f-section">Authorized By</div>
+    <div class="f-row">
+      <div><div class="f-label">Head Instructor / Sensei</div><input class="f-inp" id="m-sig1" placeholder="Name"/></div>
+      <div><div class="f-label">Association President</div><input class="f-inp" id="m-sig2" placeholder="Name"/></div>
+    </div>
+  </div>
+  </div><!-- /sec-martial -->
+
+  <button class="gen-btn" id="genBtn" onclick="generateCert()">🎓 Generate Certificate</button>
+  <button onclick="showRecords()" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;background:#f8f8f8;color:#666;font-family:'Cinzel',serif;font-size:.85rem;cursor:pointer;margin-top:8px;">📋 View All Records</button>
 </div>
 
-<div class="mo" id="moEB">
-  <div class="mobox">
-    <div class="motit"><span id="ebName">Edit Balance</span> <button class="moclo" onclick="cloMo()">✕</button></div>
-    <div style="font-size:.75rem;color:var(--muted);margin-bottom:14px;">Current: <span id="ebCurBal" style="color:var(--gold);font-weight:700;">₹0</span></div>
-    <div class="fi-label">Set Balance to</div>
-    <input class="fi" type="number" id="ebBal" placeholder="Amount"/>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px;">
-      <button class="btn bp" onclick="svEB()">Set</button>
-      <button class="btn bg" onclick="addBal()">+ Add</button>
-      <button class="btn bd" onclick="subBal()">- Sub</button>
+<!-- CERTIFICATE -->
+<div id="certPage">
+  <div class="cert-actions">
+    <button class="act-btn act-back" onclick="goBack()">← Edit Details</button>
+    <button class="act-btn act-print" onclick="window.print()">🖨️ Print Certificate</button>
+    <button class="act-btn act-download" onclick="downloadCert()">⬇️ Save as PDF</button>
+    <button class="act-btn" style="background:#1a1a1a;color:#fff;" onclick="showRecords()">📋 All Records</button>
+  </div>
+  <div class="cert-wrap">
+    <div id="certificate">
+      <!-- Borders -->
+      <div class="cert-outer-border"></div>
+      <div class="cert-inner-border"></div>
+
+      <!-- Corner ornaments -->
+      <div class="cert-corner cc-tl">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M2 2 L20 2 L20 6 L6 6 L6 20 L2 20 Z" fill="#8b6914"/>
+          <path d="M8 8 L20 8 L20 10 L10 10 L10 20 L8 20 Z" fill="#d4a017"/>
+          <circle cx="4" cy="4" r="2" fill="#d4a017"/>
+        </svg>
+      </div>
+      <div class="cert-corner cc-tr">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M2 2 L20 2 L20 6 L6 6 L6 20 L2 20 Z" fill="#8b6914"/>
+          <path d="M8 8 L20 8 L20 10 L10 10 L10 20 L8 20 Z" fill="#d4a017"/>
+          <circle cx="4" cy="4" r="2" fill="#d4a017"/>
+        </svg>
+      </div>
+      <div class="cert-corner cc-bl">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M2 2 L20 2 L20 6 L6 6 L6 20 L2 20 Z" fill="#8b6914"/>
+          <path d="M8 8 L20 8 L20 10 L10 10 L10 20 L8 20 Z" fill="#d4a017"/>
+          <circle cx="4" cy="4" r="2" fill="#d4a017"/>
+        </svg>
+      </div>
+      <div class="cert-corner cc-br">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M2 2 L20 2 L20 6 L6 6 L6 20 L2 20 Z" fill="#8b6914"/>
+          <path d="M8 8 L20 8 L20 10 L10 10 L10 20 L8 20 Z" fill="#d4a017"/>
+          <circle cx="4" cy="4" r="2" fill="#d4a017"/>
+        </svg>
+      </div>
+
+      <div class="cert-content">
+        <!-- Logo -->
+        <div id="cert-logo-area"></div>
+
+        <!-- University -->
+        <div class="cert-university" id="c-uni">PUNJAB UNIVERSITY</div>
+        <div class="cert-university-sub" id="c-uni-sub">Established 1882 · Chandigarh, India</div>
+
+        <!-- Divider -->
+        <div style="width:60%;height:1px;background:linear-gradient(90deg,transparent,#d4a017,transparent);margin-bottom:2%;"></div>
+
+        <div class="cert-presents">This is to certify that</div>
+
+        <div class="cert-name" id="c-name">STUDENT NAME</div>
+
+        <div class="cert-body" id="c-body">
+          Having successfully completed all requirements prescribed by the University<br>
+          is hereby awarded the degree of
+        </div>
+
+        <div class="cert-diploma-text" id="c-degree">BACHELOR OF TECHNOLOGY</div>
+        <div class="cert-field" id="c-field">in Computer Science & Engineering</div>
+        <div class="cert-honors" id="c-honors"></div>
+
+        <!-- Extra Box -->
+        <div id="c-extra" style="display:none;border:1px solid #d4a017;border-radius:8px;padding:8px 14px;margin-bottom:2%;text-align:center;min-width:60%;background:rgba(212,160,23,.04);">
+          <div id="c-extra-title" style="font-family:'Cinzel',serif;font-size:.6em;color:#8b6914;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;"></div>
+          <div id="c-extra-content" style="font-size:.7em;color:#444;line-height:1.7;font-style:italic;"></div>
+        </div>
+
+        <!-- Bottom -->
+        <div class="cert-bottom">
+          <div class="cert-sig">
+            <div class="cert-sig-line"></div>
+            <div class="cert-sig-name" id="c-vc">Dr. Vice Chancellor</div>
+            <div class="cert-sig-title">Vice Chancellor</div>
+          </div>
+
+          <div class="cert-seal">
+            <div class="seal-circle">
+              <div class="seal-inner">
+                <span id="c-seal-txt">PU<br>2024</span>
+              </div>
+            </div>
+            <div class="cert-date" id="c-date">Date: —</div>
+          </div>
+
+          <div class="cert-qr">
+            <div id="qrcode"></div>
+            <div class="cert-qr-label">Scan to Verify</div>
+          </div>
+
+          <div class="cert-sig">
+            <div class="cert-sig-line"></div>
+            <div class="cert-sig-name" id="c-reg">Prof. Registrar</div>
+            <div class="cert-sig-title">Registrar</div>
+          </div>
+        </div>
+
+        <!-- Cert No -->
+        <div style="font-size:.5em;color:#aaa;margin-top:1%;letter-spacing:2px;" id="c-certno">Certificate No: —</div>
+        <div style="font-size:.45em;color:#8b6914;margin-top:.5%;letter-spacing:1px;" id="c-verifylink">🔍 Verify: 5chromabet.com/verify.html</div>
+      </div>
     </div>
   </div>
 </div>
-
-<div class="notif" id="AN">—</div>
 
 <script>
-// ══ FIREBASE ═══════════════════════════
-const firebaseConfig = {
-  apiKey: "AIzaSyAbWxd0BmH1Km1BYMV3hDeojCRRlZkr3oo",
-  authDomain: "chromabet-34c53.firebaseapp.com",
-  databaseURL: "https://chromabet-34c53-default-rtdb.firebaseio.com",
-  projectId: "chromabet-34c53",
-  storageBucket: "chromabet-34c53.firebasestorage.app",
-  messagingSenderId: "205630233421",
-  appId: "1:205630233421:web:0bd80b39e900af7b543504"
-};
-firebase.initializeApp(firebaseConfig);
-const DB = firebase.database();
+// Certificate type
+let certType = 'diploma';
+function setType(t){
+  certType = t;
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('t-'+t).classList.add('on');
+  document.querySelectorAll('.cert-section').forEach(s=>s.classList.remove('on'));
+  document.getElementById('sec-'+t).classList.add('on');
+  const labels={diploma:'🎓 Generate Diploma',achievement:'🏆 Generate Achievement Certificate',training:'📚 Generate Training Certificate',business:'💼 Generate Business Certificate',martial:'🥋 Generate Martial Arts Certificate'};
+  document.getElementById('genBtn').textContent=labels[t];
+}
 
-let _db = null;
-let _adminLogged = false;
-let _ebUser = null;
-let _uPage = 1, _uPerPage = 10, _uFiltered = [];
-let _hPage = 1, _hPerPage = 10;
-
-function defDB(){ return {users:{admin:{password:'admin123',name:'Admin',phone:'',email:'',balance:5000,referralCode:'ADMIN0',referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:''}},gameHistory:[],currentRound:1,deposits:[],withdrawals:[]}; }
-function gD(){ return _db || defDB(); }
-function sD(d){ _db=d; DB.ref('chromabet').set(d).catch(e=>console.log('Write error:',e)); }
-
-// Show loading while connecting
-const loadTxt = document.getElementById('loadTxt');
-if(loadTxt) loadTxt.style.display='block';
-
-DB.ref('chromabet').on('value', snap => {
-  try {
-    const val = snap.val();
-    if(val){ _db=val; if(!_db.users)_db.users={}; if(!_db.deposits)_db.deposits=[]; if(!_db.withdrawals)_db.withdrawals=[]; if(!_db.gameHistory)_db.gameHistory=[]; }
-    else { _db=defDB(); }
-  } catch(e){ _db=defDB(); }
-
-  const lt=document.getElementById('loadTxt');
-  if(lt) lt.style.display='none';
-
-  if(!_adminLogged){
-    const sa=sessionStorage.getItem('admin_logged'),su=sessionStorage.getItem('admin_user');
-    if(sa&&su&&_db.users&&_db.users[su]){
-      _adminLogged=true;
-      document.getElementById('AL').style.display='none';
-      document.getElementById('APP').style.display='block';
-      loadDash();
-      setInterval(()=>{ document.getElementById('TT').textContent='🟢 Live • '+new Date().toLocaleTimeString(); },1000);
-    }
+// Password check
+function checkPw(){
+  const pw = document.getElementById('pwInp').value.trim();
+  if(pw === 'diploma@2024'){
+    sessionStorage.setItem('cert_auth','1');
+    document.getElementById('pwGate').style.display='none';
+    document.getElementById('formPage').style.display='block';
+  } else {
+    document.getElementById('pwErr').style.display='block';
+    document.getElementById('pwInp').value='';
   }
+}
 
-  if(_adminLogged){
-    const cp=document.querySelector('.pg.on');
-    if(cp){
-      const id=cp.id.replace('pg-','');
-      if(id==='dash')loadDash();
-      else if(id==='dep')loadDeps('all');
-      else if(id==='wd')loadWds('all');
-      else if(id==='users')loadUsers();
-      else if(id==='game')loadGame();
-    }
+// Enter key support
+document.addEventListener('DOMContentLoaded',()=>{
+  const inp = document.getElementById('pwInp');
+  if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') checkPw(); });
+  // Auto login if already authenticated this session
+  if(sessionStorage.getItem('cert_auth')==='1'){
+    document.getElementById('pwGate').style.display='none';
+    document.getElementById('formPage').style.display='block';
   }
 });
 
-function nav(p){
-  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
-  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));
-  document.getElementById('pg-'+p).classList.add('on');
-  document.getElementById('ni-'+p).classList.add('on');
-  const titles={dash:'📊 Dashboard',dep:'💰 Deposits',wd:'💸 Withdrawals',users:'👥 Users',game:'🎮 Game Control',refs:'🔗 Referrals',hist:'📜 History',set:'⚙️ Settings'};
-  document.getElementById('pgTitle').textContent=titles[p]||p;
-  if(p==='dash')loadDash();
-  else if(p==='dep')loadDeps('all');
-  else if(p==='wd')loadWds('all');
-  else if(p==='users')loadUsers();
-  else if(p==='game')loadGame();
-  else if(p==='refs')loadRefs();
-  else if(p==='hist')loadHist(1);
-  else if(p==='set')loadSettings();
+// Show custom degree input
+document.getElementById('degree').addEventListener('change',function(){
+  document.getElementById('customDegreeBox').style.display=this.value==='Custom...'?'block':'none';
+});
+
+// Set today's date
+document.getElementById('certDate').valueAsDate=new Date();
+['a-date','tr-date','b-date','m-date'].forEach(id=>{
+  const el=document.getElementById(id);if(el)el.valueAsDate=new Date();
+});
+
+// Load logo
+function loadLogo(input){
+  if(input.files&&input.files[0]){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      document.getElementById('logoImg').src=e.target.result;
+      document.getElementById('logoImg').style.display='block';
+      document.getElementById('logoPlaceholder').style.display='none';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
 }
 
-function refreshPage(){ const cp=document.querySelector('.pg.on');if(cp){const id=cp.id.replace('pg-','');nav(id);} }
+function generateCert(){
+  // Get values based on certType
+  let uniName,uniSub,stuName,enrollNo='',rollNo='',degree,major='',honors='',gradYear='2024',certDate,vcName,regName,certNo,verifyUrl='';
 
-function aLogin(){
-  const u=document.getElementById('AU').value.trim().toLowerCase(),p=document.getElementById('AP').value.trim();
-  if(!u||!p){ alert('Username aur password dalo!'); return; }
-  const tryLogin=()=>{
-    if(!_db||!_db.users){ setTimeout(tryLogin,500); return; }
-    if(!_db.users[u]){ alert('❌ User "'+u+'" nahi mila!\n\nUsername: admin\nPassword: admin123'); return; }
-    if(_db.users[u].password!==p){ alert('❌ Password galat!'); return; }
-    _adminLogged=true;
-    sessionStorage.setItem('admin_logged','1');
-    sessionStorage.setItem('admin_user',u);
-    document.getElementById('AL').style.display='none';
-    document.getElementById('APP').style.display='block';
-    loadDash();
-    setInterval(()=>{ document.getElementById('TT').textContent='🟢 Live • '+new Date().toLocaleTimeString(); },1000);
+  if(certType==='diploma'||!certType){
+    uniName=document.getElementById('uniName').value||'University Name';
+    uniSub=document.getElementById('uniSub').value||'';
+    stuName=document.getElementById('stuName').value||'Student Name';
+    enrollNo=document.getElementById('enrollNo').value||'';
+    rollNo=document.getElementById('rollNo').value||'';
+    degree=document.getElementById('degree').value;
+    if(degree==='Custom...') degree=document.getElementById('customDegree').value||'Degree';
+    major=document.getElementById('major').value||'';
+    honors=document.getElementById('honors').value||'';
+    gradYear=document.getElementById('gradYear').value||'2024';
+    certDate=document.getElementById('certDate').value;
+    vcName=document.getElementById('vcName').value||'Vice Chancellor';
+    regName=document.getElementById('regName').value||'Registrar';
+    certNo=document.getElementById('certNo').value||'CERT/'+Date.now();
+    verifyUrl=document.getElementById('verifyUrl').value||'';
+  } else if(certType==='achievement'){
+    uniName=document.getElementById('a-org').value||'Organization';
+    uniSub='Achievement Certificate';
+    stuName=document.getElementById('a-name').value||'Name';
+    degree=document.getElementById('a-pos').value||'1st Place';
+    major=document.getElementById('a-sport').value||'';
+    certDate=document.getElementById('a-date').value;
+    vcName=document.getElementById('a-sig1').value||'President';
+    regName=document.getElementById('a-sig2').value||'Secretary';
+    certNo=document.getElementById('a-certno').value||'ACH/'+Date.now();
+    gradYear=new Date().getFullYear().toString();
+  } else if(certType==='training'){
+    uniName=document.getElementById('tr-inst').value||'Institute';
+    uniSub='Training Certificate';
+    stuName=document.getElementById('tr-name').value||'Name';
+    degree=document.getElementById('tr-course').value||'Course';
+    major=document.getElementById('tr-dur').value||'';
+    honors=document.getElementById('tr-grade').value||'';
+    certDate=document.getElementById('tr-date').value;
+    vcName=document.getElementById('tr-sig1').value||'Director';
+    regName=document.getElementById('tr-sig2').value||'Trainer';
+    certNo=document.getElementById('tr-certno').value||'TR/'+Date.now();
+    gradYear=new Date().getFullYear().toString();
+  } else if(certType==='business'){
+    uniName=document.getElementById('b-org').value||'Organization';
+    uniSub='Business Certificate';
+    stuName=document.getElementById('b-name').value||'Name';
+    degree=document.getElementById('b-type').value||'Certificate';
+    major=document.getElementById('b-reason').value||'';
+    certDate=document.getElementById('b-date').value;
+    vcName=document.getElementById('b-sig1').value||'President';
+    regName=document.getElementById('b-sig2').value||'Secretary';
+    certNo=document.getElementById('b-certno').value||'BIZ/'+Date.now();
+    gradYear=new Date().getFullYear().toString();
+  } else if(certType==='martial'){
+    uniName=document.getElementById('m-acad').value||'Academy';
+    uniSub=document.getElementById('m-style').value||'Martial Arts';
+    stuName=document.getElementById('m-name').value||'Student';
+    degree=document.getElementById('m-belt').value||'Belt';
+    major=document.getElementById('m-years').value||'';
+    certDate=document.getElementById('m-date').value;
+    vcName=document.getElementById('m-sig1').value||'Head Instructor';
+    regName=document.getElementById('m-sig2').value||'President';
+    certNo=document.getElementById('m-certno').value||'MA/'+Date.now();
+    gradYear=new Date().getFullYear().toString();
+  }
+
+  // Fill certificate
+  document.getElementById('c-uni').textContent=uniName.toUpperCase();
+  document.getElementById('c-uni-sub').textContent=uniSub;
+  document.getElementById('c-name').textContent=stuName.toUpperCase();
+  document.getElementById('c-degree').textContent=degree.toUpperCase();
+  document.getElementById('c-field').textContent=major?'in '+major:'';
+  document.getElementById('c-honors').textContent=honors;
+  document.getElementById('c-vc').textContent=vcName;
+  document.getElementById('c-reg').textContent=regName;
+  document.getElementById('c-certno').textContent='Certificate No: '+certNo;
+  document.getElementById('c-seal-txt').innerHTML=uniName.split(' ').map(w=>w[0]).join('')+'<br>'+gradYear;
+
+  // Date
+  if(certDate){
+    const d=new Date(certDate);
+    document.getElementById('c-date').textContent=d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  }
+
+  // Logo
+  const logoArea=document.getElementById('cert-logo-area');
+  const logoSrc=document.getElementById('logoImg').src;
+  if(logoSrc&&document.getElementById('logoImg').style.display!=='none'){
+    logoArea.innerHTML='<img src="'+logoSrc+'" class="cert-logo"/>';
+  } else {
+    const initials=uniName.split(' ').map(w=>w[0]).join('').slice(0,3);
+    logoArea.innerHTML='<div class="cert-logo-placeholder"><span>'+initials+'</span></div>';
+  }
+
+  // QR Code
+  document.getElementById('qrcode').innerHTML='';
+  // Extra box
+  const extraTitleEl = document.getElementById('extraTitle');
+  const extraContentEl = document.getElementById('extraContent');
+  const extraTitle = extraTitleEl ? extraTitleEl.value.trim() : '';
+  const extraContent = extraContentEl ? extraContentEl.value.trim() : '';
+  if(extraTitle || extraContent){
+    document.getElementById('c-extra').style.display='block';
+    document.getElementById('c-extra-title').textContent=extraTitle;
+    document.getElementById('c-extra-content').textContent=extraContent;
+  } else {
+    document.getElementById('c-extra').style.display='none';
+  }
+
+  // Save certificate to localStorage for verification
+  const certData = {
+    type: certType,
+    certNo, stuName, degree, major, uniName, uniSub,
+    gradYear, honors, vcName, regName, enrollNo, rollNo,
+    date: certDate, issued: new Date().toISOString()
   };
-  if(_db&&_db.users) tryLogin();
-  else { const lb=document.querySelector('.lbtn');if(lb){lb.textContent='Loading...';lb.disabled=true;} setTimeout(()=>{ const lb=document.querySelector('.lbtn');if(lb){lb.textContent='LOGIN →';lb.disabled=false;} tryLogin(); },3000); }
-}
+  // Save by certNo
+  const allCerts = JSON.parse(localStorage.getItem('saved_certs')||'{}');
+  allCerts[certNo] = certData;
+  localStorage.setItem('saved_certs', JSON.stringify(allCerts));
 
-function aOut(){
-  _adminLogged=false;
-  sessionStorage.removeItem('admin_logged');
-  sessionStorage.removeItem('admin_user');
-  document.getElementById('APP').style.display='none';
-  document.getElementById('AL').style.display='flex';
-  document.getElementById('AP').value='';
-}
+  // QR points to verify page with cert number
+  const baseUrl = window.location.href.replace('index.html','').replace(/\?.*$/,'');
+  const verifyLink = verifyUrl || (baseUrl + 'verify.html?id=' + encodeURIComponent(certNo));
+  const qrData = verifyLink;
 
-function loadDash(){
-  const icon = document.getElementById('refreshIcon');
-  if(icon){ icon.style.animation='spin .6s linear'; setTimeout(()=>icon.style.animation='',700); }
-  const d=gD();
-  const users=Object.keys(d.users);
-  const players=users.filter(u=>u!=='admin');
-  document.getElementById('dUsers').textContent=users.length;
-  const deps=d.deposits||[],wds=d.withdrawals||[];
-  const totalDep=deps.filter(x=>x.status==='approved').reduce((s,x)=>s+parseFloat(x.inrAmt||0),0);
-  const totalWd=wds.filter(x=>x.status==='approved').reduce((s,x)=>s+parseFloat(x.amt||0),0);
-  const pending=deps.filter(x=>x.status==='pending').length+wds.filter(x=>x.status==='pending').length;
-  document.getElementById('dDep').textContent='₹'+totalDep.toLocaleString();
-  document.getElementById('dWd').textContent='₹'+totalWd.toLocaleString();
-  document.getElementById('dPend').textContent=pending;
-
-  // Color stats
-  const hist=d.gameHistory||[];
-  const r=hist.filter(h=>h.result==='red').length,g=hist.filter(h=>h.result==='green').length,v=hist.filter(h=>h.result==='violet').length,tot=hist.length||1;
-  const rp=Math.round(r/tot*100),gp=Math.round(g/tot*100),vp=100-rp-gp;
-  document.getElementById('cbrR').style.width=rp+'%';document.getElementById('cprR').textContent=rp+'%';
-  document.getElementById('cbrG').style.width=gp+'%';document.getElementById('cprG').textContent=gp+'%';
-  document.getElementById('cbrV').style.width=vp+'%';document.getElementById('cprV').textContent=vp+'%';
-
-  // Pending list
-  const pendDeps=deps.filter(x=>x.status==='pending').slice(0,5);
-  const pendWds=wds.filter(x=>x.status==='pending').slice(0,5);
-  const pl=document.getElementById('pendList');
-  const allPend=[...pendDeps.map(x=>({...x,kind:'Deposit'})),...pendWds.map(x=>({...x,kind:'Withdrawal'}))];
-  if(!allPend.length){pl.innerHTML='<div style="color:var(--muted);font-size:.8rem;">No pending requests</div>';return;}
-  pl.innerHTML=allPend.map(x=>`<div class="pend-item"><div><div class="pend-type" style="color:${x.kind==='Deposit'?'var(--green)':'var(--red)'}">${x.kind==='Deposit'?'💰':'💸'} ${x.kind}</div><div class="pend-info">${x.userName||'—'} • ₹${x.inrAmt||x.amt||0}</div></div><span class="tag ${x.kind==='Deposit'?'tappr':'trej'}" style="font-size:.58rem;">PENDING</span></div>`).join('');
-
-  // Top players
-  const sorted=players.map(u=>({u,d:d.users[u]})).sort((a,b)=>(b.d.balance||0)-(a.d.balance||0)).slice(0,8);
-  const rankClass=(i)=>i===0?'gold':i===1?'silver':i===2?'bronze':'';
-  document.getElementById('topPlayers').innerHTML=sorted.map((p,i)=>`<div class="tp-row"><div class="tp-rank ${rankClass(i)}">${i+1}</div><div class="tp-name">${p.d.name||'—'}</div><div style="color:var(--muted);font-size:.72rem;">${p.d.phone||'—'}</div><div class="tp-bal">₹${(p.d.balance||0).toLocaleString()}</div><div style="font-size:.7rem;color:var(--muted);margin-left:12px;">${p.d.totalBets||0} bets</div><div style="font-size:.7rem;margin-left:12px;"><span style="color:var(--green)">${p.d.wins||0}W</span>/<span style="color:var(--red)">${p.d.losses||0}L</span></div></div>`).join('');
-}
-
-function loadDeps(filter){
-  const d=gD();let deps=d.deposits||[];
-  if(filter==='pending') deps=deps.filter(x=>x.status==='pending');
-  else if(filter==='approved') deps=deps.filter(x=>x.status==='approved');
-  const tb=document.getElementById('depTbl');
-  if(!deps.length){tb.innerHTML=`<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--muted);">No deposits</td></tr>`;return;}
-  let sno=1;
-  tb.innerHTML=deps.map(dep=>{
-    const isUpi=dep.network==='INR-UPI';
-    return `<tr>
-      <td class="sno">${sno++}</td>
-      <td><strong>${dep.userName||'—'}</strong></td>
-      <td style="color:var(--muted)">${dep.phone||'—'}</td>
-      <td style="font-size:.68rem;color:var(--gold);max-width:120px;overflow:hidden;text-overflow:ellipsis;">${dep.txHash||'—'}</td>
-      <td>${isUpi?'—':dep.usdtAmt+' USDT'}</td>
-      <td style="color:var(--green);font-weight:700;">₹${dep.inrAmt||0}</td>
-      <td><span class="tag ${isUpi?'tinr':'tappr'}">${dep.network||'—'}</span></td>
-      <td><span class="tag ${dep.status==='approved'?'tappr':dep.status==='rejected'?'trej':'tpend'}">${dep.status||'pending'}</span></td>
-      <td style="color:var(--muted);font-size:.7rem;">${dep.date||'—'}</td>
-      <td style="display:flex;gap:5px;">${dep.status==='pending'?`<button class="btn bg bsm" onclick="actDep('${dep.id}','approve')">✅</button><button class="btn bd bsm" onclick="actDep('${dep.id}','reject')">❌</button>`:'<span style="color:var(--muted);font-size:.7rem;">Done</span>'}</td>
-    </tr>`;
-  }).join('');
-}
-
-function actDep(id,action){
-  const d=gD();const idx=d.deposits.findIndex(x=>x.id===id);if(idx<0)return;
-  const dep=d.deposits[idx];dep.status=action==='approve'?'approved':'rejected';
-  if(action==='approve'){
-    const uid=dep.user;if(d.users[uid]){
-      d.users[uid].balance=(d.users[uid].balance||0)+parseFloat(dep.inrAmt||0);
-      d.users[uid].totalDeposited=(d.users[uid].totalDeposited||0)+parseFloat(dep.inrAmt||0);
-      // First deposit bonus
-      if(!d.users[uid].fdBonusClaimed&&(d.users[uid].totalDeposited||0)>=100){
-        const amt=parseFloat(dep.inrAmt||0);let bonusPct=0;
-        if(amt>=5000)bonusPct=.2;else if(amt>=1000)bonusPct=.15;else if(amt>=100)bonusPct=.1;
-        if(bonusPct>0){const bonus=Math.floor(amt*bonusPct);d.users[uid].balance+=bonus;d.users[uid].fdBonusClaimed=true;nt('💰 First Deposit Bonus: +₹'+bonus);}
-      }
-      // Referral deposit bonus
-      if(d.users[uid].referredBy&&parseFloat(dep.inrAmt||0)>=500){
-        const rf=d.users[uid].referredBy;
-        if(d.users[rf]&&!d.users[uid].refDepBonusPaid){
-          d.users[rf].balance=(d.users[rf].balance||0)+150;
-          d.users[uid].refDepBonusPaid=true;
-          nt('🔗 Referral deposit bonus: ₹150 to '+d.users[rf].name);
-        }
-      }
-      if(!d.users[uid].transactions)d.users[uid].transactions=[];
-      d.users[uid].transactions.unshift({type:'Deposit',amount:'₹'+dep.inrAmt+' ('+dep.network+')',network:dep.network,status:'Approved',date:new Date().toLocaleDateString()});
-    }
-  } else {
-    const uid=dep.user;if(d.users[uid]){if(!d.users[uid].transactions)d.users[uid].transactions=[];d.users[uid].transactions.unshift({type:'Deposit',amount:'₹'+dep.inrAmt,network:dep.network,status:'Rejected',date:new Date().toLocaleDateString()});}
-  }
-  sD(d);nt(action==='approve'?'✅ Deposit Approved!':'❌ Deposit Rejected');loadDeps('all');
-}
-
-function loadWds(filter){
-  const d=gD();let wds=d.withdrawals||[];
-  if(filter==='pending') wds=wds.filter(x=>x.status==='pending');
-  const tb=document.getElementById('wdTbl');
-  if(!wds.length){tb.innerHTML=`<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--muted);">No withdrawals</td></tr>`;return;}
-  let sno=1;
-  tb.innerHTML=wds.map(wd=>{
-    const isUpi=wd.network==='INR-UPI';
-    return `<tr>
-      <td class="sno">${sno++}</td>
-      <td><strong>${wd.userName||'—'}</strong></td>
-      <td style="color:var(--muted)">${wd.phone||'—'}</td>
-      <td style="color:${isUpi?'var(--gold)':'var(--muted)'};font-size:.72rem;max-width:130px;overflow:hidden;text-overflow:ellipsis;">${wd.addr||'—'}${wd.holderName?' ('+wd.holderName+')':''}</td>
-      <td style="color:var(--red);font-weight:700;">₹${wd.amt||0}</td>
-      <td>${isUpi?'INR':wd.usdtAmt+' USDT'}</td>
-      <td><span class="tag ${isUpi?'tinr':'tappr'}">${wd.network||'—'}</span></td>
-      <td><span class="tag ${wd.status==='approved'?'tappr':wd.status==='rejected'?'trej':'tpend'}">${wd.status||'pending'}</span></td>
-      <td style="color:var(--muted);font-size:.7rem;">${wd.date||'—'}</td>
-      <td style="display:flex;gap:5px;">${wd.status==='pending'?`<button class="btn bg bsm" onclick="actWd('${wd.id}','approve')">✅</button><button class="btn bd bsm" onclick="actWd('${wd.id}','reject')">❌</button>`:'<span style="color:var(--muted);font-size:.7rem;">Done</span>'}</td>
-    </tr>`;
-  }).join('');
-}
-
-function actWd(id,action){
-  const d=gD();const idx=d.withdrawals.findIndex(x=>x.id===id);if(idx<0)return;
-  const wd=d.withdrawals[idx];wd.status=action==='approve'?'approved':'rejected';
-  const uid=wd.user;
-  if(action==='rejected'&&d.users[uid]){
-    d.users[uid].balance=(d.users[uid].balance||0)+parseFloat(wd.amt||0);
-    d.users[uid].totalWithdrawn=Math.max(0,(d.users[uid].totalWithdrawn||0)-parseFloat(wd.amt||0));
-    if(!d.users[uid].transactions)d.users[uid].transactions=[];
-    d.users[uid].transactions.unshift({type:'Withdrawal',amount:'₹'+wd.amt,network:wd.network,status:'Rejected',date:new Date().toLocaleDateString()});
-    nt('❌ Withdrawal Rejected — ₹'+wd.amt+' refunded');
-  } else {
-    if(d.users[uid]){if(!d.users[uid].transactions)d.users[uid].transactions=[];d.users[uid].transactions.unshift({type:'Withdrawal',amount:'₹'+wd.amt,network:wd.network,status:'Approved',date:new Date().toLocaleDateString()});}
-    nt('✅ Withdrawal Approved!');
-  }
-  sD(d);loadWds('all');
-}
-
-function loadUsers(page){
-  page=page||1;_uPage=page;
-  const d=gD(),all=Object.keys(d.users),players=all.filter(u=>u!=='admin');
-  document.getElementById('uCnt').textContent='👥 Users — '+all.length+' total ('+players.length+' players)';
-  const sorted=['admin',...players.sort((a,b)=>(d.users[b]?.joined||'').localeCompare(d.users[a]?.joined||''))];
-  _uFiltered=sorted;renderUsers(_uFiltered,page);
-}
-
-function searchUsers(){
-  const q=document.getElementById('uSearch').value.trim().toLowerCase();
-  const d=gD(),all=Object.keys(d.users);
-  const sorted=['admin',...all.filter(u=>u!=='admin').sort((a,b)=>(d.users[b]?.joined||'').localeCompare(d.users[a]?.joined||''))];
-  if(!q){_uFiltered=sorted;}else{_uFiltered=sorted.filter(u=>{const ud=d.users[u];return(ud.name||'').toLowerCase().includes(q)||(ud.phone||'').includes(q)||(ud.email||'').toLowerCase().includes(q);});}
-  _uPage=1;renderUsers(_uFiltered,1);
-}
-
-function renderUsers(list,page){
-  const d=gD(),total=list.length,totalPages=Math.ceil(total/_uPerPage),start=(page-1)*_uPerPage,end=Math.min(start+_uPerPage,total),pageList=list.slice(start,end);
-  let sno=start;
-  document.getElementById('uTbl').innerHTML=pageList.map(u=>{
-    const ud=d.users[u];if(!ud)return'';
-    const isAdmin=u==='admin';if(!isAdmin)sno++;
-    const refBy=ud.referredBy&&d.users[ud.referredBy]?d.users[ud.referredBy].name:'—';
-    return `<tr>
-      <td class="sno">${isAdmin?'—':sno}</td>
-      <td><strong>${ud.name||'—'}</strong>${isAdmin?' <span class="tag tadm">ADMIN</span>':''}</td>
-      <td style="color:var(--muted)">${ud.phone||'—'}</td>
-      <td style="font-size:.68rem;color:var(--muted)">${ud.email||'—'}</td>
-      <td style="color:var(--gold);font-weight:700;">₹${(ud.balance||0).toLocaleString()}</td>
-      <td style="color:var(--green)">₹${ud.totalDeposited||0}</td>
-      <td style="color:var(--red)">₹${ud.totalWithdrawn||0}</td>
-      <td>${ud.totalBets||0}</td>
-      <td><span style="color:var(--green)">${ud.wins||0}W</span>/<span style="color:var(--red)">${ud.losses||0}L</span></td>
-      <td style="color:#ce93d8;font-size:.72rem;">${isAdmin?'—':refBy}</td>
-      <td style="color:var(--muted);font-size:.7rem;">${ud.joined||'—'}</td>
-      <td style="display:flex;gap:5px;">
-        <button class="btn bgo bsm" onclick="opEB('${u}')">💰</button>
-        ${!isAdmin?`<button class="btn bd bsm" onclick="delU('${u}')">🗑️</button>`:''}
-      </td>
-    </tr>`;
-  }).join('');
-  const pg=document.getElementById('uPagination');
-  if(totalPages<=1){pg.innerHTML='';return;}
-  let html='<button class="pgn-btn" onclick="renderUsers(_uFiltered,'+(Math.max(1,page-1))+')" '+(page===1?'disabled':'')+'>← Prev</button>';
-  let sp=Math.max(1,page-2),ep=Math.min(totalPages,sp+4);sp=Math.max(1,ep-4);
-  for(let i=sp;i<=ep;i++) html+=`<button class="pgn-btn${i===page?' on':''}" onclick="renderUsers(_uFiltered,${i})">${i}</button>`;
-  html+='<button class="pgn-btn" onclick="renderUsers(_uFiltered,'+(Math.min(totalPages,page+1))+')" '+(page===totalPages?'disabled':'')+'>Next →</button>';
-  html+=`<span class="pgn-info">Page ${page}/${totalPages} (${total} users)</span>`;
-  pg.innerHTML=html;
-}
-
-function opAddU(){ document.getElementById('moAddU').classList.add('op'); }
-function cloMo(){ document.querySelectorAll('.mo').forEach(m=>m.classList.remove('op')); }
-function addU(){
-  const name=document.getElementById('muName').value.trim(),phone=document.getElementById('muPhone').value.trim(),pass=document.getElementById('muPass').value,bal=parseInt(document.getElementById('muBal').value)||150;
-  if(!name||!phone||!pass){nt('❌ Sab fields fill karo','err');return;}
-  const d=gD(),uid='user_'+Date.now()+'_'+Math.floor(Math.random()*999);
-  const gc=()=>{const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');};
-  d.users[uid]={password:pass,name,phone,email:'',balance:bal,referralCode:gc(),referredBy:null,referrals:[],totalBets:0,totalWagered:0,totalDeposited:0,totalWithdrawn:0,wins:0,losses:0,netPnl:0,joined:new Date().toLocaleDateString(),transactions:[],savedUpi:'',savedUpiName:''};
-  sD(d);cloMo();nt('✅ User added!');loadUsers();
-  document.getElementById('muName').value='';document.getElementById('muPhone').value='';document.getElementById('muPass').value='';document.getElementById('muBal').value='';
-}
-function opEB(u){ _ebUser=u;const d=gD(),ud=d.users[u];document.getElementById('ebName').textContent='💰 '+ud.name;document.getElementById('ebCurBal').textContent='₹'+(ud.balance||0).toLocaleString();document.getElementById('ebBal').value='';document.getElementById('moEB').classList.add('op'); }
-function svEB(){ const d=gD(),v=parseInt(document.getElementById('ebBal').value);if(!_ebUser||isNaN(v))return nt('❌ Amount dalo','err');d.users[_ebUser].balance=v;sD(d);cloMo();nt('✅ Balance set to ₹'+v);loadUsers(); }
-function addBal(){ const d=gD(),v=parseInt(document.getElementById('ebBal').value);if(!_ebUser||isNaN(v))return nt('❌ Amount dalo','err');d.users[_ebUser].balance=(d.users[_ebUser].balance||0)+v;sD(d);cloMo();nt('✅ +₹'+v+' added');loadUsers(); }
-function subBal(){ const d=gD(),v=parseInt(document.getElementById('ebBal').value);if(!_ebUser||isNaN(v))return nt('❌ Amount dalo','err');d.users[_ebUser].balance=Math.max(0,(d.users[_ebUser].balance||0)-v);sD(d);cloMo();nt('✅ -₹'+v+' removed');loadUsers(); }
-function delU(u){ if(!confirm('Delete this user?'))return;const d=gD();delete d.users[u];sD(d);nt('🗑️ User deleted');loadUsers(); }
-
-function loadGame(){
-  const d=gD();
-  document.getElementById('curRnd').textContent='#'+String(d.currentRound||1).padStart(4,'0');
-  document.getElementById('fStatus').textContent=d.forcedResult?'Status: Forced → '+d.forcedResult.toUpperCase():'Status: Random (default)';
-  loadLiveBets();
-}
-
-function loadLiveBets(){
-  const d=gD();const rnd=d.currentRound||1;
-  DB.ref('chromabet/liveBets').on('value',snap=>{
-    const bets=snap.val()||{};let rA=0,gA=0,vA=0,rC=0,gC=0,vC=0,numA=0;
-    Object.values(bets).forEach(bet=>{
-      if(bet.round===rnd){const col=bet.color||'';
-        if(col==='red'){rA+=bet.amount;rC++;}
-        else if(col==='green'){gA+=bet.amount;gC++;}
-        else if(col==='violet'){vA+=bet.amount;vC++;}
-        else if(col.startsWith('num_')){numA+=bet.amount;}
-      }
-    });
-    document.getElementById('betRed').textContent='₹'+rA.toLocaleString();
-    document.getElementById('betGreen').textContent='₹'+gA.toLocaleString();
-    document.getElementById('betViolet').textContent='₹'+vA.toLocaleString();
-    document.getElementById('betRedC').textContent=rC;
-    document.getElementById('betGreenC').textContent=gC;
-    document.getElementById('betVioletC').textContent=vC;
-    document.getElementById('betTotal').textContent='₹'+(rA+gA+vA+numA).toLocaleString();
+  new QRCode(document.getElementById('qrcode'),{
+    text:qrData,
+    width:70,height:70,
+    colorDark:'#1a1a1a',
+    colorLight:'#ffffff',
+    correctLevel:QRCode.CorrectLevel.M
   });
+  
+  // Store verify link for display
+  window._lastVerifyLink = qrData;
+  const vl = document.getElementById('c-verifylink');
+  if(vl) vl.textContent = '🔍 Verify: ' + verifyLink;
+  const vl = document.getElementById('c-verifylink');
+  if(vl) vl.textContent = '🔍 Verify: ' + verifyLink;
+
+  document.getElementById('formPage').style.display='none';
+  document.getElementById('certPage').style.display='block';
+  window.scrollTo(0,0);
 }
 
-function forceR(c){ const d=gD();d.forcedResult=c;sD(d);document.getElementById('fStatus').textContent='Status: Forced → '+c.toUpperCase();nt('🎯 Result forced: '+c.toUpperCase()); }
-function clearF(){ const d=gD();d.forcedResult=null;sD(d);document.getElementById('fStatus').textContent='Status: Random (default)';nt('✅ Back to random'); }
-
-function loadRefs(){
-  const d=gD(),users=Object.keys(d.users).filter(u=>u!=='admin');
-  const stats=users.map(u=>({u,d:d.users[u],refs:(d.users[u].referrals||[]).length,earned:(d.users[u].referrals||[]).reduce((s,r)=>s+(r.earned||0),0)})).filter(x=>x.refs>0).sort((a,b)=>b.refs-a.refs);
-  const tot=stats.reduce((s,x)=>s+x.refs,0),bonus=stats.reduce((s,x)=>s+x.earned,0);
-  document.getElementById('rTot').textContent=tot;document.getElementById('rBonus').textContent='₹'+bonus;
-  document.getElementById('refTbl').innerHTML=stats.length?stats.map((s,i)=>`<tr><td class="sno">${i+1}</td><td><strong>${s.d.name||'—'}</strong></td><td style="color:var(--gold);font-family:'Orbitron',sans-serif;font-size:.78rem;">${s.d.referralCode||'—'}</td><td style="color:var(--green)">${s.refs}</td><td style="color:var(--gold)">₹${s.earned}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted);">No referrals yet</td></tr>';
+function goBack(){
+  document.getElementById('certPage').style.display='none';
+  document.getElementById('formPage').style.display='block';
 }
 
-function loadHist(page){
-  page=page||1;_hPage=page;
-  const d=gD(),hist=d.gameHistory||[],tb=document.getElementById('hTbl');
-  if(!hist.length){tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted);">No rounds yet</td></tr>';document.getElementById('hPagination').innerHTML='';return;}
-  const total=hist.length,totalPages=Math.ceil(total/_hPerPage),start=(page-1)*_hPerPage,end=Math.min(start+_hPerPage,total);
-  let sno=start+1;
-  tb.innerHTML=hist.slice(start,end).map(h=>`<tr>
-    <td class="sno">${sno++}</td>
-    <td style="font-family:'Orbitron',sans-serif;font-size:.75rem;">#${String(h.round).padStart(4,'0')}</td>
-    <td style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--gold)">${h.numResult!==undefined?h.numResult:'—'}</td>
-    <td><span class="tag ${h.result==='red'?'trej':h.result==='green'?'tappr':'tinr'}">${h.result||'—'}</span></td>
-    <td style="color:var(--muted);font-size:.7rem;">${h.timestamp||'—'}</td>
-  </tr>`).join('');
-  const pg=document.getElementById('hPagination');
-  if(totalPages<=1){pg.innerHTML='';return;}
-  let html='<button class="pgn-btn" onclick="loadHist('+(Math.max(1,page-1))+')" '+(page===1?'disabled':'')+'>← Prev</button>';
-  let sp=Math.max(1,page-2),ep=Math.min(totalPages,sp+4);sp=Math.max(1,ep-4);
-  for(let i=sp;i<=ep;i++) html+=`<button class="pgn-btn${i===page?' on':''}" onclick="loadHist(${i})">${i}</button>`;
-  html+='<button class="pgn-btn" onclick="loadHist('+(Math.min(totalPages,page+1))+')" '+(page===totalPages?'disabled':'')+'>Next →</button>';
-  html+=`<span class="pgn-info">${page}/${totalPages} (${total} rounds)</span>`;
-  pg.innerHTML=html;
-}
-
-function saveVideo(){
-  const link = document.getElementById('sVIDEO').value.trim();
-  if(!link) return nt('❌ Video link dalo!');
-  const d = gD();
-  if(!d.settings) d.settings = {};
-  d.settings.videoLink = link;
-  sD(d);
-  nt('✅ Video saved! Users ko dikhega!');
-  document.getElementById('curVideoStatus').textContent = '✅ Current: ' + link.slice(0,50) + '...';
-}
-
-function removeVideo(){
-  const d = gD();
-  if(!d.settings) d.settings = {};
-  d.settings.videoLink = '';
-  sD(d);
-  document.getElementById('sVIDEO').value = '';
-  document.getElementById('curVideoStatus').textContent = '❌ Video removed';
-  nt('🗑️ Video removed!');
-}
-
-function loadSettings(){
-  const d=gD(),s=d.settings||{};
-  document.getElementById('sVIDEO').value=s.videoLink||'';
-  if(s.videoLink) document.getElementById('curVideoStatus').textContent='✅ Current: '+s.videoLink.slice(0,50)+'...';
-  document.getElementById('sUPI').value=s.upi||'pindasandhu829@pingpay';
-  document.getElementById('sERC').value=s.erc||'0xab594d87682eeE1ECD7B72414177915153885f7c';
-  document.getElementById('sTRC').value=s.trc||'TXjL5B89b9yd6KvsxGfxxtk2RanwJj9Jvc';
-  document.getElementById('sRATE').value=s.rate||96;
-  document.getElementById('sMDEP').value=s.minDep||100;
-  document.getElementById('sRDUR').value=s.roundDur||30;
-  document.getElementById('sMBET').value=s.minBet||10;
-  document.getElementById('sRGPAY').value=s.rgPay||2;
-  document.getElementById('sVPAY').value=s.vPay||4.5;
-}
-
-function savePaySettings(){
-  const d=gD();if(!d.settings)d.settings={};
-  d.settings.upi=document.getElementById('sUPI').value.trim();
-  d.settings.erc=document.getElementById('sERC').value.trim();
-  d.settings.trc=document.getElementById('sTRC').value.trim();
-  d.settings.rate=parseFloat(document.getElementById('sRATE').value)||96;
-  d.settings.minDep=parseInt(document.getElementById('sMDEP').value)||100;
-  sD(d);nt('✅ Payment settings saved!');
-}
-
-function saveGameSettings(){
-  const d=gD();if(!d.settings)d.settings={};
-  d.settings.roundDur=parseInt(document.getElementById('sRDUR').value)||30;
-  d.settings.minBet=parseInt(document.getElementById('sMBET').value)||10;
-  d.settings.rgPay=parseFloat(document.getElementById('sRGPAY').value)||2;
-  d.settings.vPay=parseFloat(document.getElementById('sVPAY').value)||4.5;
-  sD(d);nt('✅ Game settings saved!');
-}
-
-function chgPw(){
-  const nw=document.getElementById('sNP').value;
-  if(nw.length<4)return nt('❌ Min 4 chars','err');
-  const d=gD(),au=sessionStorage.getItem('admin_user')||'admin';
-  d.users[au].password=nw;sD(d);
-  document.getElementById('sNP').value='';nt('✅ Password updated!');
-}
-function clrHist(){ if(!confirm('Clear all game history?'))return;const d=gD();d.gameHistory=[];sD(d);nt('🗑️ History cleared'); }
-function rstRnd(){ if(!confirm('Reset round to 1?'))return;const d=gD();d.currentRound=1;sD(d);nt('✅ Round reset'); }
-
-let NT2;
-function nt(msg,t){
-  const e=document.getElementById('AN');e.textContent=msg;e.className='notif'+(t?' '+t:'')+' show';
-  clearTimeout(NT2);NT2=setTimeout(()=>e.classList.remove('show'),3000);
+function downloadCert(){
+  alert('Print option use karo → "Save as PDF" select karo for best quality!');
+  window.print();
 }
 </script>
+
+<!-- RECORDS MODAL -->
+<div id="recordsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:#fff;border-radius:18px;padding:24px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:#2c1810;">📋 Certificate Records</div>
+      <button onclick="closeRecords()" style="background:#f0f0f0;border:none;border-radius:7px;padding:6px 12px;cursor:pointer;font-size:.85rem;">✕ Close</button>
+    </div>
+    <div id="recordsList"></div>
+    <button onclick="clearRecords()" style="width:100%;padding:10px;border-radius:9px;border:1px solid #fca5a5;background:#fef2f2;color:#ef4444;font-weight:600;font-size:.82rem;cursor:pointer;margin-top:12px;">🗑️ Clear All Records</button>
+  </div>
+</div>
+
 <script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/sw.js').catch(e=>console.log(e));
+function showRecords(){
+  const all = JSON.parse(localStorage.getItem('saved_certs')||'{}');
+  const keys = Object.keys(all);
+  const list = document.getElementById('recordsList');
+  
+  if(!keys.length){
+    list.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:.85rem;">No records yet</div>';
+  } else {
+    const types={diploma:'🎓',achievement:'🏆',training:'📚',business:'💼',martial:'🥋'};
+    list.innerHTML = keys.map(k=>{
+      const d=all[k];
+      const issued=d.issued?new Date(d.issued).toLocaleDateString('en-IN'):'—';
+      return `<div style="background:#f8f8f8;border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-weight:700;font-size:.88rem;">${types[d.type]||'🎓'} ${d.stuName||'—'}</div>
+          <div style="font-size:.72rem;color:#888;margin-top:2px;">${d.degree||'—'} · ${d.uniName||'—'}</div>
+          <div style="font-size:.68rem;color:#aaa;margin-top:2px;">📋 ${k} · 📅 ${issued}</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <a href="verify.html?id=${encodeURIComponent(k)}" target="_blank" style="background:linear-gradient(135deg,#8b6914,#d4a017);color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:.7rem;font-weight:700;cursor:pointer;text-decoration:none;">Verify</a>
+          <button onclick="deleteRecord('${k}')" style="background:#fef2f2;border:1px solid #fca5a5;border-radius:7px;padding:5px 10px;color:#ef4444;font-size:.7rem;font-weight:700;cursor:pointer;">Del</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('recordsModal').style.display='flex';
+}
+
+function closeRecords(){
+  document.getElementById('recordsModal').style.display='none';
+}
+
+function deleteRecord(k){
+  if(!confirm('Delete this record?')) return;
+  const all=JSON.parse(localStorage.getItem('saved_certs')||'{}');
+  delete all[k];
+  localStorage.setItem('saved_certs',JSON.stringify(all));
+  showRecords();
+}
+
+function clearRecords(){
+  if(!confirm('Clear ALL records?')) return;
+  localStorage.removeItem('saved_certs');
+  showRecords();
+}
+
+// Also show records from form page
+function showRecordsFromForm(){
+  showRecords();
 }
 </script>
 </body>
