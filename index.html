@@ -114,19 +114,8 @@ body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
 </head>
 <body>
 
-<!-- PASSWORD GATE -->
-<div id="pwGate" style="position:fixed;inset:0;background:#0c0c0c;z-index:9999;display:flex;align-items:center;justify-content:center;">
-<div style="background:#161616;border:1px solid #2a2a2a;border-radius:20px;padding:32px;width:90%;max-width:360px;text-align:center;">
-<div style="font-size:2rem;margin-bottom:10px;">🎓</div>
-<div style="font-family:'Cinzel',serif;font-size:1.1rem;color:#fff;margin-bottom:20px;">5ChromaBet</div>
-<input id="pwInp" type="password" placeholder="Password" style="width:100%;background:#111;border:2px solid #333;border-radius:10px;padding:14px;color:#fff;font-size:1.1rem;outline:none;margin-bottom:12px;text-align:center;"/>
-<button onclick="checkPw()" style="width:100%;padding:14px;border-radius:10px;border:none;background:#d4a017;color:#000;font-weight:700;font-size:1rem;cursor:pointer;">ENTER</button>
-<div id="pwErr" style="color:#ef4444;font-size:.8rem;margin-top:10px;display:none;">❌ Galat password!</div>
-</div>
-</div>
-
 <!-- FORM -->
-<div id="formPage" style="display:none;">
+<div id="formPage">
   <div class="f-title">🏆 5ChromaBet — Certificate Generator</div>
   <div class="f-sub">Type select karo aur details bharo</div>
 
@@ -500,22 +489,7 @@ function setType(t){
 }
 
 // Password check
-function checkPw(){
-  var pw = document.getElementById('pwInp').value;
-  if(pw === 'diploma@2024'){
-    document.getElementById('pwGate').style.display='none';
-    document.getElementById('formPage').style.display='block';
-  } else {
-    document.getElementById('pwErr').style.display='block';
-    document.getElementById('pwInp').value='';
-    document.getElementById('pwInp').focus();
-  }
-}
-document.addEventListener('keyup',function(e){
-  if(e.key==='Enter' && document.getElementById('pwGate').style.display!=='none'){
-    checkPw();
-  }
-});
+
 
 // Show custom degree input
 document.getElementById('degree').addEventListener('change',function(){
