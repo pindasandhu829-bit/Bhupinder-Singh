@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>5ChromaBet — Certificate Generator</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -502,6 +504,16 @@ function setType(t){
 // Password check
 
 
+// Firebase init
+const firebaseConfig = {
+  apiKey: "AIzaSyAbWxd0BmH1Km1BYMV3hDeojCRRlZkr3oo",
+  authDomain: "chromabet-34c53.firebaseapp.com",
+  databaseURL: "https://chromabet-34c53-default-rtdb.firebaseio.com",
+  projectId: "chromabet-34c53"
+};
+if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const CERTDB = firebase.database();
+
 // Password check
 function checkPw(){
   var pw = document.getElementById('pwInp').value;
@@ -658,14 +670,17 @@ function generateCert(){
     document.getElementById('c-extra').style.display='none';
   }
 
-  // Save certificate to localStorage for verification
+  // Save certificate to Firebase (accessible from ALL devices)
   const certData = {
     type: certType,
     certNo, stuName, degree, major, uniName, uniSub,
     gradYear, honors, vcName, regName, enrollNo, rollNo,
     date: certDate, issued: new Date().toISOString()
   };
-  // Save by certNo
+  // Save to Firebase
+  const safeKey = certNo.replace(/[.#$\/\[\]]/g,'_');
+  CERTDB.ref('certificates/' + safeKey).set(certData).catch(e=>console.log(e));
+  // Also save locally as backup
   const allCerts = JSON.parse(localStorage.getItem('saved_certs')||'{}');
   allCerts[certNo] = certData;
   localStorage.setItem('saved_certs', JSON.stringify(allCerts));
