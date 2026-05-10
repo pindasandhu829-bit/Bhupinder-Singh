@@ -1,791 +1,511 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pa">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>5ChromaBet — Certificate Generator</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#f0ede8;font-family:'Inter',sans-serif;min-height:100vh;}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Code Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* FORM PAGE */
-#formPage{max-width:600px;margin:0 auto;padding:24px;}
-.f-title{font-family:'Cinzel',serif;font-size:1.3rem;color:#1a1a1a;text-align:center;margin-bottom:4px;}
-.f-sub{font-size:.78rem;color:#888;text-align:center;margin-bottom:24px;}
-.f-card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:16px;}
-.f-section{font-size:.65rem;color:#999;text-transform:uppercase;letter-spacing:2px;font-weight:600;margin-bottom:12px;}
-.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.f-full{margin-bottom:12px;}
-.f-label{font-size:.72rem;color:#666;margin-bottom:4px;font-weight:500;}
-.f-inp{width:100%;background:#f8f8f8;border:1px solid #e5e5e5;border-radius:9px;padding:10px 13px;font-size:.88rem;outline:none;transition:border-color .2s;color:#1a1a1a;}
-.f-inp:focus{border-color:#8b6914;background:#fff;}
-.f-sel{width:100%;background:#f8f8f8;border:1px solid #e5e5e5;border-radius:9px;padding:10px 13px;font-size:.88rem;outline:none;color:#1a1a1a;}
-.logo-up{border:2px dashed #ddd;border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:border-color .2s;}
-.logo-up:hover{border-color:#8b6914;}
-.logo-up input{display:none;}
-.logo-preview{max-height:60px;max-width:200px;object-fit:contain;margin:8px auto;display:block;}
-.gen-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#8b6914,#d4a017);color:#fff;font-family:'Cinzel',serif;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:1px;}
-.gen-btn:hover{opacity:.9;}
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --border: #2a2a3d;
+      --accent: #00f5c4;
+      --accent2: #ff4d6d;
+      --text: #e8e8f0;
+      --muted: #6666aa;
+    }
 
-/* CERTIFICATE PAGE */
-#certPage{display:none;padding:20px;}
-.cert-actions{display:flex;gap:10px;max-width:900px;margin:0 auto 16px;flex-wrap:wrap;}
-.act-btn{padding:10px 20px;border-radius:9px;border:none;font-size:.85rem;font-weight:600;cursor:pointer;}
-.act-back{background:#f0f0f0;color:#333;}
-.act-print{background:linear-gradient(135deg,#8b6914,#d4a017);color:#fff;}
-.act-download{background:#1a1a1a;color:#fff;}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-x: hidden;
+    }
 
-/* CERTIFICATE */
-.cert-wrap{max-width:900px;margin:0 auto;}
-#certificate{
-  background:#fff;
-  width:100%;
-  aspect-ratio:1.414/1;
-  position:relative;
-  overflow:hidden;
-  font-family:'EB Garamond',serif;
-  box-shadow:0 8px 40px rgba(0,0,0,.15);
-}
+    /* Animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.3;
+      z-index: 0;
+    }
 
-/* Border Design */
-.cert-outer-border{position:absolute;inset:12px;border:3px solid #8b6914;}
-.cert-inner-border{position:absolute;inset:18px;border:1px solid #d4a017;}
-.cert-corner{position:absolute;width:40px;height:40px;}
-.cert-corner svg{width:100%;height:100%;}
-.cc-tl{top:6px;left:6px;}
-.cc-tr{top:6px;right:6px;transform:scaleX(-1);}
-.cc-bl{bottom:6px;left:6px;transform:scaleY(-1);}
-.cc-br{bottom:6px;right:6px;transform:scale(-1);}
+    /* Glowing orb */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,245,196,0.08) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
 
-.cert-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:5% 8%;}
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 560px;
+    }
 
-.cert-logo{margin-bottom:2%;height:60px;object-fit:contain;}
-.cert-logo-placeholder{width:70px;height:70px;background:linear-gradient(135deg,#5c4200,#8b6914,#d4a017,#f5c842);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2%;box-shadow:0 3px 12px rgba(212,160,23,.5);border:2px solid #d4a017;}
-.cert-logo-placeholder span{font-family:'Cinzel',serif;color:#fff;font-size:1.2rem;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.4);}
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeDown 0.7s ease both;
+    }
 
-.cert-university{font-family:'Cinzel',serif;font-size:1.4em;color:#2c1810;font-weight:700;text-align:center;letter-spacing:2px;margin-bottom:.5%;}
-.cert-university-sub{font-size:.75em;color:#666;letter-spacing:3px;text-transform:uppercase;margin-bottom:3%;}
+    .header .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
 
-.cert-presents{font-size:.7em;color:#888;letter-spacing:4px;text-transform:uppercase;margin-bottom:1%;}
-.cert-diploma-text{font-family:'Cinzel',serif;font-size:1.8em;color:#8b6914;font-weight:700;letter-spacing:3px;margin-bottom:2%;}
+    .header h1 {
+      font-size: clamp(2.2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
 
-.cert-to{font-size:.7em;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:.5%;}
-.cert-name{font-family:'Cinzel',serif;font-size:2.2em;color:#1a1a1a;font-weight:700;text-align:center;border-bottom:1px solid #d4a017;padding-bottom:.5%;margin-bottom:2%;min-width:60%;}
+    .header h1 span {
+      color: var(--accent);
+      position: relative;
+    }
 
-.cert-body{font-size:.75em;color:#444;text-align:center;line-height:1.8;margin-bottom:3%;max-width:80%;}
+    .header p {
+      margin-top: 0.7rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 400;
+    }
 
-.cert-degree{font-family:'Cinzel',serif;font-size:1em;color:#2c1810;font-weight:700;letter-spacing:1px;}
-.cert-field{font-size:.8em;color:#8b6914;font-style:italic;margin-bottom:.5%;}
-.cert-honors{font-size:.65em;color:#666;letter-spacing:2px;text-transform:uppercase;margin-bottom:3%;}
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      animation: fadeUp 0.7s ease 0.15s both;
+      box-shadow: 0 0 60px rgba(0,245,196,0.04);
+    }
 
-.cert-bottom{display:flex;justify-content:space-between;align-items:flex-end;width:100%;margin-top:auto;}
+    /* Input area */
+    .input-group {
+      margin-bottom: 1.2rem;
+    }
 
-.cert-sig{text-align:center;flex:1;}
-.cert-sig-line{border-top:1px solid #333;margin-bottom:4px;margin-left:10%;margin-right:10%;}
-.cert-sig-name{font-family:'Cinzel',serif;font-size:.65em;color:#1a1a1a;font-weight:600;}
-.cert-sig-title{font-size:.55em;color:#888;}
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      font-family: 'Space Mono', monospace;
+    }
 
-.cert-qr{text-align:center;flex:0 0 auto;}
-.cert-qr-label{font-size:.5em;color:#888;letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+    textarea, input[type="text"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      padding: 0.85rem 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      resize: vertical;
+    }
 
-.cert-seal{text-align:center;flex:1;}
-.seal-circle{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#d4a017);border:3px solid #8b6914;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;box-shadow:0 2px 8px rgba(139,105,20,.3);}
-.seal-inner{width:55px;height:55px;border-radius:50%;border:1px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;flex-direction:column;}
-.seal-inner span{font-family:'Cinzel',serif;color:#fff;font-size:.35em;font-weight:700;letter-spacing:1px;text-align:center;line-height:1.3;}
-.cert-date{font-size:.55em;color:#888;text-align:center;}
+    textarea:focus, input[type="text"]:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,245,196,0.1);
+    }
 
-@media print{
-  body{background:#fff;}
-  #certPage{padding:0;}
-  .cert-actions{display:none;}
-  #certificate{box-shadow:none;width:297mm;height:210mm;}
-}
-.type-btn{background:#fff;border:2px solid #e5e5e5;border-radius:12px;padding:14px;text-align:center;cursor:pointer;font-size:.78rem;color:#333;transition:all .2s;line-height:1.6;}
-.type-btn:hover{border-color:#8b6914;}
-.type-btn.on{border-color:#8b6914;background:linear-gradient(135deg,rgba(139,105,20,.08),rgba(212,160,23,.05));}
-.type-btn strong{display:block;font-size:.88rem;color:#1a1a1a;}
-.type-btn small{color:#888;font-size:.7rem;}
-/* Dynamic sections */
-.cert-section{display:none;}
-.cert-section.on{display:block;}
-</style>
+    textarea { min-height: 90px; }
+
+    select option { background: var(--surface); }
+
+    /* Options row */
+    .options-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .color-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .color-pick {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem 0.85rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .color-pick:hover { border-color: var(--accent); }
+
+    .color-pick input[type="color"] {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: none;
+      padding: 0;
+    }
+
+    .color-pick span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* Generate button */
+    .btn-generate {
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: #0a0a0f;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-generate::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+    }
+
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,245,196,0.35);
+    }
+
+    .btn-generate:active { transform: translateY(0); }
+
+    /* QR Output */
+    .qr-output {
+      margin-top: 2rem;
+      display: none;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .qr-output.visible { display: block; }
+
+    .qr-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0,245,196,0.15);
+    }
+
+    .qr-box::before, .qr-box::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: var(--accent);
+      border-style: solid;
+    }
+
+    .qr-box::before {
+      top: -4px; left: -4px;
+      border-width: 3px 0 0 3px;
+      border-radius: 4px 0 0 0;
+    }
+
+    .qr-box::after {
+      bottom: -4px; right: -4px;
+      border-width: 0 3px 3px 0;
+      border-radius: 0 0 4px 0;
+    }
+
+    #qrcode { display: flex; justify-content: center; }
+    #qrcode canvas, #qrcode img { border-radius: 8px; }
+
+    /* Actions */
+    .qr-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 1.2rem;
+    }
+
+    .btn-action {
+      padding: 0.75rem;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .btn-download {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .btn-download:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-copy {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .btn-copy:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    /* Info strip */
+    .qr-info {
+      margin-top: 1rem;
+      padding: 0.7rem 1rem;
+      background: rgba(0,245,196,0.05);
+      border: 1px solid rgba(0,245,196,0.15);
+      border-radius: 8px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .qr-info span { color: var(--accent); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--accent);
+      color: #0a0a0f;
+      padding: 0.7rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* Animations */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      animation: fadeUp 0.7s ease 0.3s both;
+    }
+  </style>
 </head>
 <body>
 
-<!-- PASSWORD GATE -->
-<div id="pwGate" style="position:fixed;inset:0;background:#0c0c0c;z-index:9999;display:flex;align-items:center;justify-content:center;">
-<div style="background:#161616;border:1px solid #2a2a2a;border-radius:20px;padding:32px;width:90%;max-width:360px;text-align:center;">
-<div style="font-size:2rem;margin-bottom:10px;">🎓</div>
-<div style="font-family:'Cinzel',serif;font-size:1.1rem;color:#fff;margin-bottom:20px;">5ChromaBet</div>
-<input id="pwInp" type="password" placeholder="Password daalo" style="width:100%;background:#111;border:2px solid #333;border-radius:10px;padding:14px;color:#fff;font-size:1.1rem;outline:none;margin-bottom:12px;text-align:center;"/>
-<button onclick="checkPw()" style="width:100%;padding:14px;border-radius:10px;border:none;background:#d4a017;color:#000;font-weight:700;font-size:1rem;cursor:pointer;">ENTER</button>
-<div id="pwErr" style="color:#ef4444;font-size:.8rem;margin-top:10px;display:none;">❌ Galat password!</div>
-</div>
-</div>
+  <div class="wrapper">
 
-<!-- FORM -->
-<div id="formPage" style="display:none;">
-  <div class="f-title">🏆 5ChromaBet — Certificate Generator</div>
-  <div class="f-sub">Type select karo aur details bharo</div>
+    <div class="header">
+      <span class="tag">// instant generate</span>
+      <h1>QR <span>Code</span><br>Generator</h1>
+      <p>ਕੁਝ ਵੀ ਲਿਖੋ — QR ਬਣ ਜਾਵੇਗਾ</p>
+    </div>
 
-  <!-- TYPE SELECT -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
-    <div class="type-btn on" onclick="setType('diploma')" id="t-diploma">🎓<br><strong>Diploma</strong><br><small>Graduation</small></div>
-    <div class="type-btn" onclick="setType('achievement')" id="t-achievement">🏆<br><strong>Achievement</strong><br><small>Sports/Awards</small></div>
-    <div class="type-btn" onclick="setType('training')" id="t-training">📚<br><strong>Training</strong><br><small>Education/Course</small></div>
-    <div class="type-btn" onclick="setType('business')" id="t-business">💼<br><strong>Business</strong><br><small>Organization</small></div>
-    <div class="type-btn" onclick="setType('martial')" id="t-martial" style="grid-column:span 2;">🥋<br><strong>Martial Arts</strong><br><small>Belt/Rank Certificate</small></div>
-  </div>
+    <div class="card">
 
-  <!-- DIPLOMA SECTION -->
-  <div id="sec-diploma" class="cert-section on">
-  <div class="f-card">
-    <div class="f-section">University / Institution</div>
-    <div class="f-full">
-      <div class="f-label">University / College Name *</div>
-      <input class="f-inp" id="uniName" placeholder="e.g. Punjab University, Chandigarh"/>
-    </div>
-    <div class="f-full">
-      <div class="f-label">Tagline / Location</div>
-      <input class="f-inp" id="uniSub" placeholder="e.g. Established 1882 · Chandigarh, India"/>
-    </div>
-    <div class="f-full">
-      <div class="f-label">University Logo (optional)</div>
-      <div class="logo-up" onclick="document.getElementById('logoFile').click()">
-        <input type="file" id="logoFile" accept="image/*" onchange="loadLogo(this)"/>
-        <div id="logoPlaceholder">📷 Click to upload logo</div>
-        <img id="logoImg" class="logo-preview" style="display:none;"/>
-      </div>
-    </div>
-  </div>
-
-  <div class="f-card">
-    <div class="f-section">Student Details</div>
-    <div class="f-full">
-      <div class="f-label">Student Full Name *</div>
-      <input class="f-inp" id="stuName" placeholder="e.g. Bhupinder Singh"/>
-    </div>
-    <div class="f-row">
-      <div>
-        <div class="f-label">Enrollment Number</div>
-        <input class="f-inp" id="enrollNo" placeholder="e.g. 2024-MBA-0421"/>
-      </div>
-      <div>
-        <div class="f-label">Roll Number</div>
-        <input class="f-inp" id="rollNo" placeholder="e.g. 1234"/>
-      </div>
-    </div>
-  </div>
-
-  <div class="f-card">
-    <div class="f-section">Degree Details</div>
-    <div class="f-row">
-      <div>
-        <div class="f-label">Degree *</div>
-        <select class="f-sel" id="degree">
-          <option>Bachelor of Arts (B.A.)</option>
-          <option>Bachelor of Science (B.Sc.)</option>
-          <option>Bachelor of Commerce (B.Com.)</option>
-          <option>Bachelor of Technology (B.Tech.)</option>
-          <option>Bachelor of Engineering (B.E.)</option>
-          <option>Master of Arts (M.A.)</option>
-          <option>Master of Science (M.Sc.)</option>
-          <option>Master of Business Administration (MBA)</option>
-          <option>Doctor of Philosophy (Ph.D.)</option>
-          <option>Custom...</option>
-        </select>
-      </div>
-      <div>
-        <div class="f-label">Field / Major *</div>
-        <input class="f-inp" id="major" placeholder="e.g. Computer Science"/>
-      </div>
-    </div>
-    <div class="f-full" id="customDegreeBox" style="display:none;">
-      <div class="f-label">Custom Degree Name</div>
-      <input class="f-inp" id="customDegree" placeholder="Enter degree name"/>
-    </div>
-    <div class="f-row">
-      <div>
-        <div class="f-label">Honors / Grade</div>
-        <select class="f-sel" id="honors">
-          <option value="">— None —</option>
-          <option>With Distinction</option>
-          <option>With Honors</option>
-          <option>Summa Cum Laude</option>
-          <option>Magna Cum Laude</option>
-          <option>Cum Laude</option>
-          <option>First Class</option>
-          <option>Second Class</option>
-        </select>
-      </div>
-      <div>
-        <div class="f-label">Graduation Year *</div>
-        <input class="f-inp" id="gradYear" placeholder="e.g. 2024" value="2024"/>
-      </div>
-    </div>
-    <div class="f-full">
-      <div class="f-label">Convocation Date</div>
-      <input class="f-inp" type="date" id="certDate"/>
-    </div>
-  </div>
-
-  <div class="f-card">
-    <div class="f-section">Signatures</div>
-    <div class="f-row">
-      <div>
-        <div class="f-label">Vice Chancellor / Principal</div>
-        <input class="f-inp" id="vcName" placeholder="Dr. Rajinder Kumar"/>
-      </div>
-      <div>
-        <div class="f-label">Registrar</div>
-        <input class="f-inp" id="regName" placeholder="Prof. Suresh Sharma"/>
-      </div>
-    </div>
-  </div>
-
-  <div class="f-card">
-    <div class="f-section">Certificate ID & QR Code</div>
-    <div class="f-row">
-      <div>
-        <div class="f-label">Certificate Number *</div>
-        <input class="f-inp" id="certNo" placeholder="e.g. PU/2024/001234"/>
-      </div>
-      <div>
-        <div class="f-label">Verification URL (optional)</div>
-        <input class="f-inp" id="verifyUrl" placeholder="https://verify.yoursite.com"/>
-      </div>
-    </div>
-    <div style="font-size:.72rem;color:#888;">QR code scan karne pe student ki saari details dikhegi</div>
-  </div>
-
-  </div><!-- /sec-diploma -->
-
-  <!-- ACHIEVEMENT SECTION -->
-  <div id="sec-achievement" class="cert-section">
-  <div class="f-card">
-    <div class="f-section">Organization / Event</div>
-    <div class="f-full"><div class="f-label">Organization Name *</div><input class="f-inp" id="a-org" placeholder="e.g. Punjab Sports Academy"/></div>
-    <div class="f-full"><div class="f-label">Event Name *</div><input class="f-inp" id="a-event" placeholder="e.g. State Level Cricket Championship 2024"/></div>
-  </div>
-  <div class="f-card">
-    <div class="f-section">Recipient</div>
-    <div class="f-full"><div class="f-label">Name *</div><input class="f-inp" id="a-name" placeholder="e.g. Bhupinder Singh"/></div>
-    <div class="f-row">
-      <div><div class="f-label">Achievement *</div><select class="f-sel" id="a-pos"><option>1st Place 🥇</option><option>2nd Place 🥈</option><option>3rd Place 🥉</option><option>Participation</option><option>Best Player</option><option>MVP</option><option>Custom...</option></select></div>
-      <div><div class="f-label">Sport / Category</div><input class="f-inp" id="a-sport" placeholder="e.g. Cricket, Football"/></div>
-    </div>
-    <div class="f-row">
-      <div><div class="f-label">Date</div><input class="f-inp" type="date" id="a-date"/></div>
-      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="a-certno" placeholder="ACH/2024/001"/></div>
-    </div>
-  </div>
-  <div class="f-card">
-    <div class="f-section">Authorized By</div>
-    <div class="f-row">
-      <div><div class="f-label">President / Director</div><input class="f-inp" id="a-sig1" placeholder="Name"/></div>
-      <div><div class="f-label">Secretary</div><input class="f-inp" id="a-sig2" placeholder="Name"/></div>
-    </div>
-  </div>
-  </div><!-- /sec-achievement -->
-
-  <!-- TRAINING SECTION -->
-  <div id="sec-training" class="cert-section">
-  <div class="f-card">
-    <div class="f-section">Training Institute</div>
-    <div class="f-full"><div class="f-label">Institute Name *</div><input class="f-inp" id="tr-inst" placeholder="e.g. Digital Skills Academy"/></div>
-    <div class="f-full"><div class="f-label">Course Name *</div><input class="f-inp" id="tr-course" placeholder="e.g. Advanced Web Development"/></div>
-  </div>
-  <div class="f-card">
-    <div class="f-section">Participant</div>
-    <div class="f-full"><div class="f-label">Name *</div><input class="f-inp" id="tr-name" placeholder="e.g. Bhupinder Singh"/></div>
-    <div class="f-row">
-      <div><div class="f-label">Duration</div><input class="f-inp" id="tr-dur" placeholder="e.g. 3 Months / 40 Hours"/></div>
-      <div><div class="f-label">Grade / Score</div><input class="f-inp" id="tr-grade" placeholder="e.g. A+ / 95%"/></div>
-    </div>
-    <div class="f-row">
-      <div><div class="f-label">Completion Date</div><input class="f-inp" type="date" id="tr-date"/></div>
-      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="tr-certno" placeholder="TR/2024/001"/></div>
-    </div>
-  </div>
-  <div class="f-card">
-    <div class="f-section">Signatures</div>
-    <div class="f-row">
-      <div><div class="f-label">Director / Principal</div><input class="f-inp" id="tr-sig1" placeholder="Name"/></div>
-      <div><div class="f-label">Trainer / Instructor</div><input class="f-inp" id="tr-sig2" placeholder="Name"/></div>
-    </div>
-  </div>
-  </div><!-- /sec-training -->
-
-  <!-- BUSINESS SECTION -->
-  <div id="sec-business" class="cert-section">
-  <div class="f-card">
-    <div class="f-section">Organization</div>
-    <div class="f-full"><div class="f-label">Organization Name *</div><input class="f-inp" id="b-org" placeholder="e.g. Punjab Chamber of Commerce"/></div>
-    <div class="f-full"><div class="f-label">Certificate Type *</div><select class="f-sel" id="b-type"><option>Certificate of Membership</option><option>Certificate of Excellence</option><option>Certificate of Appreciation</option><option>Certificate of Recognition</option><option>Business License Certificate</option></select></div>
-  </div>
-  <div class="f-card">
-    <div class="f-section">Recipient</div>
-    <div class="f-full"><div class="f-label">Name / Company *</div><input class="f-inp" id="b-name" placeholder="e.g. Bhupinder Singh / Singh Enterprises"/></div>
-    <div class="f-full"><div class="f-label">For / Reason</div><input class="f-inp" id="b-reason" placeholder="e.g. Outstanding contribution to trade..."/></div>
-    <div class="f-row">
-      <div><div class="f-label">Date</div><input class="f-inp" type="date" id="b-date"/></div>
-      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="b-certno" placeholder="BIZ/2024/001"/></div>
-    </div>
-  </div>
-  <div class="f-card">
-    <div class="f-section">Authorized By</div>
-    <div class="f-row">
-      <div><div class="f-label">President / CEO</div><input class="f-inp" id="b-sig1" placeholder="Name"/></div>
-      <div><div class="f-label">Secretary / Director</div><input class="f-inp" id="b-sig2" placeholder="Name"/></div>
-    </div>
-  </div>
-  </div><!-- /sec-business -->
-
-  <!-- MARTIAL ARTS SECTION -->
-  <div id="sec-martial" class="cert-section">
-  <div class="f-card">
-    <div class="f-section">Martial Arts Academy</div>
-    <div class="f-full"><div class="f-label">Academy / Dojo Name *</div><input class="f-inp" id="m-acad" placeholder="e.g. Punjab Martial Arts Academy"/></div>
-    <div class="f-full"><div class="f-label">Martial Art Style *</div><input class="f-inp" id="m-style" placeholder="e.g. Karate, Taekwondo, Kung Fu, Pencak Silat"/></div>
-  </div>
-  <div class="f-card">
-    <div class="f-section">Student</div>
-    <div class="f-full"><div class="f-label">Student Name *</div><input class="f-inp" id="m-name" placeholder="e.g. Bhupinder Singh"/></div>
-    <div class="f-row">
-      <div><div class="f-label">Belt / Rank Awarded *</div><select class="f-sel" id="m-belt"><option>White Belt</option><option>Yellow Belt</option><option>Orange Belt</option><option>Green Belt</option><option>Blue Belt</option><option>Purple Belt</option><option>Brown Belt</option><option>Red Belt</option><option>Black Belt — 1st Dan</option><option>Black Belt — 2nd Dan</option><option>Black Belt — 3rd Dan</option><option>Black Belt — 4th Dan</option><option>Master</option><option>Grand Master</option></select></div>
-      <div><div class="f-label">Years of Training</div><input class="f-inp" id="m-years" placeholder="e.g. 3 Years"/></div>
-    </div>
-    <div class="f-row">
-      <div><div class="f-label">Grading Date</div><input class="f-inp" type="date" id="m-date"/></div>
-      <div><div class="f-label">Certificate No.</div><input class="f-inp" id="m-certno" placeholder="MA/2024/001"/></div>
-    </div>
-  </div>
-  <div class="f-card">
-    <div class="f-section">Authorized By</div>
-    <div class="f-row">
-      <div><div class="f-label">Head Instructor / Sensei</div><input class="f-inp" id="m-sig1" placeholder="Name"/></div>
-      <div><div class="f-label">Association President</div><input class="f-inp" id="m-sig2" placeholder="Name"/></div>
-    </div>
-  </div>
-  </div><!-- /sec-martial -->
-
-  <button class="gen-btn" id="genBtn" onclick="generateCert()">🎓 Generate Certificate</button>
-  <button onclick="showRecords()" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;background:#f8f8f8;color:#666;font-family:'Cinzel',serif;font-size:.85rem;cursor:pointer;margin-top:8px;">📋 View All Records</button>
-</div>
-
-<!-- CERTIFICATE -->
-<div id="certPage" style="display:none;">
-  <div class="cert-actions">
-    <button class="act-btn act-back" onclick="goBack()">← Edit Details</button>
-    <button class="act-btn act-print" onclick="window.print()">🖨️ Print Certificate</button>
-    <button class="act-btn act-download" onclick="downloadCert()">⬇️ Save as PDF</button>
-    <button class="act-btn" style="background:#1a1a1a;color:#fff;" onclick="showRecords()">📋 All Records</button>
-  </div>
-  <div class="cert-wrap">
-    <div id="certificate">
-      <!-- Borders -->
-      <div class="cert-outer-border"></div>
-      <div class="cert-inner-border"></div>
-
-      <!-- Corner ornaments -->
-      <div class="cert-corner cc-tl">
-        <svg viewBox="0 0 40 40" fill="none">
-          <path d="M2 2 L20 2 L20 6 L6 6 L6 20 L2 20 Z" fill="#8b6914"/>
-          <path d="M8 8 L20 8 L20 10 L10 10 L10 20 L8 20 Z" fill="#d4a017"/>
-          <circle cx="4" cy="4" r="2" fill="#d4a017"/>
-        </svg>
-      </div>
-      <div class="cert-corner cc-tr">
-        <svg viewBox="0 0 40 40" fill="none">
-          <path d="M2 2 L20 2 L20 6 L6 6 L6 20 L2 20 Z" fill="#8b6914"/>
-          <path d="M8 8 L20 8 L20 10 L10 10 L10 20 L8 20 Z" fill="#d4a017"/>
-          <circle cx="4" cy="4" r="2" fill="#d4a017"/>
-        </svg>
-      </div>
-      <div class="cert-corner cc-bl">
-        <svg viewBox="0 0 40 40" fill="none">
-          <path d="M2 2 L20 2 L20 6 L6 6 L6 20 L2 20 Z" fill="#8b6914"/>
-          <path d="M8 8 L20 8 L20 10 L10 10 L10 20 L8 20 Z" fill="#d4a017"/>
-          <circle cx="4" cy="4" r="2" fill="#d4a017"/>
-        </svg>
-      </div>
-      <div class="cert-corner cc-br">
-        <svg viewBox="0 0 40 40" fill="none">
-          <path d="M2 2 L20 2 L20 6 L6 6 L6 20 L2 20 Z" fill="#8b6914"/>
-          <path d="M8 8 L20 8 L20 10 L10 10 L10 20 L8 20 Z" fill="#d4a017"/>
-          <circle cx="4" cy="4" r="2" fill="#d4a017"/>
-        </svg>
+      <div class="input-group">
+        <label>ਟੈਕਸਟ / URL / ਕੋਈ ਵੀ ਚੀਜ਼</label>
+        <textarea id="qrInput" placeholder="https://example.com  ਜਾਂ  ਕੋਈ ਵੀ ਲਿਖੋ..."></textarea>
       </div>
 
-      <div class="cert-content">
-        <!-- Logo -->
-        <div id="cert-logo-area"></div>
-
-        <!-- University -->
-        <div class="cert-university" id="c-uni">PUNJAB UNIVERSITY</div>
-        <div class="cert-university-sub" id="c-uni-sub">Established 1882 · Chandigarh, India</div>
-
-        <!-- Divider -->
-        <div style="width:60%;height:1px;background:linear-gradient(90deg,transparent,#d4a017,transparent);margin-bottom:2%;"></div>
-
-        <div class="cert-presents">This is to certify that</div>
-
-        <div class="cert-name" id="c-name">STUDENT NAME</div>
-
-        <div class="cert-body" id="c-body">
-          Having successfully completed all requirements prescribed by the University<br>
-          is hereby awarded the degree of
+      <div class="options-row">
+        <div class="input-group" style="margin:0">
+          <label>Size</label>
+          <select id="qrSize">
+            <option value="128">Small (128px)</option>
+            <option value="200" selected>Medium (200px)</option>
+            <option value="256">Large (256px)</option>
+            <option value="320">XL (320px)</option>
+          </select>
         </div>
-
-        <div class="cert-diploma-text" id="c-degree">BACHELOR OF TECHNOLOGY</div>
-        <div class="cert-field" id="c-field">in Computer Science & Engineering</div>
-        <div class="cert-honors" id="c-honors"></div>
-
-        <!-- Extra Box -->
-        <div id="c-extra" style="display:none;border:1px solid #d4a017;border-radius:8px;padding:8px 14px;margin-bottom:2%;text-align:center;min-width:60%;background:rgba(212,160,23,.04);">
-          <div id="c-extra-title" style="font-family:'Cinzel',serif;font-size:.6em;color:#8b6914;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;"></div>
-          <div id="c-extra-content" style="font-size:.7em;color:#444;line-height:1.7;font-style:italic;"></div>
+        <div class="input-group" style="margin:0">
+          <label>Error Correction</label>
+          <select id="qrEcc">
+            <option value="L">Low (L)</option>
+            <option value="M" selected>Medium (M)</option>
+            <option value="Q">High (Q)</option>
+            <option value="H">Max (H)</option>
+          </select>
         </div>
-
-        <!-- Bottom -->
-        <div class="cert-bottom">
-          <div class="cert-sig">
-            <div class="cert-sig-line"></div>
-            <div class="cert-sig-name" id="c-vc">Dr. Vice Chancellor</div>
-            <div class="cert-sig-title">Vice Chancellor</div>
-          </div>
-
-          <div class="cert-seal">
-            <div class="seal-circle">
-              <div class="seal-inner">
-                <span id="c-seal-txt">PU<br>2024</span>
-              </div>
-            </div>
-            <div class="cert-date" id="c-date">Date: —</div>
-          </div>
-
-          <div class="cert-qr">
-            <div id="qrcode"></div>
-            <div class="cert-qr-label">Scan to Verify</div>
-          </div>
-
-          <div class="cert-sig">
-            <div class="cert-sig-line"></div>
-            <div class="cert-sig-name" id="c-reg">Prof. Registrar</div>
-            <div class="cert-sig-title">Registrar</div>
-          </div>
-        </div>
-
-        <!-- Cert No -->
-        <div style="font-size:.5em;color:#aaa;margin-top:1%;letter-spacing:2px;" id="c-certno">Certificate No: —</div>
-        <div style="font-size:.45em;color:#8b6914;margin-top:.5%;letter-spacing:1px;" id="c-verifylink">🔍 Verify: 5chromabet.com/verify.html</div>
       </div>
-    </div>
-  </div>
-</div>
 
-<script>
-// Certificate type
-let certType = 'diploma';
-function setType(t){
-  certType = t;
-  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('on'));
-  document.getElementById('t-'+t).classList.add('on');
-  document.querySelectorAll('.cert-section').forEach(s=>s.classList.remove('on'));
-  document.getElementById('sec-'+t).classList.add('on');
-  const labels={diploma:'🎓 Generate Diploma',achievement:'🏆 Generate Achievement Certificate',training:'📚 Generate Training Certificate',business:'💼 Generate Business Certificate',martial:'🥋 Generate Martial Arts Certificate'};
-  document.getElementById('genBtn').textContent=labels[t];
-}
-
-// Password check
-
-
-// Firebase init
-const firebaseConfig = {
-  apiKey: "AIzaSyAbWxdOBmH1Km1BYMV3hDeojCRRlZkr3oo",
-  authDomain: "chromabet-34c53.firebaseapp.com",
-  databaseURL: "https://chromabet-34c53-default-rtdb.firebaseio.com",
-  projectId: "chromabet-34c53"
-};
-if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-const CERTDB = firebase.database();
-
-// Password check
-function checkPw(){
-  var pw = document.getElementById('pwInp').value;
-  if(pw === 'cert@5chroma'){
-    sessionStorage.setItem('cert_auth','1');
-    document.getElementById('pwGate').style.display='none';
-    document.getElementById('formPage').style.display='block';
-  } else {
-    document.getElementById('pwErr').style.display='block';
-    document.getElementById('pwInp').value='';
-  }
-}
-document.addEventListener('keyup',function(e){
-  if(e.key==='Enter') checkPw();
-});
-// Auto login check
-if(sessionStorage.getItem('cert_auth')==='1'){
-  document.getElementById('pwGate').style.display='none';
-  document.getElementById('formPage').style.display='block';
-}
-
-// Show custom degree input
-document.getElementById('degree').addEventListener('change',function(){
-  document.getElementById('customDegreeBox').style.display=this.value==='Custom...'?'block':'none';
-});
-
-// Set today's date
-document.getElementById('certDate').valueAsDate=new Date();
-['a-date','tr-date','b-date','m-date'].forEach(id=>{
-  const el=document.getElementById(id);if(el)el.valueAsDate=new Date();
-});
-
-// Load logo
-function loadLogo(input){
-  if(input.files&&input.files[0]){
-    const reader=new FileReader();
-    reader.onload=e=>{
-      document.getElementById('logoImg').src=e.target.result;
-      document.getElementById('logoImg').style.display='block';
-      document.getElementById('logoPlaceholder').style.display='none';
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-
-function generateCert(){
-  try {
-  // Get values based on certType
-  let uniName,uniSub,stuName,enrollNo='',rollNo='',degree,major='',honors='',gradYear='2024',certDate,vcName,regName,certNo,verifyUrl='';
-
-  if(certType==='diploma'||!certType){
-    uniName=document.getElementById('uniName').value||'University Name';
-    uniSub=document.getElementById('uniSub').value||'';
-    stuName=document.getElementById('stuName').value||'Student Name';
-    enrollNo=document.getElementById('enrollNo').value||'';
-    rollNo=document.getElementById('rollNo').value||'';
-    degree=document.getElementById('degree').value;
-    if(degree==='Custom...') degree=document.getElementById('customDegree').value||'Degree';
-    major=document.getElementById('major').value||'';
-    honors=document.getElementById('honors').value||'';
-    gradYear=document.getElementById('gradYear').value||'2024';
-    certDate=document.getElementById('certDate').value;
-    vcName=document.getElementById('vcName').value||'Vice Chancellor';
-    regName=document.getElementById('regName').value||'Registrar';
-    certNo=document.getElementById('certNo').value||'CERT/'+Date.now();
-    verifyUrl=document.getElementById('verifyUrl').value||'';
-  } else if(certType==='achievement'){
-    uniName=document.getElementById('a-org').value||'Organization';
-    uniSub='Achievement Certificate';
-    stuName=document.getElementById('a-name').value||'Name';
-    degree=document.getElementById('a-pos').value||'1st Place';
-    major=document.getElementById('a-sport').value||'';
-    certDate=document.getElementById('a-date').value;
-    vcName=document.getElementById('a-sig1').value||'President';
-    regName=document.getElementById('a-sig2').value||'Secretary';
-    certNo=document.getElementById('a-certno').value||'ACH/'+Date.now();
-    gradYear=new Date().getFullYear().toString();
-  } else if(certType==='training'){
-    uniName=document.getElementById('tr-inst').value||'Institute';
-    uniSub='Training Certificate';
-    stuName=document.getElementById('tr-name').value||'Name';
-    degree=document.getElementById('tr-course').value||'Course';
-    major=document.getElementById('tr-dur').value||'';
-    honors=document.getElementById('tr-grade').value||'';
-    certDate=document.getElementById('tr-date').value;
-    vcName=document.getElementById('tr-sig1').value||'Director';
-    regName=document.getElementById('tr-sig2').value||'Trainer';
-    certNo=document.getElementById('tr-certno').value||'TR/'+Date.now();
-    gradYear=new Date().getFullYear().toString();
-  } else if(certType==='business'){
-    uniName=document.getElementById('b-org').value||'Organization';
-    uniSub='Business Certificate';
-    stuName=document.getElementById('b-name').value||'Name';
-    degree=document.getElementById('b-type').value||'Certificate';
-    major=document.getElementById('b-reason').value||'';
-    certDate=document.getElementById('b-date').value;
-    vcName=document.getElementById('b-sig1').value||'President';
-    regName=document.getElementById('b-sig2').value||'Secretary';
-    certNo=document.getElementById('b-certno').value||'BIZ/'+Date.now();
-    gradYear=new Date().getFullYear().toString();
-  } else if(certType==='martial'){
-    uniName=document.getElementById('m-acad').value||'Academy';
-    uniSub=document.getElementById('m-style').value||'Martial Arts';
-    stuName=document.getElementById('m-name').value||'Student';
-    degree=document.getElementById('m-belt').value||'Belt';
-    major=document.getElementById('m-years').value||'';
-    certDate=document.getElementById('m-date').value;
-    vcName=document.getElementById('m-sig1').value||'Head Instructor';
-    regName=document.getElementById('m-sig2').value||'President';
-    certNo=document.getElementById('m-certno').value||'MA/'+Date.now();
-    gradYear=new Date().getFullYear().toString();
-  }
-
-  // Fill certificate
-  document.getElementById('c-uni').textContent=uniName.toUpperCase();
-  document.getElementById('c-uni-sub').textContent=uniSub;
-  document.getElementById('c-name').textContent=stuName.toUpperCase();
-  document.getElementById('c-degree').textContent=degree.toUpperCase();
-  document.getElementById('c-field').textContent=major?'in '+major:'';
-  document.getElementById('c-honors').textContent=honors;
-  document.getElementById('c-vc').textContent=vcName;
-  document.getElementById('c-reg').textContent=regName;
-  document.getElementById('c-certno').textContent='Certificate No: '+certNo;
-  document.getElementById('c-seal-txt').innerHTML=uniName.split(' ').map(w=>w[0]).join('')+'<br>'+gradYear;
-
-  // Date
-  if(certDate){
-    const d=new Date(certDate);
-    document.getElementById('c-date').textContent=d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
-  }
-
-  // Logo
-  const logoArea=document.getElementById('cert-logo-area');
-  const logoSrc=document.getElementById('logoImg').src;
-  if(logoSrc&&document.getElementById('logoImg').style.display!=='none'){
-    logoArea.innerHTML='<img src="'+logoSrc+'" class="cert-logo"/>';
-  } else {
-    const initials=uniName.split(' ').map(w=>w[0]).join('').slice(0,3);
-    logoArea.innerHTML='<div class="cert-logo-placeholder"><span>'+initials+'</span></div>';
-  }
-
-  // QR Code
-  document.getElementById('qrcode').innerHTML='';
-  // Extra box
-  const extraTitleEl = document.getElementById('extraTitle');
-  const extraContentEl = document.getElementById('extraContent');
-  const extraTitle = extraTitleEl ? extraTitleEl.value.trim() : '';
-  const extraContent = extraContentEl ? extraContentEl.value.trim() : '';
-  if(extraTitle || extraContent){
-    document.getElementById('c-extra').style.display='block';
-    document.getElementById('c-extra-title').textContent=extraTitle;
-    document.getElementById('c-extra-content').textContent=extraContent;
-  } else {
-    document.getElementById('c-extra').style.display='none';
-  }
-
-  // Save certificate to Firebase (accessible from ALL devices)
-  const certData = {
-    type: certType,
-    certNo, stuName, degree, major, uniName, uniSub,
-    gradYear, honors, vcName, regName, enrollNo, rollNo,
-    date: certDate, issued: new Date().toISOString()
-  };
-  // Save to Firebase
-  const safeKey = certNo.replace(/[.#$\/\[\]]/g,'_');
-  CERTDB.ref('certificates/' + safeKey).set(certData).catch(e=>console.log(e));
-  // Also save locally as backup
-  const allCerts = JSON.parse(localStorage.getItem('saved_certs')||'{}');
-  allCerts[certNo] = certData;
-  localStorage.setItem('saved_certs', JSON.stringify(allCerts));
-
-  // QR points to verify page with cert number
-  const baseUrl = window.location.href.replace('index.html','').replace(/\?.*$/,'');
-  const verifyLink = verifyUrl || (baseUrl + 'verify.html?id=' + encodeURIComponent(certNo));
-  const qrData = verifyLink;
-
-  new QRCode(document.getElementById('qrcode'),{
-    text:qrData,
-    width:70,height:70,
-    colorDark:'#1a1a1a',
-    colorLight:'#ffffff',
-    correctLevel:QRCode.CorrectLevel.M
-  });
-  
-  // Store verify link for display
-  window._lastVerifyLink = qrData;
-  const vl = document.getElementById('c-verifylink');
-  if(vl) vl.textContent = '🔍 Verify: ' + verifyLink;
-
-  document.getElementById('formPage').style.display='none';
-  document.getElementById('certPage').style.display='block';
-  window.scrollTo(0,0);
-  } catch(err){
-    alert('Error: ' + err.message);
-    console.error(err);
-  }
-}
-
-function goBack(){
-  document.getElementById('certPage').style.display='none';
-  document.getElementById('formPage').style.display='block';
-}
-
-function downloadCert(){
-  alert('Print option use karo → "Save as PDF" select karo for best quality!');
-  window.print();
-}
-</script>
-
-<!-- RECORDS MODAL -->
-<div id="recordsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;padding:16px;">
-  <div style="background:#fff;border-radius:18px;padding:24px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:#2c1810;">📋 Certificate Records</div>
-      <button onclick="closeRecords()" style="background:#f0f0f0;border:none;border-radius:7px;padding:6px 12px;cursor:pointer;font-size:.85rem;">✕ Close</button>
-    </div>
-    <div id="recordsList"></div>
-    <button onclick="clearRecords()" style="width:100%;padding:10px;border-radius:9px;border:1px solid #fca5a5;background:#fef2f2;color:#ef4444;font-weight:600;font-size:.82rem;cursor:pointer;margin-top:12px;">🗑️ Clear All Records</button>
-  </div>
-</div>
-
-<script>
-function showRecords(){
-  const all = JSON.parse(localStorage.getItem('saved_certs')||'{}');
-  const keys = Object.keys(all);
-  const list = document.getElementById('recordsList');
-  
-  if(!keys.length){
-    list.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:.85rem;">No records yet</div>';
-  } else {
-    const types={diploma:'🎓',achievement:'🏆',training:'📚',business:'💼',martial:'🥋'};
-    list.innerHTML = keys.map(k=>{
-      const d=all[k];
-      const issued=d.issued?new Date(d.issued).toLocaleDateString('en-IN'):'—';
-      return `<div style="background:#f8f8f8;border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
-        <div>
-          <div style="font-weight:700;font-size:.88rem;">${types[d.type]||'🎓'} ${d.stuName||'—'}</div>
-          <div style="font-size:.72rem;color:#888;margin-top:2px;">${d.degree||'—'} · ${d.uniName||'—'}</div>
-          <div style="font-size:.68rem;color:#aaa;margin-top:2px;">📋 ${k} · 📅 ${issued}</div>
+      <div class="color-row">
+        <div class="color-pick">
+          <input type="color" id="qrFg" value="#000000" />
+          <span>QR Color</span>
         </div>
-        <div style="display:flex;gap:6px;">
-          <a href="verify.html?id=${encodeURIComponent(k)}" target="_blank" style="background:linear-gradient(135deg,#8b6914,#d4a017);color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:.7rem;font-weight:700;cursor:pointer;text-decoration:none;">Verify</a>
-          <button onclick="deleteRecord('${k}')" style="background:#fef2f2;border:1px solid #fca5a5;border-radius:7px;padding:5px 10px;color:#ef4444;font-size:.7rem;font-weight:700;cursor:pointer;">Del</button>
+        <div class="color-pick">
+          <input type="color" id="qrBg" value="#ffffff" />
+          <span>Background</span>
         </div>
-      </div>`;
-    }).join('');
-  }
-  document.getElementById('recordsModal').style.display='flex';
-}
+      </div>
 
-function closeRecords(){
-  document.getElementById('recordsModal').style.display='none';
-}
+      <button class="btn-generate" onclick="generateQR()">⚡ Generate QR Code</button>
 
-function deleteRecord(k){
-  if(!confirm('Delete this record?')) return;
-  const all=JSON.parse(localStorage.getItem('saved_certs')||'{}');
-  delete all[k];
-  localStorage.setItem('saved_certs',JSON.stringify(all));
-  showRecords();
-}
+      <!-- QR Output -->
+      <div class="qr-output" id="qrOutput">
+        <div class="qr-box">
+          <div id="qrcode"></div>
+        </div>
+        <div class="qr-info">
+          <span id="charCount">0 chars</span>
+          <span id="qrTimestamp"></span>
+        </div>
+        <div class="qr-actions">
+          <button class="btn-action btn-download" onclick="downloadQR()">⬇ Download PNG</button>
+          <button class="btn-action btn-copy" onclick="copyText()">⎘ Copy Text</button>
+        </div>
+      </div>
 
-function clearRecords(){
-  if(!confirm('Clear ALL records?')) return;
-  localStorage.removeItem('saved_certs');
-  showRecords();
-}
+    </div>
 
-// Also show records from form page
-function showRecordsFromForm(){
-  showRecords();
-}
-</script>
+    <div class="footer">made with ♥ · QR Code Generator</div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let qrInstance = null;
+
+    function generateQR() {
+      const text = document.getElementById('qrInput').value.trim();
+      if (!text) { showToast('ਕੁਝ ਲਿਖੋ ਪਹਿਲਾਂ! 📝'); return; }
+
+      const size   = parseInt(document.getElementById('qrSize').value);
+      const ecc    = document.getElementById('qrEcc').value;
+      const fg     = document.getElementById('qrFg').value;
+      const bg     = document.getElementById('qrBg').value;
+
+      const eccMap = { L: QRCode.CorrectLevel.L, M: QRCode.CorrectLevel.M,
+                       Q: QRCode.CorrectLevel.Q, H: QRCode.CorrectLevel.H };
+
+      const container = document.getElementById('qrcode');
+      container.innerHTML = '';
+      if (qrInstance) { try { qrInstance.clear(); } catch(e){} }
+
+      qrInstance = new QRCode(container, {
+        text, width: size, height: size,
+        colorDark: fg, colorLight: bg,
+        correctLevel: eccMap[ecc]
+      });
+
+      document.getElementById('charCount').textContent = text.length + ' chars';
+      document.getElementById('qrTimestamp').textContent =
+        new Date().toLocaleTimeString('pa-IN');
+
+      const output = document.getElementById('qrOutput');
+      output.classList.remove('visible');
+      void output.offsetWidth;
+      output.classList.add('visible');
+
+      showToast('QR ਬਣ ਗਿਆ! ✅');
+    }
+
+    function downloadQR() {
+      const canvas = document.querySelector('#qrcode canvas');
+      if (!canvas) { showToast('ਪਹਿਲਾਂ QR ਬਣਾਓ'); return; }
+      const a = document.createElement('a');
+      a.download = 'qr-code.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      showToast('Download ਹੋ ਰਿਹਾ ਹੈ ⬇');
+    }
+
+    function copyText() {
+      const text = document.getElementById('qrInput').value;
+      if (!text) { showToast('ਕੁਝ ਨਹੀਂ ਕੋਪੀ ਕਰਨ ਲਈ'); return; }
+      navigator.clipboard.writeText(text).then(() => showToast('ਕੋਪੀ ਹੋ ਗਿਆ! ⎘'));
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // Enter key shortcut
+    document.getElementById('qrInput').addEventListener('keydown', e => {
+      if (e.ctrlKey && e.key === 'Enter') generateQR();
+    });
+  </script>
 </body>
 </html>
