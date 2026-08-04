@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sehaj Resort & Sandhu Enterprises – Khour Salarian, Nandpur, District Samba, J&K</title>
+<meta name="description" content="Sehaj Resort - Premium Event Venue for Marriages, Birthdays, Ring Ceremonies in Khour Salarian, Nandpur, District Samba, Jammu Kashmir. Sandhu Enterprises - GeM Portal Registered Government Supplier.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c9940a;--gold-light:#f0b429;--navy:#0f1e35;--navy-mid:#1a2f4e;--green:#1a4a2e;--green-mid:#2d6e46;--green-light:#3d8f5c;--cream:#faf7f0;--white:#fff;--muted:#6b7a8d}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,30,53,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,148,10,0.25);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:64px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold-light)}
+.nav-logo span{color:rgba(255,255,255,0.4);font-size:10px;display:block;letter-spacing:2px}
+.nav-links{display:flex;gap:4px;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:13px;padding:7px 12px;border-radius:6px;transition:all 0.2s}
+.nav-links a:hover{color:var(--gold-light);background:rgba(255,255,255,0.06)}
+.hero{min-height:100vh;background:linear-gradient(135deg,#060f1c 0%,#0f1e35 50%,#091a10 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 5% 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 20% 40%,rgba(201,148,10,0.07) 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 80% 60%,rgba(26,74,46,0.1) 0%,transparent 70%)}
+.hero-badge{display:inline-flex;align-items:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:30px;padding:6px 18px;margin-bottom:24px;animation:fadeDown 0.8s ease both}
+.hero-badge span{font-size:12px;color:rgba(255,255,255,0.6);letter-spacing:1px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,72px);color:#fff;line-height:1.1;margin-bottom:12px;animation:fadeDown 0.9s ease 0.1s both}
+.hero h1 em{color:var(--gold-light);font-style:italic}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.45);letter-spacing:1px;margin-bottom:48px;animation:fadeDown 0.9s 0.2s both}
+.hero-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:800px;width:100%;animation:fadeUp 1s 0.3s both}
+.hcard{border-radius:16px;padding:28px 24px;text-align:left;cursor:pointer;transition:all 0.3s;text-decoration:none;display:block}
+.hcard.s{background:linear-gradient(135deg,rgba(201,148,10,0.15),rgba(201,148,10,0.05));border:1px solid rgba(201,148,10,0.3)}
+.hcard.r{background:linear-gradient(135deg,rgba(26,74,46,0.3),rgba(26,74,46,0.1));border:1px solid rgba(61,143,92,0.3)}
+.hcard:hover{transform:translateY(-6px)}
+.hcard-icon{font-size:40px;margin-bottom:14px}
+.hcard-name{font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:6px}
+.hcard-name.g{color:var(--gold-light)}
+.hcard-name.gr{color:#6ddb96}
+.hcard-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:14px}
+.hcard-btn{display:inline-block;font-size:12px;font-weight:600;padding:7px 16px;border-radius:6px}
+.hcard-btn.g{background:var(--gold);color:#fff}
+.hcard-btn.gr{background:var(--green-mid);color:#fff}
+.sec{padding:80px 5%}
+.sec-tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.sec-tag.g{color:var(--gold)}
+.sec-tag.gr{color:var(--green-mid)}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,44px);line-height:1.2;margin-bottom:14px}
+.sec-sub{font-size:15px;color:var(--muted);line-height:1.7;max-width:520px}
+.divider{display:flex;align-items:center}
+.div-g{flex:1;height:5px;background:linear-gradient(90deg,var(--gold),var(--gold-light))}
+.div-gr{flex:1;height:5px;background:linear-gradient(90deg,var(--green-mid),var(--green-light))}
+.div-c{width:12px;height:12px;background:var(--cream);border:3px solid var(--navy);border-radius:50%;flex-shrink:0}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;max-width:1100px;margin:32px auto 0}
+.card{background:var(--white);border-radius:14px;padding:26px 22px;border:1px solid rgba(15,30,53,0.07);transition:all 0.3s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transform:scaleX(0);transition:transform 0.3s}
+.card:hover{transform:translateY(-5px);box-shadow:0 12px 32px rgba(15,30,53,0.1)}
+.card:hover::before{transform:scaleX(1)}
+.card.gc::before{background:linear-gradient(90deg,var(--green),var(--green-light))}
+.card-icon{font-size:36px;margin-bottom:12px}
+.card h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.card p{font-size:13px;color:var(--muted);line-height:1.6}
+.dark-sec{background:var(--navy);padding:60px 5%}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:48px;max-width:1000px;margin:32px auto 0;align-items:start}
+.cd{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding:14px 16px;background:rgba(255,255,255,0.05);border-radius:10px;border:1px solid rgba(201,148,10,0.2)}
+.cd-icon{font-size:20px;flex-shrink:0}
+.cd strong{display:block;font-size:10px;color:var(--gold-light);letter-spacing:1.5px;margin-bottom:2px}
+.cd span{font-size:13px;color:rgba(255,255,255,0.8);line-height:1.5}
+.cform{background:rgba(255,255,255,0.04);border-radius:14px;padding:28px;border:1px solid rgba(201,148,10,0.2)}
+.cform h3{font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:20px}
+.fg{margin-bottom:13px}
+.fg label{display:block;font-size:10px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:5px;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{width:100%;padding:10px 13px;border:1px solid rgba(255,255,255,0.1);border-radius:7px;background:rgba(255,255,255,0.06);color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold)}
+.fg select option{background:var(--navy)}
+.fg textarea{height:80px;resize:none}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-g{width:100%;background:var(--gold);color:#fff;border:none;padding:12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-top:4px}
+.btn-g:hover{background:var(--gold-light);color:var(--navy)}
+.btn-gr{width:100%;background:var(--green);color:#fff;border:none;padding:12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-top:4px}
+.btn-gr:hover{background:var(--green-mid)}
+.fsuc{display:none;text-align:center;padding:12px;font-weight:600;font-size:14px;border-radius:8px;margin-top:10px}
+.green-sec{background:var(--green);padding:60px 5%}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;max-width:1100px;margin:28px auto 0}
+.feat{text-align:center;padding:24px 16px;border-radius:12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);transition:all 0.3s}
+.feat:hover{background:rgba(255,255,255,0.12);transform:translateY(-4px)}
+.feat-icon{font-size:32px;margin-bottom:10px}
+.feat-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.feat-desc{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5}
+.light-sec{background:#fff;padding:60px 5%}
+.lcd{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding:14px 16px;background:var(--cream);border-radius:10px;border:1px solid rgba(26,74,46,0.1)}
+.lcd-icon{font-size:20px;flex-shrink:0}
+.lcd strong{display:block;font-size:10px;color:var(--green-mid);letter-spacing:1.5px;margin-bottom:2px}
+.lcd span{font-size:13px;color:var(--navy);line-height:1.5}
+.lcform{background:var(--cream);border-radius:14px;padding:28px;border:1px solid rgba(26,74,46,0.12)}
+.lcform h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--green);margin-bottom:20px}
+.fg2{margin-bottom:13px}
+.fg2 label{display:block;font-size:10px;font-weight:600;letter-spacing:1px;color:var(--muted);margin-bottom:5px;text-transform:uppercase}
+.fg2 input,.fg2 select,.fg2 textarea{width:100%;padding:10px 13px;border:1.5px solid rgba(26,74,46,0.15);border-radius:7px;background:#fff;color:var(--navy);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s}
+.fg2 input:focus,.fg2 select:focus,.fg2 textarea:focus{border-color:var(--green-light)}
+.fg2 textarea{height:80px;resize:none}
+
+/* GALLERY */
+.gallery-sec{background:#0a1a10;padding:70px 5%}
+.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1100px;margin:32px auto 0}
+.gal-item{border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:var(--green-mid);display:flex;align-items:center;justify-content:center;font-size:52px;border:1px solid rgba(255,255,255,0.06);transition:transform 0.3s;position:relative;cursor:pointer}
+.gal-item:hover{transform:scale(1.03)}
+.gal-item:nth-child(1){grid-column:span 2;aspect-ratio:16/9}
+.gal-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s}
+.gal-item:hover img{transform:scale(1.05)}
+.gal-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);padding:14px;color:#fff;font-size:13px;font-weight:600}
+
+footer{background:#060f1c;padding:40px 5%;text-align:center}
+.foot-logos{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin-bottom:16px}
+.foot-biz h4{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:4px}
+.foot-biz h4.g{color:var(--gold-light)}
+.foot-biz h4.gr{color:#6ddb96}
+.foot-biz p{font-size:12px;color:rgba(255,255,255,0.3)}
+.foot-loc{font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px}
+.foot-links{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:16px}
+.foot-links a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s}
+.foot-links a:hover{color:var(--gold-light)}
+.foot-copy{font-size:11px;color:rgba(255,255,255,0.15)}
+.wa{position:fixed;bottom:24px;right:24px;z-index:999;background:#25d366;color:#fff;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 20px rgba(37,211,102,0.45);text-decoration:none;transition:all 0.3s;animation:pulse 2.5s infinite}
+.wa:hover{transform:scale(1.1)}
+.wa-tip{position:absolute;right:62px;background:var(--navy);color:#fff;font-size:11px;font-weight:600;padding:5px 10px;border-radius:5px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.wa:hover .wa-tip{opacity:1}
+#notice-bar{display:none;position:fixed;top:64px;left:0;right:0;z-index:199;background:var(--gold);color:var(--navy);text-align:center;padding:8px 16px;font-size:13px;font-weight:600}
+#admin-fab{position:fixed;bottom:86px;right:24px;z-index:9999;background:#0d1b2a;color:rgba(255,255,255,0.25);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;border:1px solid rgba(255,255,255,0.08);transition:all 0.3s}
+#admin-fab:hover{color:var(--gold-light);border-color:var(--gold)}
+#admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;overflow-y:auto;padding:16px}
+#admin-overlay.show{display:block}
+.adm-box{background:#0d1b2a;border-radius:16px;border:1px solid rgba(201,148,10,0.3);width:100%;max-width:680px;margin:50px auto;overflow:hidden}
+.adm-hdr{background:linear-gradient(90deg,#0f1e35,#1a2f4e);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,148,10,0.2)}
+.adm-hdr h2{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:19px}
+.adm-close{color:rgba(255,255,255,0.4);cursor:pointer;font-size:22px;background:none;border:none}
+.adm-body{padding:22px}
+.adm-login{text-align:center;padding:16px 0}
+.adm-login p{color:rgba(255,255,255,0.45);margin-bottom:16px;font-size:14px}
+.adm-login input{width:100%;padding:12px 15px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:12px}
+.adm-login input:focus{border-color:var(--gold)}
+.adm-login button{width:100%;background:var(--gold);color:#fff;border:none;padding:12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer}
+.adm-err{color:#ff6b6b;font-size:13px;margin-top:8px;display:none}
+.adm-tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.adm-tab{padding:8px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.04);transition:all 0.2s}
+.adm-tab.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+.adm-pane{display:none}
+.adm-pane.show{display:block}
+.af{margin-bottom:13px}
+.af label{display:block;font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase}
+.af input,.af textarea,.af select{width:100%;padding:10px 13px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s}
+.af input:focus,.af textarea:focus{border-color:var(--gold)}
+.af textarea{height:75px;resize:none}
+.adm-sec{background:rgba(255,255,255,0.03);border-radius:10px;padding:16px;border:1px solid rgba(255,255,255,0.06);margin-bottom:16px}
+.adm-sec-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.adm-save-btn{background:var(--green-mid);color:#fff;border:none;padding:9px 20px;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.2s}
+.adm-saved{display:none;color:#6ddb96;font-size:12px;margin-left:10px}
+.adm-logout-btn{background:rgba(255,0,0,0.1);color:#ff6b6b;border:1px solid rgba(255,0,0,0.2);padding:7px 14px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;float:right}
+.svc-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.svc-item{display:flex;gap:8px;align-items:center}
+.svc-item input{flex:1}
+.del-btn{background:rgba(255,0,0,0.15);color:#ff6b6b;border:none;width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:16px;flex-shrink:0}
+.add-btn{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.1);padding:7px 14px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;width:100%;margin-bottom:10px}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.45)}50%{box-shadow:0 4px 32px rgba(37,211,102,0.7)}}
+@media(max-width:768px){.nav-links{gap:2px}.nav-links a{font-size:11px;padding:6px 8px}.hero-cards{grid-template-columns:1fr}.cgrid{grid-template-columns:1fr}.fr{grid-template-columns:1fr}.gal-grid{grid-template-columns:1fr 1fr}.gal-item:nth-child(1){grid-column:span 1;aspect-ratio:4/3}.foot-logos{gap:24px}}
+</style>
+</head>
+<body>
+<div id="notice-bar"></div>
+<a href="https://wa.me/919086328594" target="_blank" class="wa"><span class="wa-tip">Contact Us</span>💬</a>
+<div id="admin-fab" onclick="toggleAdmin()">⚙️</div>
+
+<nav>
+  <div class="nav-logo">KS Business Hub<span>KHOUR SALARIAN · J&K</span></div>
+  <ul class="nav-links">
+    <li><a href="#sandhu">🏛️ Sandhu Enterprises</a></li>
+    <li><a href="#sehaj">🌿 Sehaj Resort</a></li>
+    <li><a href="#sc">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-badge"><span>📍 KHOUR SALARIAN · NANDPUR · DISTRICT SAMBA · JAMMU & KASHMIR</span></div>
+  <h1>Your Trusted Local<br><em>Business Partners</em></h1>
+  <p class="hero-sub">TWO BUSINESSES · ONE LOCATION · COMPLETE SERVICE</p>
+  <div class="hero-cards">
+    <a href="#sandhu" class="hcard s">
+      <div class="hcard-icon">🏛️</div>
+      <div class="hcard-name g">Sandhu Enterprises</div>
+      <div class="hcard-desc">GeM Portal Registered Firm — Official Government Supply Partner for all departments</div>
+      <span class="hcard-btn g">View Details →</span>
+    </a>
+    <a href="#sehaj" class="hcard r">
+      <div class="hcard-icon">🌿</div>
+      <div class="hcard-name gr">Sehaj Resort</div>
+      <div class="hcard-desc">Premium Event Venue — Marriages, Birthdays, Ring Ceremonies & all occasions</div>
+      <span class="hcard-btn gr">View Details →</span>
+    </a>
+  </div>
+</section>
+
+<div class="divider"><div class="div-g"></div><div class="div-c"></div><div class="div-gr"></div></div>
+
+<section class="sec" id="sandhu" style="background:#fff">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="sec-tag g">🏛️ Business 1</div>
+    <h2 class="sec-title">Sandhu Enterprises</h2>
+    <p class="sec-sub">GeM Portal Registered Firm · Khour Salarian, Nandpur, District Samba, Jammu & Kashmir. Trusted government supply partner.</p>
+    <div class="grid3">
+      <div class="card"><div class="card-icon">📦</div><h3>Product Supply</h3><p>All types of products required by government departments.</p></div>
+      <div class="card"><div class="card-icon">🛠️</div><h3>Services & Maintenance</h3><p>Professional services for government offices as per GeM guidelines.</p></div>
+      <div class="card"><div class="card-icon">🖥️</div><h3>IT & Equipment</h3><p>Computers, printers and IT equipment for government institutions.</p></div>
+      <div class="card"><div class="card-icon">🏗️</div><h3>Infrastructure</h3><p>Construction materials, furniture and stationery for public sector.</p></div>
+      <div class="card"><div class="card-icon">🚗</div><h3>Vehicle & Transport</h3><p>Vehicles and transport solutions for government departments.</p></div>
+      <div class="card"><div class="card-icon">📋</div><h3>Custom Requirements</h3><p>Any specific procurement need — contact us directly.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="dark-sec" id="sc">
+  <div class="cgrid">
+    <div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">CONTACT</div>
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:#fff;margin-bottom:20px">Sandhu Enterprises</div>
+      <div class="cd"><div class="cd-icon">👤</div><div><strong>OWNER</strong><span>Bhupinder Singh</span></div></div>
+      <div class="cd"><div class="cd-icon">📞</div><div><strong>PHONE / WHATSAPP</strong><span>+91 90863 28594</span></div></div>
+      <div class="cd"><div class="cd-icon">📍</div><div><strong>LOCATION</strong><span>Khour Salarian, Nandpur, District Samba, Jammu & Kashmir</span></div></div>
+      <div class="cd"><div class="cd-icon">🏛️</div><div><strong>GeM PORTAL</strong><span>Government Registered Supplier</span></div></div>
+      <a href="https://wa.me/919070818181" target="_blank" style="display:inline-block;margin-top:14px;background:var(--gold);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">💬 WhatsApp Now</a>&nbsp;&nbsp;<a href="https://maps.app.goo.gl/AJya41ksNpy1ZPmF8" target="_blank" style="display:inline-block;margin-top:10px;background:#4285f4;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">📍 Get Directions</a> <a href="https://maps.app.goo.gl/AJya41ksNpy1ZPmF8" target="_blank" style="display:inline-block;margin-top:10px;background:#4285f4;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">📍 Get Directions</a>
+    </div>
+    <div class="cform">
+      <h3>Send Enquiry</h3>
+      <div class="fr">
+        <div class="fg"><label>Name</label><input type="text" id="sn" placeholder="Your name"></div>
+        <div class="fg"><label>Phone</label><input type="tel" id="sp" placeholder="+91 XXXXX"></div>
+      </div>
+      <div class="fg"><label>Department</label><input type="text" id="sd" placeholder="Government department"></div>
+      <div class="fg"><label>Service</label>
+        <select id="ss"><option value="">Select...</option><option>Product Supply</option><option>IT & Equipment</option><option>Infrastructure</option><option>Services & Maintenance</option><option>Custom Requirement</option></select>
+      </div>
+      <div class="fg"><label>Message</label><textarea id="sm" placeholder="Describe your requirement..."></textarea></div>
+      <button class="btn-g" onclick="submitSandhu()">Send Enquiry →</button>
+      <div class="fsuc" id="ss-ok" style="background:rgba(109,219,150,0.1);color:#6ddb96">✅ Enquiry sent! We will contact you shortly.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="div-gr"></div><div class="div-c"></div><div class="div-g"></div></div>
+
+<section class="sec" id="sehaj" style="background:var(--cream)">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="sec-tag gr">🌿 Business 2</div>
+    <h2 class="sec-title" style="color:var(--green)">Sehaj Resort</h2>
+    <p class="sec-sub">Chimna Chak, Near KS Fuel · Khour Salarian · Nandpur · District Samba, Jammu & Kashmir<br>Owner: <strong>Bhupinder Singh</strong></p>
+    <div class="grid3" style="margin-top:32px">
+      <div class="card gc"><div class="card-icon">💍</div><h3>Marriage Functions</h3><p>Grand weddings with beautiful decoration and complete arrangements.</p></div>
+      <div class="card gc"><div class="card-icon">🎂</div><h3>Birthday Parties</h3><p>Make every birthday special for all ages with full arrangements.</p></div>
+      <div class="card gc"><div class="card-icon">💫</div><h3>Ring Ceremony</h3><p>Elegant settings for your engagement — complete setup.</p></div>
+      <div class="card gc"><div class="card-icon">🌸</div><h3>Kitty Parties</h3><p>Vibrant setting for ladies get-togethers and kitty parties.</p></div>
+      <div class="card gc"><div class="card-icon">🎊</div><h3>Family Functions</h3><p>Anniversaries, religious ceremonies and all family gatherings.</p></div>
+      <div class="card gc"><div class="card-icon">🤝</div><h3>All Occasions</h3><p>Any special occasion — we make it extraordinary.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery-sec" id="gallery">
+  <div style="max-width:1100px;margin:0 auto;text-align:center">
+    <div style="font-size:11px;font-weight:600;letter-spacing:3px;color:#3d8f5c;text-transform:uppercase;margin-bottom:10px">📸 OUR VENUE</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,44px);color:#fff;margin-bottom:8px">Sehaj Resort Gallery</h2>
+    <p style="color:rgba(255,255,255,0.5);font-size:14px">Beautiful venue for every celebration</p>
+  </div>
+  <div class="gal-grid">
+    <div class="gal-item"><img src="img/resort.jpg" alt="Sehaj Resort Building" onerror="this.parentElement.innerHTML='🏡<div class=gal-label>Resort Building & Garden</div>'"><div class="gal-label">🏡 Resort Building & Garden</div></div>
+    <div class="gal-item"><img src="img/hall.jpg" alt="Wedding Hall" onerror="this.parentElement.innerHTML='💍<div class=gal-label>Wedding Hall</div>'"><div class="gal-label">💍 Wedding Hall</div></div>
+    <div class="gal-item"><img src="img/entrance.jpg" alt="Decorated Entrance" onerror="this.parentElement.innerHTML='🌸<div class=gal-label>Decorated Entrance</div>'"><div class="gal-label">🌸 Decorated Entrance</div></div>
+    <div class="gal-item"><img src="img/resort.jpg" alt="Night View" onerror="this.parentElement.innerHTML='🌙<div class=gal-label>Night View</div>'" style="object-position:center 60%"><div class="gal-label">🌙 Night View</div></div>
+  </div>
+</section>
+
+<section class="green-sec">
+  <div style="max-width:1100px;margin:0 auto;text-align:center">
+    <div style="font-size:11px;font-weight:600;letter-spacing:3px;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-bottom:8px">FACILITIES</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,44px);color:#fff">Everything You Need</h2>
+  </div>
+  <div class="feat-grid">
+    <div class="feat"><div class="feat-icon">🏛️</div><div class="feat-title">Spacious Hall</div><div class="feat-desc">Large hall for any size event</div></div>
+    <div class="feat"><div class="feat-icon">🌿</div><div class="feat-title">Beautiful Garden</div><div class="feat-desc">Lush green open-air spaces</div></div>
+    <div class="feat"><div class="feat-icon">🍽️</div><div class="feat-title">Catering</div><div class="feat-desc">Delicious food arrangements</div></div>
+    <div class="feat"><div class="feat-icon">🎵</div><div class="feat-title">Sound & Lights</div><div class="feat-desc">Professional setup for events</div></div>
+    <div class="feat"><div class="feat-icon">🚗</div><div class="feat-title">Parking</div><div class="feat-desc">Ample parking for all guests</div></div>
+    <div class="feat"><div class="feat-icon">🎨</div><div class="feat-title">Decoration</div><div class="feat-desc">Beautiful theme decorations</div></div>
+  </div>
+</section>
+
+<section class="light-sec" id="rc">
+  <div style="max-width:1100px;margin:0 auto 28px;text-align:center">
+    <div style="font-size:11px;font-weight:600;letter-spacing:3px;color:var(--green-mid);text-transform:uppercase;margin-bottom:8px">BOOK YOUR EVENT</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,44px);color:var(--green)">Contact Sehaj Resort</h2>
+  </div>
+  <div class="cgrid" style="margin-top:0">
+    <div>
+      <div class="lcd"><div class="lcd-icon">👤</div><div><strong>OWNER</strong><span>Bhupinder Singh</span></div></div>
+      <div class="lcd"><div class="lcd-icon">📞</div><div><strong>PHONE / WHATSAPP</strong><span>+91 90551 62123</span></div></div>
+      <div class="lcd"><div class="lcd-icon">📍</div><div><strong>LOCATION</strong><span>Chimna Chak, Near KS Fuel, Khour Salarian, Nandpur, District Samba, Jammu & Kashmir</span></div></div>
+      <div class="lcd"><div class="lcd-icon">⏰</div><div><strong>AVAILABLE</strong><span>All Days · 9:00 AM – 9:00 PM</span></div></div>
+      <a href="https://wa.me/919055162123" target="_blank" style="display:inline-block;margin-top:14px;background:var(--green);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">💬 WhatsApp to Book</a>&nbsp;&nbsp;<a href="https://maps.app.goo.gl/SKwZ1drYY1MatnZa6" target="_blank" style="display:inline-block;margin-top:10px;background:#4285f4;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">📍 Get Directions</a> <a href="https://maps.app.goo.gl/SKwZ1drYY1MatnZa6" target="_blank" style="display:inline-block;margin-top:10px;background:#4285f4;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">📍 Get Directions</a>
+    </div>
+    <div class="lcform">
+      <h3>Book Your Event</h3>
+      <div class="fg2"><label>Name</label><input type="text" id="rn" placeholder="Your name"></div>
+      <div class="fg2"><label>Phone</label><input type="tel" id="rp" placeholder="+91 XXXXX"></div>
+      <div class="fg2"><label>Event Type</label>
+        <select id="re"><option value="">Select event...</option><option>Marriage Function</option><option>Birthday Party</option><option>Ring Ceremony</option><option>Kitty Party</option><option>Family Function</option><option>Other</option></select>
+      </div>
+      <div class="fg2"><label>Event Date</label><input type="date" id="rd"></div>
+      <div class="fg2"><label>Message</label><textarea id="rm" placeholder="Guests count, requirements..."></textarea></div>
+      <button class="btn-gr" onclick="submitSehaj()">Send Booking Enquiry →</button>
+      <div class="fsuc" id="rs-ok" style="background:rgba(109,219,150,0.1);color:var(--green)">✅ Booking sent! Bhupinder Singh ji will contact you soon.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-logos">
+    <div class="foot-biz"><h4 class="g">Sandhu Enterprises</h4><p>GeM Portal Registered · Government Supplier</p></div>
+    <div style="width:1px;background:rgba(255,255,255,0.1)"></div>
+    <div class="foot-biz"><h4 class="gr">Sehaj Resort</h4><p>Premium Event Venue · All Occasions</p></div>
+  </div>
+  <div class="foot-loc">📍 Khour Salarian · Nandpur · District Samba · Jammu & Kashmir &nbsp;|&nbsp; 👤 Bhupinder Singh &nbsp;|&nbsp; 📞 Sandhu: +91 90863 28594 | Sehaj: +91 90551 62123
+  <div class="foot-links">
+    <a href="#home">Home</a><a href="#sandhu">Sandhu Enterprises</a><a href="#sehaj">Sehaj Resort</a><a href="#sc">Contact</a><a href="https://wa.me/919086328594" target="_blank">WhatsApp</a>
+  </div>
+  <div class="foot-copy">© 2025 Khour Salarian Business Hub. All Rights Reserved.</div>
+</footer>
+
+<!-- ADMIN PANEL -->
+<div id="admin-overlay">
+  <div class="adm-box">
+    <div class="adm-hdr">
+      <h2>🔐 Admin Panel</h2>
+      <button class="adm-close" onclick="toggleAdmin()">✕</button>
+    </div>
+    <div class="adm-body">
+      <div id="adm-login">
+        <div class="adm-login">
+          <p>Enter admin password</p>
+          <input type="password" id="adm-pass" placeholder="Password..." onkeydown="if(event.key==='Enter')chkPass()">
+          <button onclick="chkPass()">🔓 Login</button>
+          <div class="adm-err" id="adm-err">❌ Wrong password!</div>
+        </div>
+      </div>
+      <div id="adm-panel" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <span style="color:#6ddb96;font-size:13px">✅ Admin Access</span>
+          <button class="adm-logout-btn" onclick="admLogout()">Logout</button>
+        </div>
+        <div class="adm-tabs">
+          <div class="adm-tab active" onclick="showTab('t1',this)">⚙️ General</div>
+          <div class="adm-tab" onclick="showTab('t2',this)">🏛️ Sandhu</div>
+          <div class="adm-tab" onclick="showTab('t3',this)">🌿 Sehaj</div>
+          <div class="adm-tab" onclick="showTab('t4',this)">📢 Notice</div>
+        </div>
+        <div class="adm-pane show" id="t1">
+          <div class="adm-sec">
+            <div class="adm-sec-title">Contact Info</div>
+            <div class="af"><label>Owner Name</label><input type="text" id="a-owner" placeholder="Bhupinder Singh"></div>
+            <div class="af"><label>Phone / WhatsApp</label><input type="text" id="a-phone" placeholder="+91 90863 28594"></div>
+            <div class="af"><label>Location</label><textarea id="a-loc"></textarea></div>
+            <div class="af"><label>Timings</label><input type="text" id="a-timing"></div>
+            <button class="adm-save-btn" onclick="saveG()">💾 Save</button>
+            <span class="adm-saved" id="sv1">✅ Saved!</span>
+          </div>
+        </div>
+        <div class="adm-pane" id="t2">
+          <div class="adm-sec">
+            <div class="adm-sec-title">Sandhu Enterprises</div>
+            <div class="af"><label>GeM Status</label><input type="text" id="a-gem"></div>
+            <div class="af"><label>Description</label><textarea id="a-sdesc"></textarea></div>
+            <button class="adm-save-btn" onclick="saveS()">💾 Save</button>
+            <span class="adm-saved" id="sv2">✅ Saved!</span>
+          </div>
+        </div>
+        <div class="adm-pane" id="t3">
+          <div class="adm-sec">
+            <div class="adm-sec-title">Sehaj Resort</div>
+            <div class="af"><label>Tagline</label><input type="text" id="a-tag"></div>
+            <div class="af"><label>Description</label><textarea id="a-rdesc"></textarea></div>
+            <button class="adm-save-btn" onclick="saveR()">💾 Save</button>
+            <span class="adm-saved" id="sv3">✅ Saved!</span>
+          </div>
+        </div>
+        <div class="adm-pane" id="t4">
+          <div class="adm-sec">
+            <div class="adm-sec-title">Website Notice</div>
+            <div class="af"><label>Notice (leave blank to hide)</label><textarea id="a-notice"></textarea></div>
+            <button class="adm-save-btn" onclick="saveN()">💾 Publish</button>
+            <span class="adm-saved" id="sv4">✅ Published!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PASS=btoa('Bhupinder@666');
+function toggleAdmin(){document.getElementById('admin-overlay').classList.toggle('show')}
+function chkPass(){
+  if(btoa(document.getElementById('adm-pass').value)===PASS){
+    document.getElementById('adm-login').style.display='none';
+    document.getElementById('adm-panel').style.display='block';
+    loadAdm();
+  }else{document.getElementById('adm-err').style.display='block';document.getElementById('adm-pass').value=''}
+}
+function admLogout(){document.getElementById('adm-login').style.display='block';document.getElementById('adm-panel').style.display='none';document.getElementById('adm-pass').value='';toggleAdmin()}
+function showTab(id,el){document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('show'));document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('show');el.classList.add('active')}
+function sv(id){const e=document.getElementById(id);e.style.display='inline';setTimeout(()=>e.style.display='none',2500)}
+function gd(){return JSON.parse(localStorage.getItem('ksd')||'{}')}
+function sd(d){localStorage.setItem('ksd',JSON.stringify(d))}
+function loadAdm(){
+  const d=gd();
+  if(d.owner)document.getElementById('a-owner').value=d.owner;
+  if(d.phone)document.getElementById('a-phone').value=d.phone;
+  if(d.loc)document.getElementById('a-loc').value=d.loc;
+  if(d.timing)document.getElementById('a-timing').value=d.timing;
+  if(d.gem)document.getElementById('a-gem').value=d.gem;
+  if(d.sdesc)document.getElementById('a-sdesc').value=d.sdesc;
+  if(d.tag)document.getElementById('a-tag').value=d.tag;
+  if(d.rdesc)document.getElementById('a-rdesc').value=d.rdesc;
+  if(d.notice)document.getElementById('a-notice').value=d.notice;
+}
+function saveG(){const d=gd();d.owner=document.getElementById('a-owner').value;d.phone=document.getElementById('a-phone').value;d.loc=document.getElementById('a-loc').value;d.timing=document.getElementById('a-timing').value;sd(d);sv('sv1')}
+function saveS(){const d=gd();d.gem=document.getElementById('a-gem').value;d.sdesc=document.getElementById('a-sdesc').value;sd(d);sv('sv2')}
+function saveR(){const d=gd();d.tag=document.getElementById('a-tag').value;d.rdesc=document.getElementById('a-rdesc').value;sd(d);sv('sv3')}
+function saveN(){const d=gd();d.notice=document.getElementById('a-notice').value;sd(d);const nb=document.getElementById('notice-bar');if(d.notice){nb.textContent='📢 '+d.notice;nb.style.display='block'}else{nb.style.display='none'}sv('sv4')}
+window.addEventListener('load',()=>{const d=gd();if(d.notice){const nb=document.getElementById('notice-bar');nb.textContent='📢 '+d.notice;nb.style.display='block'}});
+function submitSandhu(){
+  const n=document.getElementById('sn').value,p=document.getElementById('sp').value;
+  if(!n||!p){alert('Please fill name and phone.');return}
+  const t=`*New Enquiry – Sandhu Enterprises*%0A%0A*Name:* ${n}%0A*Phone:* ${p}%0A*Dept:* ${document.getElementById('sd').value||'N/A'}%0A*Service:* ${document.getElementById('ss').value||'N/A'}%0A*Message:* ${document.getElementById('sm').value||'N/A'}`;
+  window.open(`https://wa.me/919086328594?text=${t}`,'_blank');
+  document.getElementById('ss-ok').style.display='block';
+  document.getElementById('sn').value='';document.getElementById('sp').value='';
+}
+function submitSehaj(){
+  const n=document.getElementById('rn').value,p=document.getElementById('rp').value;
+  if(!n||!p){alert('Please fill name and phone.');return}
+  const t=`*Booking – Sehaj Resort*%0A%0A*Name:* ${n}%0A*Phone:* ${p}%0A*Event:* ${document.getElementById('re').value||'N/A'}%0A*Date:* ${document.getElementById('rd').value||'N/A'}%0A*Message:* ${document.getElementById('rm').value||'N/A'}`;
+  window.open(`https://wa.me/919086328594?text=${t}`,'_blank');
+  document.getElementById('rs-ok').style.display='block';
+  document.getElementById('rn').value='';document.getElementById('rp').value='';
+}
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}})},{threshold:0.1});
+document.querySelectorAll('.card,.feat,.cd,.lcd').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity 0.5s ease,transform 0.5s ease';obs.observe(el)});
+</script>
+</body>
+</html>
