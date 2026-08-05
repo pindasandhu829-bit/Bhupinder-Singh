@@ -319,6 +319,14 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
   </div>
 </section>
 
+<!-- GOOGLE MAP SECTION -->
+<section style="padding: 40px 5%; background: var(--cream);">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <h3 style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 16px; color: var(--navy);">Find Us On Map</h3>
+    <div id="map" style="height: 400px; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+  </div>
+</section>
+
 <footer>
   <div class="foot-logos">
     <div class="foot-biz"><h4 class="g">Sandhu Enterprises</h4><p>GeM Portal Registered · Government Supplier</p></div>
@@ -451,6 +459,23 @@ function submitSehaj(){
 }
 const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}})},{threshold:0.1});
 document.querySelectorAll('.card,.feat,.cd,.lcd').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity 0.5s ease,transform 0.5s ease';obs.observe(el)});
+
+// GOOGLE MAP INITIALIZATION FUNCTION
+function initMap() {
+  const location = { lat: 32.55, lng: 74.80 }; // Set your exact latitude & longitude here
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: location,
+  });
+  new google.maps.Marker({
+    position: location,
+    map: map,
+    title: "Sehaj Resort & Sandhu Enterprises",
+  });
+}
 </script>
+
+<!-- GOOGLE MAPS API SCRIPT WITH YOUR API KEY -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASXaCS6ob_g8jS-RFPTX-Z2A1U1qbkHEA&callback=initMap" async defer></script>
 </body>
 </html>
