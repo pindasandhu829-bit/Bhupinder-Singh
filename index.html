@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sehaj Resort & Sandhu Enterprises – Khour Salarian, Nandpur, District Samba, J&K</title>
-<meta name="description" content="Sehaj Resort - Premium Event Venue for Marriages, Birthdays, Ring Ceremonies in Khour Salarian, Nandpur, District Samba, Jammu Kashmir. Sandhu Enterprises - GeM Portal Registered Government Supplier.">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Sandhu Enterprises & Sehaj Resort – Khour Salarian, Samba, J&K</title>
+<meta name="description" content="Sandhu Enterprises - GeM Registered Government Supplier, GST & UDYAM Verified. Sehaj Resort - Premium Event Venue in Khour Salarian, Samba, J&K.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#c9940a;--gold-light:#f0b429;--navy:#0f1e35;--navy-mid:#1a2f4e;--green:#1a4a2e;--green-mid:#2d6e46;--green-light:#3d8f5c;--cream:#faf7f0;--white:#fff;--muted:#6b7a8d}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -42,20 +42,29 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,30,53,0.9
 .sec-tag.g{color:var(--gold)}
 .sec-tag.gr{color:var(--green-mid)}
 .sec-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,44px);line-height:1.2;margin-bottom:14px}
-.sec-sub{font-size:15px;color:var(--muted);line-height:1.7;max-width:520px}
+.sec-sub{font-size:15px;color:var(--muted);line-height:1.7;max-width:650px}
 .divider{display:flex;align-items:center}
 .div-g{flex:1;height:5px;background:linear-gradient(90deg,var(--gold),var(--gold-light))}
 .div-gr{flex:1;height:5px;background:linear-gradient(90deg,var(--green-mid),var(--green-light))}
 .div-c{width:12px;height:12px;background:var(--cream);border:3px solid var(--navy);border-radius:50%;flex-shrink:0}
-.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;max-width:1100px;margin:32px auto 0}
-.card{background:var(--white);border-radius:14px;padding:26px 22px;border:1px solid rgba(15,30,53,0.07);transition:all 0.3s;position:relative;overflow:hidden}
+
+/* GOVT DETAILS BADGES */
+.gov-badges{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0 30px}
+.gbadge{background:var(--cream);border:1px solid rgba(201,148,10,0.3);padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;color:var(--navy)}
+.gbadge span{color:var(--gold);margin-right:5px}
+
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1100px;margin:32px auto 0}
+.card{background:var(--white);border-radius:14px;padding:24px;border:1px solid rgba(15,30,53,0.07);transition:all 0.3s;position:relative;overflow:hidden}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transform:scaleX(0);transition:transform 0.3s}
 .card:hover{transform:translateY(-5px);box-shadow:0 12px 32px rgba(15,30,53,0.1)}
 .card:hover::before{transform:scaleX(1)}
 .card.gc::before{background:linear-gradient(90deg,var(--green),var(--green-light))}
-.card-icon{font-size:36px;margin-bottom:12px}
+.card-icon{font-size:32px;margin-bottom:10px}
 .card h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px}
-.card p{font-size:13px;color:var(--muted);line-height:1.6}
+.card ul{list-style:none;padding-left:0}
+.card ul li{font-size:13px;color:var(--muted);margin-bottom:5px;position:relative;padding-left:15px}
+.card ul li::before{content:"•";position:absolute;left:0;color:var(--gold);font-weight:bold}
+
 .dark-sec{background:var(--navy);padding:60px 5%}
 .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:48px;max-width:1000px;margin:32px auto 0;align-items:start}
 .cd{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding:14px 16px;background:rgba(255,255,255,0.05);border-radius:10px;border:1px solid rgba(201,148,10,0.2)}
@@ -152,11 +161,6 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 .adm-save-btn{background:var(--green-mid);color:#fff;border:none;padding:9px 20px;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.2s}
 .adm-saved{display:none;color:#6ddb96;font-size:12px;margin-left:10px}
 .adm-logout-btn{background:rgba(255,0,0,0.1);color:#ff6b6b;border:1px solid rgba(255,0,0,0.2);padding:7px 14px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;float:right}
-.svc-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.svc-item{display:flex;gap:8px;align-items:center}
-.svc-item input{flex:1}
-.del-btn{background:rgba(255,0,0,0.15);color:#ff6b6b;border:none;width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:16px;flex-shrink:0}
-.add-btn{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.1);padding:7px 14px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;width:100%;margin-bottom:10px}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.45)}50%{box-shadow:0 4px 32px rgba(37,211,102,0.7)}}
@@ -165,7 +169,7 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 </head>
 <body>
 <div id="notice-bar"></div>
-<a href="https://wa.me/919070818181" target="_blank" class="wa"><span class="wa-tip">Contact Us</span>💬</a>
+<a href="https://wa.me/919086328594" target="_blank" class="wa"><span class="wa-tip">Contact Us</span>💬</a>
 <div id="admin-fab" onclick="toggleAdmin()">⚙️</div>
 
 <nav>
@@ -178,15 +182,15 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 </nav>
 
 <section class="hero" id="home">
-  <div class="hero-badge"><span>📍 KHOUR SALARIAN · NANDPUR · DISTRICT SAMBA · JAMMU & KASHMIR</span></div>
+  <div class="hero-badge"><span>📍 KHOUR SALARIAN · RAMGARH · DISTRICT SAMBA · JAMMU & KASHMIR</span></div>
   <h1>Your Trusted Local<br><em>Business Partners</em></h1>
   <p class="hero-sub">TWO BUSINESSES · ONE LOCATION · COMPLETE SERVICE</p>
   <div class="hero-cards">
     <a href="#sandhu" class="hcard s">
       <div class="hcard-icon">🏛️</div>
       <div class="hcard-name g">Sandhu Enterprises</div>
-      <div class="hcard-desc">GeM Portal Registered Firm — Official Government Supply Partner for all departments</div>
-      <span class="hcard-btn g">View Details →</span>
+      <div class="hcard-desc">GeM Registered & Government Supply Partner — GST & UDYAM Verified Firm</div>
+      <span class="hcard-btn g">View Procurement Catalog →</span>
     </a>
     <a href="#sehaj" class="hcard r">
       <div class="hcard-icon">🌿</div>
@@ -201,16 +205,133 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 
 <section class="sec" id="sandhu" style="background:#fff">
   <div style="max-width:1100px;margin:0 auto">
-    <div class="sec-tag g">🏛️ Business 1</div>
+    <div class="sec-tag g">🏛️ Government Supplier & Work Contracts</div>
     <h2 class="sec-title">Sandhu Enterprises</h2>
-    <p class="sec-sub">GeM Portal Registered Firm · Khour Salarian, Nandpur, District Samba, Jammu & Kashmir. Trusted government supply partner.</p>
+    <p class="sec-sub">One Stop Solution for All Your Supply & Procurement Needs. Registered Government Supplier delivering products, services and works contracts across PAN India.</p>
+    
+    <div class="gov-badges">
+      <div class="gbadge"><span>📜 GSTIN:</span> 01RJMPS4175J1ZG</div>
+      <div class="gbadge"><span>🏢 UDYAM:</span> UDYAM-JK-19-0013675</div>
+      <div class="gbadge"><span>👤 Constitution:</span> Proprietorship (Bhupinder Singh)</div>
+      <div class="gbadge"><span>✅ Status:</span> Active Registered Supplier</div>
+    </div>
+
     <div class="grid3">
-      <div class="card"><div class="card-icon">📦</div><h3>Product Supply</h3><p>All types of products required by government departments.</p></div>
-      <div class="card"><div class="card-icon">🛠️</div><h3>Services & Maintenance</h3><p>Professional services for government offices as per GeM guidelines.</p></div>
-      <div class="card"><div class="card-icon">🖥️</div><h3>IT & Equipment</h3><p>Computers, printers and IT equipment for government institutions.</p></div>
-      <div class="card"><div class="card-icon">🏗️</div><h3>Infrastructure</h3><p>Construction materials, furniture and stationery for public sector.</p></div>
-      <div class="card"><div class="card-icon">🚗</div><h3>Vehicle & Transport</h3><p>Vehicles and transport solutions for government departments.</p></div>
-      <div class="card"><div class="card-icon">📋</div><h3>Custom Requirements</h3><p>Any specific procurement need — contact us directly.</p></div>
+      <div class="card">
+        <div class="card-icon">💻</div>
+        <h3>01. Electronics & IT Products</h3>
+        <ul>
+          <li>Laptops, Desktops & Monitors</li>
+          <li>Printers, Scanners & Copiers</li>
+          <li>CCTV Surveillance Systems</li>
+          <li>LED TVs & Display Panels</li>
+          <li>UPS, Inverters & Batteries</li>
+          <li>Networking Devices & Peripherals</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🪑</div>
+        <h3>02. Office Furniture</h3>
+        <ul>
+          <li>Office Chairs & Executive Tables</li>
+          <li>Workstations & Modular Furniture</li>
+          <li>Filing Cabinets & Steel Almirahs</li>
+          <li>Conference Tables</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🏫</div>
+        <h3>03. Institutional & School Furniture</h3>
+        <ul>
+          <li>School Desks & Benches</li>
+          <li>Teacher Tables & Chairs</li>
+          <li>Library & Laboratory Furniture</li>
+          <li>Auditorium & Hostel Furniture</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🏠</div>
+        <h3>04. Home Furniture</h3>
+        <ul>
+          <li>Beds, Mattresses & Sofa Sets</li>
+          <li>Dining Tables & Wardrobes</li>
+          <li>Study Tables & Storage Units</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">💡</div>
+        <h3>05. Electrical Items</h3>
+        <ul>
+          <li>LED Lights & Panels</li>
+          <li>Fans & Exhaust Fans</li>
+          <li>Switches, Sockets & Cables</li>
+          <li>Electrical Accessories</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📹</div>
+        <h3>06. CCTV & Networking</h3>
+        <ul>
+          <li>CCTV Cameras & DVR / NVR</li>
+          <li>Networking Equipment</li>
+          <li>Routers, Switches & Structured Cabling</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📁</div>
+        <h3>07. Office Stationery & Consumables</h3>
+        <ul>
+          <li>Stationery Items & Printer Papers</li>
+          <li>Toners & Cartridges</li>
+          <li>Files, Folders, Binders & Supplies</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🧯</div>
+        <h3>08. Safety & Industrial Products</h3>
+        <ul>
+          <li>Safety Shoes, Helmets & Gloves</li>
+          <li>Fire Extinguishers & Safety Signs</li>
+          <li>Tools, Equipment & Cleaning Materials</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🏗️</div>
+        <h3>09. Construction & Work Contract</h3>
+        <ul>
+          <li>Building Materials & Hardware Supplies</li>
+          <li>Plumbing & Sanitary Items</li>
+          <li>Paints & Chemicals</li>
+          <li>Civil Work Items Supply</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h3>10. Services & Work Contract</h3>
+        <ul>
+          <li>Works Contract Services</li>
+          <li>Maintenance Services & AMC</li>
+          <li>Manpower Supply</li>
+          <li>Other Technical Support Services</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🛍️</div>
+        <h3>11. Customized GeM Supply</h3>
+        <ul>
+          <li>Capable of supplying products across all GeM categories as per specifications.</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -218,25 +339,38 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 <section class="dark-sec" id="sc">
   <div class="cgrid">
     <div>
-      <div style="font-size:11px;font-weight:600;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">CONTACT</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">OFFICIAL CONTACT</div>
       <div style="font-family:'Playfair Display',serif;font-size:28px;color:#fff;margin-bottom:20px">Sandhu Enterprises</div>
-      <div class="cd"><div class="cd-icon">👤</div><div><strong>OWNER</strong><span>Bhupinder Singh</span></div></div>
-      <div class="cd"><div class="cd-icon">📞</div><div><strong>PHONE / WHATSAPP</strong><span>+91 90708 18181</span></div></div>
-      <div class="cd"><div class="cd-icon">📍</div><div><strong>LOCATION</strong><span>Khour Salarian, Nandpur, District Samba, Jammu & Kashmir</span></div></div>
-      <div class="cd"><div class="cd-icon">🏛️</div><div><strong>GeM PORTAL</strong><span>Government Registered Supplier</span></div></div>
-      <a href="https://wa.me/919070818181" target="_blank" style="display:inline-block;margin-top:14px;background:var(--gold);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">💬 WhatsApp Now</a>
+      <div class="cd"><div class="cd-icon">👤</div><div><strong>PROPRIETOR</strong><span>Bhupinder Singh</span></div></div>
+      <div class="cd"><div class="cd-icon">📞</div><div><strong>PHONE / WHATSAPP</strong><span>+91 90863 28594 / +91 90708 18181</span></div></div>
+      <div class="cd"><div class="cd-icon">✉️</div><div><strong>EMAIL</strong><span>sandhuenterprises666@gmail.com</span></div></div>
+      <div class="cd"><div class="cd-icon">📍</div><div><strong>REGISTERED OFFICE ADDRESS</strong><span>1, Yakh Nand Pur Road, Jankar Chand Hardware Store, Khor Salarian, Samba, Jammu and Kashmir - 181141</span></div></div>
+      <div class="cd"><div class="cd-icon">🏛️</div><div><strong>REGISTRATION STATUS</strong><span>GeM Portal Registered · GSTIN: 01RJMPS4175J1ZG</span></div></div>
+      <a href="https://wa.me/919086328594" target="_blank" style="display:inline-block;margin-top:14px;background:var(--gold);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">💬 WhatsApp Order / Enquiry</a>
     </div>
     <div class="cform">
-      <h3>Send Enquiry</h3>
+      <h3>Send Procurement Enquiry</h3>
       <div class="fr">
         <div class="fg"><label>Name</label><input type="text" id="sn" placeholder="Your name"></div>
         <div class="fg"><label>Phone</label><input type="tel" id="sp" placeholder="+91 XXXXX"></div>
       </div>
-      <div class="fg"><label>Department</label><input type="text" id="sd" placeholder="Government department"></div>
-      <div class="fg"><label>Service</label>
-        <select id="ss"><option value="">Select...</option><option>Product Supply</option><option>IT & Equipment</option><option>Infrastructure</option><option>Services & Maintenance</option><option>Custom Requirement</option></select>
+      <div class="fg"><label>Department / Organization</label><input type="text" id="sd" placeholder="Government department / Company"></div>
+      <div class="fg"><label>Category Required</label>
+        <select id="ss">
+          <option value="">Select category...</option>
+          <option>Electronics & IT Products</option>
+          <option>Office Furniture</option>
+          <option>Institutional Furniture</option>
+          <option>Electrical Items</option>
+          <option>CCTV & Networking</option>
+          <option>Stationery & Consumables</option>
+          <option>Safety & Industrial</option>
+          <option>Construction Supplies</option>
+          <option>Services & Maintenance</option>
+          <option>Custom GeM Requirement</option>
+        </select>
       </div>
-      <div class="fg"><label>Message</label><textarea id="sm" placeholder="Describe your requirement..."></textarea></div>
+      <div class="fg"><label>Message</label><textarea id="sm" placeholder="Describe requirement / quantity..."></textarea></div>
       <button class="btn-g" onclick="submitSandhu()">Send Enquiry →</button>
       <div class="fsuc" id="ss-ok" style="background:rgba(109,219,150,0.1);color:#6ddb96">✅ Enquiry sent! We will contact you shortly.</div>
     </div>
@@ -299,10 +433,10 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
   <div class="cgrid" style="margin-top:0">
     <div>
       <div class="lcd"><div class="lcd-icon">👤</div><div><strong>OWNER</strong><span>Bhupinder Singh</span></div></div>
-      <div class="lcd"><div class="lcd-icon">📞</div><div><strong>PHONE / WHATSAPP</strong><span>+91 90708 18181</span></div></div>
+      <div class="lcd"><div class="lcd-icon">📞</div><div><strong>PHONE / WHATSAPP</strong><span>+91 90863 28594 / +91 90708 18181</span></div></div>
       <div class="lcd"><div class="lcd-icon">📍</div><div><strong>LOCATION</strong><span>Chimna Chak, Near KS Fuel, Khour Salarian, Nandpur, District Samba, Jammu & Kashmir</span></div></div>
       <div class="lcd"><div class="lcd-icon">⏰</div><div><strong>AVAILABLE</strong><span>All Days · 9:00 AM – 9:00 PM</span></div></div>
-      <a href="https://wa.me/919070818181" target="_blank" style="display:inline-block;margin-top:14px;background:var(--green);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">💬 WhatsApp to Book</a>
+      <a href="https://wa.me/919086328594" target="_blank" style="display:inline-block;margin-top:14px;background:var(--green);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">💬 WhatsApp to Book</a>
     </div>
     <div class="lcform">
       <h3>Book Your Event</h3>
@@ -329,15 +463,15 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 
 <footer>
   <div class="foot-logos">
-    <div class="foot-biz"><h4 class="g">Sandhu Enterprises</h4><p>GeM Portal Registered · Government Supplier</p></div>
+    <div class="foot-biz"><h4 class="g">Sandhu Enterprises</h4><p>GeM Registered · GSTIN: 01RJMPS4175J1ZG · UDYAM-JK-19-0013675</p></div>
     <div style="width:1px;background:rgba(255,255,255,0.1)"></div>
     <div class="foot-biz"><h4 class="gr">Sehaj Resort</h4><p>Premium Event Venue · All Occasions</p></div>
   </div>
-  <div class="foot-loc">📍 Khour Salarian · Nandpur · District Samba · Jammu & Kashmir &nbsp;|&nbsp; 👤 Bhupinder Singh &nbsp;|&nbsp; 📞 +91 90708 18181</div>
+  <div class="foot-loc">📍 Khor Salarian, Samba, Jammu & Kashmir - 181141 &nbsp;|&nbsp; 👤 Bhupinder Singh &nbsp;|&nbsp; 📞 +91 90863 28594 / +91 90708 18181</div>
   <div class="foot-links">
-    <a href="#home">Home</a><a href="#sandhu">Sandhu Enterprises</a><a href="#sehaj">Sehaj Resort</a><a href="#sc">Contact</a><a href="https://wa.me/919070818181" target="_blank">WhatsApp</a>
+    <a href="#home">Home</a><a href="#sandhu">Sandhu Enterprises</a><a href="#sehaj">Sehaj Resort</a><a href="#sc">Contact</a><a href="https://wa.me/919086328594" target="_blank">WhatsApp</a>
   </div>
-  <div class="foot-copy">© 2025 Khour Salarian Business Hub. All Rights Reserved.</div>
+  <div class="foot-copy">© 2026 Khour Salarian Business Hub. All Rights Reserved.</div>
 </footer>
 
 <!-- ADMIN PANEL -->
@@ -371,7 +505,7 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
           <div class="adm-sec">
             <div class="adm-sec-title">Contact Info</div>
             <div class="af"><label>Owner Name</label><input type="text" id="a-owner" placeholder="Bhupinder Singh"></div>
-            <div class="af"><label>Phone / WhatsApp</label><input type="text" id="a-phone" placeholder="+91 90708 18181"></div>
+            <div class="af"><label>Phone / WhatsApp</label><input type="text" id="a-phone" placeholder="+91 90863 28594"></div>
             <div class="af"><label>Location</label><textarea id="a-loc"></textarea></div>
             <div class="af"><label>Timings</label><input type="text" id="a-timing"></div>
             <button class="adm-save-btn" onclick="saveG()">💾 Save</button>
@@ -444,8 +578,8 @@ window.addEventListener('load',()=>{const d=gd();if(d.notice){const nb=document.
 function submitSandhu(){
   const n=document.getElementById('sn').value,p=document.getElementById('sp').value;
   if(!n||!p){alert('Please fill name and phone.');return}
-  const t=`*New Enquiry – Sandhu Enterprises*%0A%0A*Name:* ${n}%0A*Phone:* ${p}%0A*Dept:* ${document.getElementById('sd').value||'N/A'}%0A*Service:* ${document.getElementById('ss').value||'N/A'}%0A*Message:* ${document.getElementById('sm').value||'N/A'}`;
-  window.open(`https://wa.me/919070818181?text=${t}`,'_blank');
+  const t=`*New Procurement Enquiry – Sandhu Enterprises*%0A%0A*Name:* ${n}%0A*Phone:* ${p}%0A*Dept:* ${document.getElementById('sd').value||'N/A'}%0A*Category:* ${document.getElementById('ss').value||'N/A'}%0A*Message:* ${document.getElementById('sm').value||'N/A'}`;
+  window.open(`https://wa.me/919086328594?text=${t}`,'_blank');
   document.getElementById('ss-ok').style.display='block';
   document.getElementById('sn').value='';document.getElementById('sp').value='';
 }
@@ -453,7 +587,7 @@ function submitSehaj(){
   const n=document.getElementById('rn').value,p=document.getElementById('rp').value;
   if(!n||!p){alert('Please fill name and phone.');return}
   const t=`*Booking – Sehaj Resort*%0A%0A*Name:* ${n}%0A*Phone:* ${p}%0A*Event:* ${document.getElementById('re').value||'N/A'}%0A*Date:* ${document.getElementById('rd').value||'N/A'}%0A*Message:* ${document.getElementById('rm').value||'N/A'}`;
-  window.open(`https://wa.me/919070818181?text=${t}`,'_blank');
+  window.open(`https://wa.me/919086328594?text=${t}`,'_blank');
   document.getElementById('rs-ok').style.display='block';
   document.getElementById('rn').value='';document.getElementById('rp').value='';
 }
@@ -470,7 +604,7 @@ function initMap() {
   new google.maps.Marker({
     position: location,
     map: map,
-    title: "Sehaj Resort & Sandhu Enterprises",
+    title: "Sandhu Enterprises & Sehaj Resort",
   });
 }
 </script>
