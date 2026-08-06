@@ -173,8 +173,8 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 </head>
 <body>
 <div id="notice-bar"></div>
-<a href="https://wa.me/919086328594" target="_blank" class="wa"><span class="wa-tip">Contact Us</span>💬</a>
-<div id="admin-fab" onclick="toggleAdmin()">⚙️</div>
+<a href="https://wa.me/919086328594" target="_blank" class="wa" aria-label="Contact via WhatsApp"><span class="wa-tip">Contact Us</span>💬</a>
+<div id="admin-fab" onclick="toggleAdmin()" role="button" aria-label="Open Admin Panel">⚙️</div>
 
 <nav>
   <div class="nav-logo">KS Business Hub<span>KHOUR SALARIAN · J&K</span></div>
@@ -461,7 +461,9 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 <section style="padding: 40px 5%; background: var(--cream);">
   <div style="max-width: 1100px; margin: 0 auto;">
     <h3 style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 16px; color: var(--navy);">Find Us On Map</h3>
-    <div id="map" style="height: 400px; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+    <div id="map" style="height: 400px; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background: #e5e3df; display: flex; align-items: center; justify-content: center;">
+      <p style="color: var(--muted); font-size: 14px;">Loading Google Map...</p>
+    </div>
   </div>
 </section>
 
@@ -548,20 +550,46 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 </div>
 
 <script>
-const PASS=btoa('Bhupinder@666');
+const PASS = "Bhupinder@666";
+
 function toggleAdmin(){document.getElementById('admin-overlay').classList.toggle('show')}
+
 function chkPass(){
-  if(btoa(document.getElementById('adm-pass').value)===PASS){
+  const inputPass = document.getElementById('adm-pass').value;
+  if(inputPass === PASS){
+    document.getElementById('adm-err').style.display='none';
     document.getElementById('adm-login').style.display='none';
     document.getElementById('adm-panel').style.display='block';
     loadAdm();
-  }else{document.getElementById('adm-err').style.display='block';document.getElementById('adm-pass').value=''}
+  } else {
+    document.getElementById('adm-err').style.display='block';
+    document.getElementById('adm-pass').value='';
+  }
 }
-function admLogout(){document.getElementById('adm-login').style.display='block';document.getElementById('adm-panel').style.display='none';document.getElementById('adm-pass').value='';toggleAdmin()}
-function showTab(id,el){document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('show'));document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('show');el.classList.add('active')}
-function sv(id){const e=document.getElementById(id);e.style.display='inline';setTimeout(()=>e.style.display='none',2500)}
+
+function admLogout(){
+  document.getElementById('adm-login').style.display='block';
+  document.getElementById('adm-panel').style.display='none';
+  document.getElementById('adm-pass').value='';
+  toggleAdmin();
+}
+
+function showTab(id,el){
+  document.querySelectorAll('.adm-pane').forEach(p=>p.classList.remove('show'));
+  document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('show');
+  el.classList.add('active');
+}
+
+function sv(id){
+  const e=document.getElementById(id);
+  e.style.display='inline';
+  setTimeout(()=>e.style.display='none',2500);
+}
+
 function gd(){return JSON.parse(localStorage.getItem('ksd')||'{}')}
 function sd(d){localStorage.setItem('ksd',JSON.stringify(d))}
+
 function loadAdm(){
   const d=gd();
   if(d.owner)document.getElementById('a-owner').value=d.owner;
@@ -574,34 +602,68 @@ function loadAdm(){
   if(d.rdesc)document.getElementById('a-rdesc').value=d.rdesc;
   if(d.notice)document.getElementById('a-notice').value=d.notice;
 }
+
 function saveG(){const d=gd();d.owner=document.getElementById('a-owner').value;d.phone=document.getElementById('a-phone').value;d.loc=document.getElementById('a-loc').value;d.timing=document.getElementById('a-timing').value;sd(d);sv('sv1')}
 function saveS(){const d=gd();d.gem=document.getElementById('a-gem').value;d.sdesc=document.getElementById('a-sdesc').value;sd(d);sv('sv2')}
 function saveR(){const d=gd();d.tag=document.getElementById('a-tag').value;d.rdesc=document.getElementById('a-rdesc').value;sd(d);sv('sv3')}
-function saveN(){const d=gd();d.notice=document.getElementById('a-notice').value;sd(d);const nb=document.getElementById('notice-bar');if(d.notice){nb.textContent='📢 '+d.notice;nb.style.display='block'}else{nb.style.display='none'}sv('sv4')}
-window.addEventListener('load',()=>{const d=gd();if(d.notice){const nb=document.getElementById('notice-bar');nb.textContent='📢 '+d.notice;nb.style.display='block'}});
+function saveN(){
+  const d=gd();
+  d.notice=document.getElementById('a-notice').value;
+  sd(d);
+  const nb=document.getElementById('notice-bar');
+  if(d.notice){nb.textContent='📢 '+d.notice;nb.style.display='block'}else{nb.style.display='none'}
+  sv('sv4');
+}
+
+window.addEventListener('load',()=>{
+  const d=gd();
+  if(d.notice){
+    const nb=document.getElementById('notice-bar');
+    nb.textContent='📢 '+d.notice;
+    nb.style.display='block';
+  }
+});
+
 function submitSandhu(){
   const n=document.getElementById('sn').value,p=document.getElementById('sp').value;
   if(!n||!p){alert('Please fill name and phone.');return}
-  const t=`*New Procurement Enquiry – Sandhu Enterprises*%0A%0A*Name:* ${n}%0A*Phone:* ${p}%0A*Dept:* ${document.getElementById('sd').value||'N/A'}%0A*Category:* ${document.getElementById('ss').value||'N/A'}%0A*Message:* ${document.getElementById('sm').value||'N/A'}`;
+  const t=`*New Procurement Enquiry – Sandhu Enterprises*%0A%0A*Name:* ${encodeURIComponent(n)}%0A*Phone:* ${encodeURIComponent(p)}%0A*Dept:* ${encodeURIComponent(document.getElementById('sd').value||'N/A')}%0A*Category:* ${encodeURIComponent(document.getElementById('ss').value||'N/A')}%0A*Message:* ${encodeURIComponent(document.getElementById('sm').value||'N/A')}`;
   window.open(`https://wa.me/919086328594?text=${t}`,'_blank');
   document.getElementById('ss-ok').style.display='block';
   document.getElementById('sn').value='';document.getElementById('sp').value='';
 }
+
 function submitSehaj(){
   const n=document.getElementById('rn').value,p=document.getElementById('rp').value;
   if(!n||!p){alert('Please fill name and phone.');return}
-  const t=`*Booking – Sehaj Resort*%0A%0A*Name:* ${n}%0A*Phone:* ${p}%0A*Event:* ${document.getElementById('re').value||'N/A'}%0A*Date:* ${document.getElementById('rd').value||'N/A'}%0A*Message:* ${document.getElementById('rm').value||'N/A'}`;
+  const t=`*Booking – Sehaj Resort*%0A%0A*Name:* ${encodeURIComponent(n)}%0A*Phone:* ${encodeURIComponent(p)}%0A*Event:* ${encodeURIComponent(document.getElementById('re').value||'N/A')}%0A*Date:* ${encodeURIComponent(document.getElementById('rd').value||'N/A')}%0A*Message:* ${encodeURIComponent(document.getElementById('rm').value||'N/A')}`;
   window.open(`https://wa.me/919086328594?text=${t}`,'_blank');
   document.getElementById('rs-ok').style.display='block';
   document.getElementById('rn').value='';document.getElementById('rp').value='';
 }
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}})},{threshold:0.1});
-document.querySelectorAll('.card,.feat,.cd,.lcd').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity 0.5s ease,transform 0.5s ease';obs.observe(el)});
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity='1';
+      e.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:0.1});
+
+document.querySelectorAll('.card,.feat,.cd,.lcd').forEach(el=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(18px)';
+  el.style.transition='opacity 0.5s ease,transform 0.5s ease';
+  obs.observe(el);
+});
 
 // GOOGLE MAP INITIALIZATION FUNCTION
 function initMap() {
-  const location = { lat: 32.55, lng: 74.80 }; // Set your exact latitude & longitude here
-  const map = new google.maps.Map(document.getElementById("map"), {
+  const location = { lat: 32.55, lng: 74.80 };
+  const mapElement = document.getElementById("map");
+  if (!mapElement) return;
+  const map = new google.maps.Map(mapElement, {
     zoom: 15,
     center: location,
   });
