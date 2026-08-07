@@ -9,6 +9,15 @@
 <!-- GOOGLE SEARCH CONSOLE VERIFICATION TAG -->
 <meta name="google-site-verification" content="ttR0k4r6PogEFNK87iQvtSyMiUyUP6uCJGIs0so-iYI" />
 
+<!-- GOOGLE ADS TAG -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-YOUR_TAG_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-YOUR_TAG_ID');
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#c9940a;--gold-light:#f0b429;--navy:#0f1e35;--navy-mid:#1a2f4e;--green:#1a4a2e;--green-mid:#2d6e46;--green-light:#3d8f5c;--cream:#faf7f0;--white:#fff;--muted:#6b7a8d}
@@ -420,5 +429,11 @@ function initMap() {
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8OEQP_tigTdUto-XBBW-LOPJIrzFIGIw&callback=initMap" async defer></script>
+
+<!-- GOOGLE ADS CONVERSION EVENT SNIPPET -->
+<script>
+  gtag('event', 'conversion', {'send_to': 'AW-YOUR_CONVERSION_ID/YOUR_LABEL'});
+</script>
+
 </body>
 </html>
