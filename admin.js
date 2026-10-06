@@ -100,3 +100,4 @@
     else ov.style.display='none';
   };
 })();
+<button onclick="toggleAdmin()">⚙️ Admin Settings</button>
