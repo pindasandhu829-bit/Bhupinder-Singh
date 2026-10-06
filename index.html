@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sandhu Enterprises & Sehaj Resort</title>
+<title>Sandhu Enterprises & Sehaj Resort | Bhupinder Singh</title>
 <meta name="description" content="Bhupinder Singh - Sandhu Enterprises GeM Registered Government Supplier & Sehaj Resort Premium Event Venue in Khour Salarian, Samba, J&K.">
 
 <!-- GOOGLE SEARCH CONSOLE VERIFICATION TAG -->
@@ -26,7 +26,7 @@ html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);overflow-x:hidden}
 nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,30,53,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,148,10,0.25);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:70px}
 .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-.nav-brand img{height:45px;width:45px;object-fit:contain;border-radius:50%;background:#fff;padding:2px}
+.nav-brand img{height:45px;width:45px;object-fit:cover;border-radius:50%;border:1px solid var(--gold)}
 .nav-logo{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold-light);line-height:1.2}
 .nav-logo span{color:rgba(255,255,255,0.6);font-size:11px;display:block;font-family:'DM Sans',sans-serif}
 .nav-links{display:flex;gap:4px;list-style:none}
@@ -34,18 +34,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,30,53,0.9
 .nav-links a:hover{color:var(--gold-light);background:rgba(255,255,255,0.06)}
 .hero{min-height:100vh;background:linear-gradient(135deg,#060f1c 0%,#0f1e35 50%,#091a10 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 5% 60px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 20% 40%,rgba(201,148,10,0.07) 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 80% 60%,rgba(26,74,46,0.1) 0%,transparent 70%)}
-.hero-logo-img{width:90px;height:90px;object-fit:contain;border-radius:50%;background:#fff;padding:4px;margin-bottom:18px;box-shadow:0 8px 24px rgba(0,0,0,0.3);animation:fadeDown 0.7s ease both}
 .hero-owner-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(201,148,10,0.15);border:1px solid rgba(201,148,10,0.4);border-radius:30px;padding:8px 20px;margin-bottom:20px;animation:fadeDown 0.8s ease both}
 .hero-owner-tag span{font-size:13px;color:var(--gold-light);font-weight:600;letter-spacing:0.5px}
 .hero h1{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,64px);color:#fff;line-height:1.1;margin-bottom:12px;animation:fadeDown 0.9s ease 0.1s both}
 .hero h1 em{color:var(--gold-light);font-style:italic}
 .hero-sub{font-size:14px;color:rgba(255,255,255,0.6);letter-spacing:1px;margin-bottom:36px;animation:fadeDown 0.9s 0.2s both}
-.hero-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:800px;width:100%;animation:fadeUp 1s 0.3s both}
-.hcard{border-radius:16px;padding:28px 24px;text-align:left;cursor:pointer;transition:all 0.3s;text-decoration:none;display:block}
+.hero-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:850px;width:100%;animation:fadeUp 1s 0.3s both}
+.hcard{border-radius:16px;padding:28px 24px;text-align:left;cursor:pointer;transition:all 0.3s;text-decoration:none;display:flex;flex-direction:column;align-items:flex-start}
 .hcard.s{background:linear-gradient(135deg,rgba(201,148,10,0.15),rgba(201,148,10,0.05));border:1px solid rgba(201,148,10,0.3)}
 .hcard.r{background:linear-gradient(135deg,rgba(26,74,46,0.3),rgba(26,74,46,0.1));border:1px solid rgba(61,143,92,0.3)}
 .hcard:hover{transform:translateY(-6px)}
-.hcard-icon{font-size:40px;margin-bottom:14px}
+.hcard-logo{width:65px;height:65px;object-fit:cover;border-radius:50%;border:2px solid var(--gold);margin-bottom:14px;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
 .hcard-name{font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:6px}
 .hcard-name.g{color:var(--gold-light)}
 .hcard-name.gr{color:#6ddb96}
@@ -205,7 +204,7 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 
 <nav>
   <a href="#home" class="nav-brand">
-    <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+    <img src="logo-sandhu.png" alt="Sandhu Logo" onerror="this.style.display='none'">
     <div class="nav-logo">Bhupinder Singh<span>KHOUR SALARIAN · J&K</span></div>
   </a>
   <ul class="nav-links">
@@ -216,19 +215,18 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
 </nav>
 
 <section class="hero" id="home">
-  <img src="logo.png" alt="Logo" class="hero-logo-img" onerror="this.style.display='none'">
   <div class="hero-owner-tag"><span>👤 PROPRIETOR & FOUNDER: BHUPINDER SINGH</span></div>
   <h1>Excellence in Enterprise<br><em>& Hospitality</em></h1>
   <p class="hero-sub">KHOUR SALARIAN · RAMGARH · DISTRICT SAMBA · JAMMU & KASHMIR</p>
   <div class="hero-cards">
     <a href="#sandhu" class="hcard s">
-      <div class="hcard-icon">🏛️️</div>
+      <img src="logo-sandhu.png" alt="Sandhu Logo" class="hcard-logo" onerror="this.style.display='none'">
       <div class="hcard-name g">Sandhu Enterprises</div>
       <div class="hcard-desc">GeM Registered & Government Supply Partner — GST & UDYAM Verified Firm</div>
       <span class="hcard-btn g">View Procurement Catalog →</span>
     </a>
     <a href="#sehaj" class="hcard r">
-      <div class="hcard-icon">🌿</div>
+      <img src="logo-sehaj.png" alt="Sehaj Logo" class="hcard-logo" onerror="this.style.display='none'">
       <div class="hcard-name gr">Sehaj Resort</div>
       <div class="hcard-desc">Premium Event Venue — Marriages, Birthdays, Ring Ceremonies & all occasions</div>
       <span class="hcard-btn gr">View Details →</span>
@@ -329,10 +327,10 @@ footer{background:#060f1c;padding:40px 5%;text-align:center}
     <p style="color:rgba(255,255,255,0.5);font-size:14px">Beautiful venue for every celebration</p>
   </div>
   <div class="gal-grid">
-    <div class="gal-item"><img src="img/resort.jpg" alt="Sehaj Resort Building" onerror="this.parentElement.innerHTML='🏡<div class=gal-label>Resort Building & Garden</div>'"><div class="gal-label">🏡 Resort Building & Garden</div></div>
+    <div class="gal-item"><img src="logo-sehaj.png" alt="Sehaj Resort Logo" style="object-fit:contain;background:#05140b;padding:20px"><div class="gal-label">🌿 Sehaj Resort Identity</div></div>
     <div class="gal-item"><img src="img/hall.jpg" alt="Wedding Hall" onerror="this.parentElement.innerHTML='💍<div class=gal-label>Wedding Hall</div>'"><div class="gal-label">💍 Wedding Hall</div></div>
     <div class="gal-item"><img src="img/entrance.jpg" alt="Decorated Entrance" onerror="this.parentElement.innerHTML='🌸<div class=gal-label>Decorated Entrance</div>'"><div class="gal-label">🌸 Decorated Entrance</div></div>
-    <div class="gal-item"><img src="img/resort.jpg" alt="Night View" onerror="this.parentElement.innerHTML='🌙<div class=gal-label>Night View</div>'" style="object-position:center 60%"><div class="gal-label">🌙 Night View</div></div>
+    <div class="gal-item"><img src="logo-sandhu.png" alt="Sandhu Enterprises" style="object-fit:contain;background:#05140b;padding:20px"><div class="gal-label">🏛️ Sandhu Enterprises Partner</div></div>
   </div>
 </section>
 
